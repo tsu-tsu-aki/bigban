@@ -3,23 +3,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { BigBangCanvas } from "@/components/teaser/BigBangCanvas";
-import { BigBangWebGL } from "@/components/teaser/BigBangWebGL";
 import { TeaserContent } from "@/components/teaser/TeaserContent";
-import { EngineSwitch } from "@/components/teaser/EngineSwitch";
 import { useAnimationPhase } from "@/hooks/useAnimationPhase";
-import type { AnimationPhase, BigBangConfig } from "@/components/teaser/types";
-
-type EngineType = "canvas" | "webgl";
+import type { AnimationPhase } from "@/components/teaser/types";
 
 const LOGO_SRC = "/logos/tate-neon-hybrid.svg";
 
 export default function TeaserPage() {
-  const [engine, setEngine] = useState<EngineType>("canvas");
-  const [config, setConfig] = useState<BigBangConfig>({
-    explosionStyle: "physics",
-    duration: "medium",
-  });
-  const { phase, setPhase, reset } = useAnimationPhase(config);
+  const { phase, setPhase } = useAnimationPhase();
 
   const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
 
@@ -36,24 +27,6 @@ export default function TeaserPage() {
     },
     [setPhase]
   );
-
-  const handleReplay = useCallback(() => {
-    reset();
-  }, [reset]);
-
-  const handleEngineChange = useCallback(
-    (newEngine: EngineType) => {
-      setEngine(newEngine);
-      reset();
-    },
-    [reset]
-  );
-
-  const handleConfigChange = useCallback((newConfig: BigBangConfig) => {
-    setConfig(newConfig);
-  }, []);
-
-  const EngineComponent = engine === "webgl" ? BigBangWebGL : BigBangCanvas;
 
   return (
     <div
@@ -79,16 +52,12 @@ export default function TeaserPage() {
         }}
       />
 
-      {/* BigBang Engine */}
+      {/* BigBang Animation */}
       {phase !== "content" && (
-        <EngineComponent
-          config={config}
-          onPhaseChange={handlePhaseChange}
-          logoSrc={LOGO_SRC}
-        />
+        <BigBangCanvas onPhaseChange={handlePhaseChange} />
       )}
 
-      {/* Teaser Content — shown after animation completes */}
+      {/* Teaser Content — fades in after animation completes */}
       {phase === "content" && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -104,15 +73,6 @@ export default function TeaserPage() {
           <TeaserContent logoSrc={LOGO_SRC} />
         </motion.div>
       )}
-
-      {/* Engine Switch — development comparison UI */}
-      <EngineSwitch
-        engine={engine}
-        config={config}
-        onEngineChange={handleEngineChange}
-        onConfigChange={handleConfigChange}
-        onReplay={handleReplay}
-      />
     </div>
   );
 }

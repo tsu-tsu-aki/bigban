@@ -1,18 +1,16 @@
 "use client";
 
 import { useState, useCallback } from "react";
-
-import type { AnimationPhase, BigBangConfig } from "@/components/teaser/types";
+import type { AnimationPhase } from "@/components/teaser/types";
 
 interface UseAnimationPhaseReturn {
   phase: AnimationPhase;
   setPhase: (phase: AnimationPhase) => void;
   reset: () => void;
   isComplete: boolean;
-  config: BigBangConfig;
 }
 
-export function useAnimationPhase(config: BigBangConfig): UseAnimationPhaseReturn {
+export function useAnimationPhase(): UseAnimationPhaseReturn {
   const [phase, setPhase] = useState<AnimationPhase>("dark");
 
   const reset = useCallback(() => {
@@ -24,6 +22,5 @@ export function useAnimationPhase(config: BigBangConfig): UseAnimationPhaseRetur
     setPhase,
     reset,
     isComplete: phase === "content",
-    config,
   };
 }

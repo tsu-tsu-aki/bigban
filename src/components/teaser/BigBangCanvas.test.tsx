@@ -1,9 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { BigBangCanvas } from "./BigBangCanvas";
-import type { BigBangConfig } from "./types";
 
-// Canvas API をモック
 const mockGetContext = vi.fn(() => ({
   clearRect: vi.fn(),
   fillRect: vi.fn(),
@@ -42,19 +40,8 @@ describe("BigBangCanvas", () => {
     vi.restoreAllMocks();
   });
 
-  const defaultConfig: BigBangConfig = {
-    explosionStyle: "physics",
-    duration: "medium",
-  };
-
   it("canvas 要素が role=img と aria-label 付きでレンダリングされる", () => {
-    render(
-      <BigBangCanvas
-        config={defaultConfig}
-        onPhaseChange={vi.fn()}
-        logoSrc="/logos/tate-neon-hybrid.svg"
-      />
-    );
+    render(<BigBangCanvas onPhaseChange={vi.fn()} />);
 
     const canvas = screen.getByRole("img");
     expect(canvas).toBeInTheDocument();
@@ -62,13 +49,7 @@ describe("BigBangCanvas", () => {
   });
 
   it("canvas が全画面表示される", () => {
-    render(
-      <BigBangCanvas
-        config={defaultConfig}
-        onPhaseChange={vi.fn()}
-        logoSrc="/logos/tate-neon-hybrid.svg"
-      />
-    );
+    render(<BigBangCanvas onPhaseChange={vi.fn()} />);
 
     const canvas = screen.getByRole("img");
     expect(canvas.tagName).toBe("CANVAS");
@@ -76,15 +57,7 @@ describe("BigBangCanvas", () => {
 
   it("マウント時に onPhaseChange が dark で呼ばれる", () => {
     const onPhaseChange = vi.fn();
-
-    render(
-      <BigBangCanvas
-        config={defaultConfig}
-        onPhaseChange={onPhaseChange}
-        logoSrc="/logos/tate-neon-hybrid.svg"
-      />
-    );
-
+    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
     expect(onPhaseChange).toHaveBeenCalledWith("dark");
   });
 
@@ -101,28 +74,14 @@ describe("BigBangCanvas", () => {
     }));
 
     const onPhaseChange = vi.fn();
-
-    render(
-      <BigBangCanvas
-        config={defaultConfig}
-        onPhaseChange={onPhaseChange}
-        logoSrc="/logos/tate-neon-hybrid.svg"
-      />
-    );
+    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
 
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
     expect(onPhaseChange).toHaveBeenCalledWith("content");
   });
 
   it("アンマウント時にアニメーションがクリーンアップされる", () => {
-    const { unmount } = render(
-      <BigBangCanvas
-        config={defaultConfig}
-        onPhaseChange={vi.fn()}
-        logoSrc="/logos/tate-neon-hybrid.svg"
-      />
-    );
-
+    const { unmount } = render(<BigBangCanvas onPhaseChange={vi.fn()} />);
     unmount();
     expect(window.cancelAnimationFrame).toHaveBeenCalled();
   });

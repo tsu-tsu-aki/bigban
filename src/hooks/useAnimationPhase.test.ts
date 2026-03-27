@@ -1,7 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useAnimationPhase } from "./useAnimationPhase";
-import type { BigBangConfig } from "@/components/teaser/types";
 
 describe("useAnimationPhase", () => {
   beforeEach(() => {
@@ -12,18 +11,13 @@ describe("useAnimationPhase", () => {
     vi.useRealTimers();
   });
 
-  const defaultConfig: BigBangConfig = {
-    explosionStyle: "physics",
-    duration: "medium",
-  };
-
   it("初期フェーズは dark", () => {
-    const { result } = renderHook(() => useAnimationPhase(defaultConfig));
+    const { result } = renderHook(() => useAnimationPhase());
     expect(result.current.phase).toBe("dark");
   });
 
   it("setPhase でフェーズを変更できる", () => {
-    const { result } = renderHook(() => useAnimationPhase(defaultConfig));
+    const { result } = renderHook(() => useAnimationPhase());
 
     act(() => {
       result.current.setPhase("converge");
@@ -33,7 +27,7 @@ describe("useAnimationPhase", () => {
   });
 
   it("reset で dark に戻る", () => {
-    const { result } = renderHook(() => useAnimationPhase(defaultConfig));
+    const { result } = renderHook(() => useAnimationPhase());
 
     act(() => {
       result.current.setPhase("content");
@@ -47,7 +41,7 @@ describe("useAnimationPhase", () => {
   });
 
   it("isComplete は content フェーズで true", () => {
-    const { result } = renderHook(() => useAnimationPhase(defaultConfig));
+    const { result } = renderHook(() => useAnimationPhase());
 
     expect(result.current.isComplete).toBe(false);
 
@@ -56,22 +50,5 @@ describe("useAnimationPhase", () => {
     });
 
     expect(result.current.isComplete).toBe(true);
-  });
-
-  it("config を返す", () => {
-    const { result } = renderHook(() => useAnimationPhase(defaultConfig));
-    expect(result.current.config).toEqual(defaultConfig);
-  });
-
-  it("config 変更時に状態が更新される", () => {
-    const { result, rerender } = renderHook(
-      ({ config }) => useAnimationPhase(config),
-      { initialProps: { config: defaultConfig } }
-    );
-
-    const newConfig: BigBangConfig = { explosionStyle: "neon", duration: "short" };
-    rerender({ config: newConfig });
-
-    expect(result.current.config).toEqual(newConfig);
   });
 });
