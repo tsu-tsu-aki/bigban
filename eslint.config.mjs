@@ -9,6 +9,7 @@ export default tseslint.config(
       ".next/**",
       "node_modules/**",
       "__mocks__/**",
+      "coverage/**",
       "vitest.config.ts",
       "vitest.setup.ts",
     ],

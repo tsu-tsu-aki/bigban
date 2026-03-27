@@ -40,5 +40,11 @@ yarn-error.log*
 # original design assets (large .ai files)
 nouhin/
 
+# test coverage
+coverage/
+
+# typescript
+tsconfig.tsbuildinfo
+
 # superpowers brainstorm sessions
 .superpowers/
