@@ -39,3 +39,6 @@ yarn-error.log*
 
 # original design assets (large .ai files)
 nouhin/
+
+# superpowers brainstorm sessions
+.superpowers/
