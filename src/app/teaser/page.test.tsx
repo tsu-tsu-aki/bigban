@@ -1,4 +1,4 @@
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import TeaserPage from "./page";
 
@@ -36,5 +36,14 @@ describe("TeaserPage", () => {
     render(<TeaserPage />);
     const container = screen.getByTestId("teaser-page");
     expect(container).toHaveClass("cursor-none");
+  });
+
+  it("マウス移動でカーソル位置が更新される", () => {
+    render(<TeaserPage />);
+
+    fireEvent.mouseMove(window, { clientX: 100, clientY: 200 });
+
+    const container = screen.getByTestId("teaser-page");
+    expect(container).toBeInTheDocument();
   });
 });

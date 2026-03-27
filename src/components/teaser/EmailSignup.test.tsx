@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect } from "vitest";
 import { EmailSignup } from "./EmailSignup";
@@ -31,6 +31,16 @@ describe("EmailSignup", () => {
 
     const button = screen.getByRole("button", { name: /notify me/i });
     await user.click(button);
+
+    expect(screen.queryByText(/registered/i)).not.toBeInTheDocument();
+    expect(screen.getByPlaceholderText("your@email.com")).toBeInTheDocument();
+  });
+
+  it("空メールでフォーム送信時に handleSubmit が呼ばれても submitted にならない", () => {
+    render(<EmailSignup />);
+
+    const form = screen.getByRole("button", { name: /notify me/i }).closest("form");
+    fireEvent.submit(form!);
 
     expect(screen.queryByText(/registered/i)).not.toBeInTheDocument();
     expect(screen.getByPlaceholderText("your@email.com")).toBeInTheDocument();
