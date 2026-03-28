@@ -68,7 +68,7 @@ export default function Hero() {
     >
       {/* Custom Cursor */}
       <motion.div
-        className="fixed pointer-events-none z-[60] mix-blend-difference"
+        className="custom-cursor fixed pointer-events-none z-[60] mix-blend-difference"
         animate={{
           x: cursorPos.x - 20,
           y: cursorPos.y - 20,

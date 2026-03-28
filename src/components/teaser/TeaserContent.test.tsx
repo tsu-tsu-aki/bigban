@@ -82,6 +82,24 @@ describe("TeaserContent", () => {
     expect(screen.getByText("西村昭彦")).toBeInTheDocument();
   });
 
+  it("FOUNDERの西村昭彦がInstagramへのリンクになっている", () => {
+    render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
+
+    const link = screen.getByRole("link", { name: "西村昭彦" });
+    expect(link).toHaveAttribute("href", "https://www.instagram.com/adihiko/");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  it("LOCATIONの本八幡駅 徒歩1分がGoogle Mapsへのリンクになっている", () => {
+    render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
+
+    const link = screen.getByRole("link", { name: "本八幡駅 徒歩1分" });
+    expect(link).toHaveAttribute("href", "https://maps.app.goo.gl/Hjm2wMkZ6SXVoJKq7");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
   it("フッターが表示される", () => {
     render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
     expect(screen.getByText(/RST Agency/)).toBeInTheDocument();

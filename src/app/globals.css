@@ -8,7 +8,7 @@
   --color-text-gray: #8A8A8A;
 
   --font-serif: "DM Serif Display", "Playfair Display", Georgia, serif;
-  --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Inter", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
 }
 
 @layer base {
@@ -20,6 +20,7 @@
 
   body {
     font-family: var(--font-sans);
+    font-feature-settings: "palt";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -47,9 +48,18 @@
   background-size: 256px 256px;
 }
 
-/* Custom cursor for hero */
-.custom-cursor-area {
-  cursor: none;
+/* Custom cursor — hidden on touch devices */
+.custom-cursor {
+  display: none;
+}
+
+@media (pointer: fine) {
+  .custom-cursor-area {
+    cursor: none;
+  }
+  .custom-cursor {
+    display: block;
+  }
 }
 
 .magnetic-button {

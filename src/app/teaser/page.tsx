@@ -31,11 +31,12 @@ export default function TeaserPage() {
   return (
     <div
       data-testid="teaser-page"
-      className="relative min-h-screen bg-[#000000] overflow-x-hidden cursor-none"
+      className="relative min-h-screen bg-[#000000] overflow-x-hidden custom-cursor-area"
     >
       {/* Custom cursor */}
       <motion.div
-        className="fixed pointer-events-none z-[100] mix-blend-difference"
+        data-testid="custom-cursor"
+        className="custom-cursor fixed pointer-events-none z-[100] mix-blend-difference"
         animate={{ x: cursorPos.x - 16, y: cursorPos.y - 16 }}
         transition={{ type: "spring", stiffness: 600, damping: 30 }}
       >
