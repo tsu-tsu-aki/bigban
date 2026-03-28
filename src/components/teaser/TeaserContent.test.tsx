@@ -22,7 +22,7 @@ describe("TeaserContent", () => {
 
   it("開業日が表示される", () => {
     render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
-    expect(screen.getByText("2026.4.18 OPEN")).toBeInTheDocument();
+    expect(screen.getByText("2026.4.17 18:00 OPEN")).toBeInTheDocument();
   });
 
   it("カウントダウンが表示される", () => {
@@ -36,7 +36,7 @@ describe("TeaserContent", () => {
 
   it("日本語見出しがh2タグで表示される", () => {
     render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
-    const heading = screen.getByText(/ここから、ピックルボールのビッグバンが始まる/);
+    const heading = screen.getByText(/ピックルボールのビッグバンがここから始まる/);
     expect(heading).toBeInTheDocument();
     expect(heading.tagName).toBe("H2");
   });
@@ -61,10 +61,11 @@ describe("TeaserContent", () => {
     ).toBeInTheDocument();
   });
 
-  it("強調テキストが正しくマークアップされている", () => {
+  it("ボディテキストにレンタルコートの記述が含まれる", () => {
     render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
-    const emphasis = screen.getByText(/これは単なるレンタルコートではない/);
-    expect(emphasis.tagName).toBe("EM");
+    expect(
+      screen.getByText(/これは単なるレンタルコートではない/)
+    ).toBeInTheDocument();
   });
 
   it("メール登録セクションが表示される", () => {
@@ -78,12 +79,11 @@ describe("TeaserContent", () => {
     expect(screen.getByText("本八幡駅 徒歩1分")).toBeInTheDocument();
     expect(screen.getByText("プロ仕様ハードコート 3面")).toBeInTheDocument();
     expect(screen.getByText("6:00 – 23:00")).toBeInTheDocument();
-    expect(screen.getByText("西村昭彦 — 世界王者")).toBeInTheDocument();
+    expect(screen.getByText("西村昭彦")).toBeInTheDocument();
   });
 
   it("フッターが表示される", () => {
     render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
     expect(screen.getByText(/RST Agency/)).toBeInTheDocument();
-    expect(screen.getByText("Instagram")).toBeInTheDocument();
   });
 });

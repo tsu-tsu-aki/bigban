@@ -6,7 +6,7 @@ import { useCountdown } from "@/hooks/useCountdown";
 
 import { EmailSignup } from "./EmailSignup";
 
-const LAUNCH_DATE = new Date("2026-04-18T00:00:00+09:00");
+const LAUNCH_DATE = new Date("2026-04-17T18:00:00+09:00");
 
 interface TeaserContentProps {
   logoSrc: string;
@@ -70,7 +70,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
           className="text-[12px] md:text-[13px] tracking-[0.4em] text-[#E6E6E6] uppercase font-[var(--font-inter)]"
           style={{ marginBottom: "clamp(0.5rem, 1vh, 1rem)" }}
         >
-          2026.4.18 OPEN
+          2026.4.17 18:00 OPEN
         </motion.p>
 
         {/* Countdown */}
@@ -91,7 +91,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
                 <span className="text-[clamp(2rem,5vw,3.5rem)] text-[#E6E6E6] leading-none block font-[var(--font-dm-serif)]">
                   {String(item.value).padStart(2, "0")}
                 </span>
-                <span className="text-[9px] tracking-[0.35em] text-[#8A8A8A]/50 uppercase mt-2 block font-[var(--font-inter)]">
+                <span className="text-[9px] tracking-[0.35em] text-[#E6E6E6]/60 uppercase mt-2 block font-[var(--font-inter)]">
                   {item.label}
                 </span>
               </motion.div>
@@ -138,14 +138,11 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 3.1 }}
-            className="text-[clamp(0.75rem,1.05vw,0.9rem)] text-[#8A8A8A] leading-[2] md:leading-[1.8] tracking-[0.02em] max-w-[520px] md:max-w-[860px] mx-auto font-[var(--font-inter)]"
+            className="text-[clamp(0.75rem,1.05vw,0.9rem)] text-[#E6E6E6] leading-[2] md:leading-[1.8] tracking-[0.02em] max-w-[520px] md:max-w-[860px] mx-auto font-[var(--font-inter)]"
           >
             本八幡駅徒歩1分の立地にプロ仕様ピックルボールハードコート3面がオープン。
             <br className="hidden md:block" />
-            <em className="not-italic text-[#E6E6E6] font-semibold">
-              これは単なるレンタルコートではない。
-            </em>
-            トレーニング、競技、コミュニティが一体となった空間。ここから始まります。
+            これは単なるレンタルコートではない。トレーニング、競技、コミュニティが一体となった空間。ここから始まります。
           </motion.p>
         </div>
 
@@ -156,7 +153,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
           transition={{ duration: 0.7, delay: 3.5 }}
           className="w-full max-w-md"
         >
-          <p className="text-[10px] tracking-[0.3em] text-[#8A8A8A]/60 uppercase text-center mb-4 font-[var(--font-inter)]">
+          <p className="text-[12px] tracking-[0.3em] text-[#E6E6E6]/60 uppercase text-center mb-4 font-[var(--font-inter)]">
             オープン情報をいち早くお届け
           </p>
           <EmailSignup />
@@ -178,7 +175,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
             { label: "FOUNDER", value: "西村昭彦" },
           ].map((fact) => (
             <div key={fact.label} className="flex items-baseline gap-3 py-2">
-              <span className="text-[9px] tracking-[0.3em] text-[#8A8A8A]/40 uppercase font-[var(--font-inter)]">
+              <span className="text-[9px] tracking-[0.3em] text-[#E6E6E6]/50 uppercase font-[var(--font-inter)]">
                 {fact.label}
               </span>
               <span className="text-[12px] text-[#E6E6E6]/60 tracking-wide font-[var(--font-inter)]">
@@ -194,34 +191,10 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 4.0 }}
-        className="flex items-center justify-between px-8 md:px-16 py-5"
+        className="flex items-center justify-center px-8 md:px-16 py-5"
       >
         <span className="text-[10px] text-[#8A8A8A]/30 font-[var(--font-inter)]">
           &copy; 2026 RST Agency Inc.
-        </span>
-        <a
-          href="#"
-          className="inline-flex items-center gap-2 text-[10px] tracking-[0.2em] text-[#8A8A8A]/40 hover:text-[#F6FF54] transition-colors duration-300 uppercase font-[var(--font-inter)]"
-        >
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <rect x="2" y="2" width="20" height="20" rx="5" />
-            <circle cx="12" cy="12" r="5" />
-            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-          </svg>
-          Instagram
-        </a>
-        <span className="text-[10px] tracking-[0.2em] text-[#8A8A8A]/30 uppercase font-[var(--font-inter)]">
-          Ichikawa, Chiba
         </span>
       </motion.footer>
     </div>
