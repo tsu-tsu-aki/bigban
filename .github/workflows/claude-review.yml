@@ -1,0 +1,46 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    name: Claude コードレビュー
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - name: コードをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Claude Code Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            あなたはシニアコードレビュアーです。日本語でレビューしてください。
+
+            このリポジトリのCLAUDE.mdに記載されたコーディング規約に基づいてレビューを行ってください。
+            特に以下の観点を重視してください:
+
+            - TypeScript: strict mode, any禁止, React.FC禁止, import type の使用
+            - Next.js App Router: Server/Client Componentの適切な分離
+            - Tailwind CSS v4: ユーティリティクラスの適切な使用
+            - アクセシビリティ: セマンティックHTML, alt属性, キーボードナビゲーション
+            - テスト: TDDサイクルの遵守, カバレッジ100%
+            - パフォーマンス: Core Web Vitals, 適切な画像最適化
+            - Framer Motion: use clientの適切な使用, transformプロパティの使用
+
+            また、以下のバグや潜在的問題も検出してください:
+            - ロジックエラー、off-by-oneエラー、境界値の見落とし
+            - nullやundefinedによるランタイムエラーの可能性
+            - 非同期処理の競合状態やエラーハンドリングの欠落
+            - メモリリーク（イベントリスナーやタイマーの未解除）
+            - セキュリティ上の問題（XSS, インジェクション等）
+            - 既存コードとの不整合やリグレッションの可能性
+
+            問題がない場合は、無理にコメントを作る必要はありません。
