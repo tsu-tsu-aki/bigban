@@ -47,9 +47,18 @@
   background-size: 256px 256px;
 }
 
-/* Custom cursor for hero */
-.custom-cursor-area {
-  cursor: none;
+/* Custom cursor — hidden on touch devices */
+.custom-cursor {
+  display: none;
+}
+
+@media (pointer: fine) {
+  .custom-cursor-area {
+    cursor: none;
+  }
+  .custom-cursor {
+    display: block;
+  }
 }
 
 .magnetic-button {

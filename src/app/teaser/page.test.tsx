@@ -32,10 +32,16 @@ describe("TeaserPage", () => {
     expect(screen.getByText("2026.4.17 18:00 OPEN")).toBeInTheDocument();
   });
 
-  it("カスタムカーソルが表示される", () => {
+  it("custom-cursor-area クラスが適用される", () => {
     render(<TeaserPage />);
     const container = screen.getByTestId("teaser-page");
-    expect(container).toHaveClass("cursor-none");
+    expect(container).toHaveClass("custom-cursor-area");
+  });
+
+  it("カスタムカーソル要素に custom-cursor クラスが適用される", () => {
+    render(<TeaserPage />);
+    const cursorElement = screen.getByTestId("custom-cursor");
+    expect(cursorElement).toHaveClass("custom-cursor");
   });
 
   it("マウス移動でカーソル位置が更新される", () => {
