@@ -63,6 +63,16 @@ describe("icon.png", () => {
   });
 });
 
+describe("icon2.png", () => {
+  it("is a 32x32 PNG", () => {
+    const buffer = readFileSync(join(APP_DIR, "icon2.png"));
+    const { width, height } = getPngDimensions(buffer);
+
+    expect(width).toBe(32);
+    expect(height).toBe(32);
+  });
+});
+
 describe("apple-icon.png", () => {
   it("is a 180x180 PNG", () => {
     const buffer = readFileSync(join(APP_DIR, "apple-icon.png"));
