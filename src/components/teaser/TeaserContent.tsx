@@ -138,7 +138,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 3.1 }}
-            className="text-[clamp(0.75rem,1.05vw,0.9rem)] text-[#E6E6E6] leading-[2] md:leading-[1.8] tracking-[0.02em] max-w-[520px] md:max-w-[860px] mx-auto font-[var(--font-inter)]"
+            className="text-[clamp(0.85rem,1.2vw,1rem)] text-[#E6E6E6] leading-[2] md:leading-[1.8] tracking-[0.02em] max-w-[520px] md:max-w-[860px] mx-auto font-[var(--font-inter)]"
           >
             本八幡駅徒歩1分の立地にプロ仕様ピックルボールハードコート3面がオープン。
             <br className="hidden md:block" />
@@ -151,9 +151,9 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 3.5 }}
-          className="w-full max-w-md"
+          className="w-full max-w-md mb-8"
         >
-          <p className="text-[12px] tracking-[0.3em] text-[#E6E6E6]/60 uppercase text-center mb-4 font-[var(--font-inter)]">
+          <p className="text-[13px] tracking-[0.3em] text-[#E6E6E6]/60 uppercase text-center mb-4 font-[var(--font-inter)]">
             オープン情報をいち早くお届け
           </p>
           <EmailSignup />
@@ -175,10 +175,10 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
             { label: "FOUNDER", value: "西村昭彦" },
           ].map((fact) => (
             <div key={fact.label} className="flex items-baseline gap-3 py-2">
-              <span className="text-[9px] tracking-[0.3em] text-[#E6E6E6]/50 uppercase font-[var(--font-inter)]">
+              <span className="text-[11px] tracking-[0.3em] text-[#E6E6E6]/50 uppercase font-[var(--font-inter)]">
                 {fact.label}
               </span>
-              <span className="text-[12px] text-[#E6E6E6]/60 tracking-wide font-[var(--font-inter)]">
+              <span className="text-[14px] text-[#E6E6E6]/60 tracking-wide font-[var(--font-inter)]">
                 {fact.value}
               </span>
             </div>
