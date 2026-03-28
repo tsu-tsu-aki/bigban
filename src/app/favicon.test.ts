@@ -73,6 +73,16 @@ describe("icon2.png", () => {
   });
 });
 
+describe("opengraph-image.png", () => {
+  it("is a 1200x630 PNG", () => {
+    const buffer = readFileSync(join(APP_DIR, "opengraph-image.png"));
+    const { width, height } = getPngDimensions(buffer);
+
+    expect(width).toBe(1200);
+    expect(height).toBe(630);
+  });
+});
+
 describe("apple-icon.png", () => {
   it("is a 180x180 PNG", () => {
     const buffer = readFileSync(join(APP_DIR, "apple-icon.png"));
