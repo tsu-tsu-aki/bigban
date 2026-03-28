@@ -169,18 +169,29 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
       >
         <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-x-8 gap-y-2 md:gap-x-12">
           {[
-            { label: "LOCATION", value: "本八幡駅 徒歩1分" },
+            { label: "LOCATION", value: "本八幡駅 徒歩1分", href: "https://maps.app.goo.gl/Hjm2wMkZ6SXVoJKq7" },
             { label: "COURTS", value: "プロ仕様ハードコート 3面" },
             { label: "OPEN", value: "6:00 – 23:00" },
-            { label: "FOUNDER", value: "西村昭彦" },
+            { label: "FOUNDER", value: "西村昭彦", href: "https://www.instagram.com/adihiko/" },
           ].map((fact) => (
             <div key={fact.label} className="flex items-baseline gap-3 py-2">
               <span className="text-[11px] tracking-[0.3em] text-[#E6E6E6]/50 uppercase font-[var(--font-inter)]">
                 {fact.label}
               </span>
-              <span className="text-[14px] text-[#E6E6E6]/60 tracking-wide font-[var(--font-inter)]">
-                {fact.value}
-              </span>
+              {fact.href ? (
+                <a
+                  href={fact.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[14px] text-[#E6E6E6]/60 tracking-wide font-[var(--font-inter)] hover:text-[#E6E6E6] transition-colors"
+                >
+                  {fact.value}
+                </a>
+              ) : (
+                <span className="text-[14px] text-[#E6E6E6]/60 tracking-wide font-[var(--font-inter)]">
+                  {fact.value}
+                </span>
+              )}
             </div>
           ))}
         </div>
