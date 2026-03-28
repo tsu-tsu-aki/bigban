@@ -34,11 +34,37 @@ describe("TeaserContent", () => {
     expect(screen.getByText("SEC")).toBeInTheDocument();
   });
 
-  it("タグラインが表示される", () => {
+  it("日本語見出しがh2タグで表示される", () => {
+    render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
+    const heading = screen.getByText(/ここから、ピックルボールのビッグバンが始まる/);
+    expect(heading).toBeInTheDocument();
+    expect(heading.tagName).toBe("H2");
+  });
+
+  it("英語見出しが表示される", () => {
+    render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
+    const heading = screen.getByText(
+      /the pickle bang will begin here from your small dinks/i
+    );
+    expect(heading).toBeInTheDocument();
+  });
+
+  it("コピーセクションにディバイダーが存在する", () => {
+    render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
+    expect(screen.getByRole("separator")).toBeInTheDocument();
+  });
+
+  it("ボディテキストが表示される", () => {
     render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
     expect(
-      screen.getByText(/クロスミントン世界王者が手がける/)
+      screen.getByText(/トレーニング、競技、コミュニティが一体となった空間/)
     ).toBeInTheDocument();
+  });
+
+  it("強調テキストが正しくマークアップされている", () => {
+    render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
+    const emphasis = screen.getByText(/これは単なるレンタルコートではない/);
+    expect(emphasis.tagName).toBe("EM");
   });
 
   it("メール登録セクションが表示される", () => {
