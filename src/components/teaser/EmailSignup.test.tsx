@@ -31,7 +31,7 @@ describe("EmailSignup", () => {
     await user.click(screen.getByRole("button", { name: /登録ｽﾙ/ }));
 
     await waitFor(() => {
-      expect(screen.getByText(/registered/i)).toBeInTheDocument();
+      expect(screen.getByText(/登録が完了しました/)).toBeInTheDocument();
     });
     expect(screen.queryByPlaceholderText("your@email.com")).not.toBeInTheDocument();
     expect(fetchMock).toHaveBeenCalledWith("/api/subscribe", {
@@ -60,7 +60,7 @@ describe("EmailSignup", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText(/registered/i)).toBeInTheDocument();
+      expect(screen.getByText(/登録が完了しました/)).toBeInTheDocument();
     });
   });
 
@@ -106,7 +106,7 @@ describe("EmailSignup", () => {
     const button = screen.getByRole("button", { name: /登録ｽﾙ/ });
     await user.click(button);
 
-    expect(screen.queryByText(/registered/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/登録が完了しました/)).not.toBeInTheDocument();
     expect(screen.getByPlaceholderText("your@email.com")).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
@@ -117,7 +117,7 @@ describe("EmailSignup", () => {
     const form = screen.getByRole("button", { name: /登録ｽﾙ/ }).closest("form");
     fireEvent.submit(form!);
 
-    expect(screen.queryByText(/registered/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/登録が完了しました/)).not.toBeInTheDocument();
     expect(screen.getByPlaceholderText("your@email.com")).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });

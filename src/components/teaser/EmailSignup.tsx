@@ -82,7 +82,7 @@ export function EmailSignup() {
             className="text-center"
           >
             <p className="text-[#F6FF54] text-[13px] tracking-[0.15em] font-[var(--font-inter)]">
-              REGISTERED — WE&apos;LL BE IN TOUCH.
+              登録が完了しました
             </p>
           </motion.div>
         )}
