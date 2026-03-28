@@ -29,7 +29,7 @@ describe("TeaserPage", () => {
     await act(async () => {
       vi.advanceTimersByTime(10);
     });
-    expect(screen.getByText("2026.4.18 OPEN")).toBeInTheDocument();
+    expect(screen.getByText("2026.4.17 18:00 OPEN")).toBeInTheDocument();
   });
 
   it("カスタムカーソルが表示される", () => {

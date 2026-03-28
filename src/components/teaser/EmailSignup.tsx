@@ -40,7 +40,7 @@ export function EmailSignup() {
               type="submit"
               className="bg-[#F6FF54] text-[#0A0A0A] px-6 py-4 text-[11px] tracking-[0.2em] uppercase font-semibold hover:bg-[#F6FF54]/90 transition-colors shrink-0 font-[var(--font-inter)] rounded-r-sm"
             >
-              NOTIFY ME
+              登録スル
             </button>
           </motion.form>
         ) : (
