@@ -44,7 +44,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.4, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="relative"
-          style={{ marginBottom: "clamp(1rem, 3vh, 2rem)" }}
+          style={{ marginBottom: "clamp(0.5rem, 2vh, 2rem)" }}
         >
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none"
@@ -58,7 +58,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
             src={logoSrc}
             alt="THE PICKLE BANG THEORY"
             className="relative z-[1] w-auto object-contain"
-            style={{ height: "clamp(180px, 30vh, 400px)" }}
+            style={{ height: "clamp(140px, 25vh, 400px)" }}
           />
         </motion.div>
 
@@ -68,7 +68,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1.6 }}
           className="text-[12px] md:text-[13px] tracking-[0.4em] text-[#E6E6E6] uppercase font-[var(--font-inter)]"
-          style={{ marginBottom: "clamp(0.75rem, 2vh, 1.5rem)" }}
+          style={{ marginBottom: "clamp(0.5rem, 1vh, 1rem)" }}
         >
           2026.4.18 OPEN
         </motion.p>
@@ -79,7 +79,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1.9 }}
           className="flex items-center gap-6 md:gap-10"
-          style={{ marginBottom: "clamp(1rem, 2vh, 2rem)" }}
+          style={{ marginBottom: "clamp(0.5rem, 1.5vh, 1.5rem)" }}
         >
           {countdownItems.map((item, i) => (
             <div key={item.label} className="text-center">
@@ -101,8 +101,8 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
 
         {/* Copy section */}
         <div
-          className="text-center max-w-[640px]"
-          style={{ marginBottom: "clamp(1.5rem, 3vh, 2.5rem)" }}
+          className="text-center max-w-[640px] md:max-w-none"
+          style={{ marginBottom: "clamp(1rem, 2vh, 1.5rem)" }}
         >
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
@@ -110,9 +110,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
             transition={{ duration: 0.7, delay: 2.4 }}
             className="text-[clamp(1.5rem,3.2vw,2.8rem)] text-[#E6E6E6] leading-[1.35] tracking-[-0.01em] font-bold font-[var(--font-dm-serif)]"
           >
-            ここから、ピックルボールの
-            <br />
-            ビッグバンが始まる。
+            ピックルボールのビッグバンがここから始まる。
           </motion.h2>
 
           <motion.p
@@ -121,9 +119,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
             transition={{ duration: 0.7, delay: 2.7 }}
             className="text-[clamp(0.7rem,1.1vw,0.95rem)] text-[#F6FF54] leading-[1.5] tracking-[0.18em] uppercase font-medium font-[var(--font-inter)] mb-6"
           >
-            The pickle bang will begin here
-            <br />
-            {" "}from your small dinks
+            The pickle bang will begin here from your small dinks
           </motion.p>
 
           <motion.div
@@ -142,9 +138,10 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 3.1 }}
-            className="text-[clamp(0.75rem,1.05vw,0.9rem)] text-[#8A8A8A] leading-[2] tracking-[0.02em] max-w-[520px] mx-auto font-[var(--font-inter)]"
+            className="text-[clamp(0.75rem,1.05vw,0.9rem)] text-[#8A8A8A] leading-[2] md:leading-[1.8] tracking-[0.02em] max-w-[520px] md:max-w-[860px] mx-auto font-[var(--font-inter)]"
           >
             本八幡駅徒歩1分の立地にプロ仕様ピックルボールハードコート3面がオープン。
+            <br className="hidden md:block" />
             <em className="not-italic text-[#E6E6E6] font-semibold">
               これは単なるレンタルコートではない。
             </em>
@@ -178,7 +175,7 @@ export function TeaserContent({ logoSrc }: TeaserContentProps) {
             { label: "LOCATION", value: "本八幡駅 徒歩1分" },
             { label: "COURTS", value: "プロ仕様ハードコート 3面" },
             { label: "OPEN", value: "6:00 – 23:00" },
-            { label: "FOUNDER", value: "西村昭彦 — 世界王者" },
+            { label: "FOUNDER", value: "西村昭彦" },
           ].map((fact) => (
             <div key={fact.label} className="flex items-baseline gap-3 py-2">
               <span className="text-[9px] tracking-[0.3em] text-[#8A8A8A]/40 uppercase font-[var(--font-inter)]">
