@@ -1,8 +1,6 @@
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
@@ -16,6 +14,7 @@ export async function POST(request: Request) {
     );
   }
 
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const { error } = await resend.contacts.create({ email });
 
   if (error) {
