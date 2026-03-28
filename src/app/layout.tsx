@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, Inter } from "next/font/google";
+import { DM_Serif_Display, Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 
 const dmSerif = DM_Serif_Display({
@@ -15,6 +15,13 @@ const inter = Inter({
   display: "swap",
 });
 
+const notoSansJP = Noto_Sans_JP({
+  subsets: ["latin"],
+  variable: "--font-noto-sans-jp",
+  display: "swap",
+  preload: false,
+});
+
 export const metadata: Metadata = {
   title: "THE PICKLE BANG THEORY | Premium Indoor Pickleball",
   description:
@@ -27,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja" className={`${dmSerif.variable} ${inter.variable}`}>
+    <html lang="ja" className={`${dmSerif.variable} ${inter.variable} ${notoSansJP.variable}`}>
       <body className="grain-overlay">{children}</body>
     </html>
   );
