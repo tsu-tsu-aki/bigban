@@ -1,11 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-deep-black: #0A0A0A;
-  --color-off-white: #F5F2EE;
-  --color-accent: #C8FF00;
-  --color-text-dark: #1A1A1A;
-  --color-text-gray: #8A8A8A;
+  --color-deep-black: #080808;
+  --color-off-white: #080808;
+  --color-accent: #B8A88A;
+  --color-text-dark: #E8E4DF;
+  --color-text-gray: #555555;
+  --color-text-light: #E8E4DF;
 
   --font-serif: "DM Serif Display", "Playfair Display", Georgia, serif;
   --font-sans: "Inter", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
