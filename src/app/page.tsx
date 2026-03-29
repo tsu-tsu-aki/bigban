@@ -1,23 +1,32 @@
-import Navigation from "@/components/Navigation";
-import Hero from "@/components/Hero";
-import Introduction from "@/components/Introduction";
-import KeyNumbers from "@/components/KeyNumbers";
-import Concept from "@/components/Concept";
-import Services from "@/components/Services";
-import Founder from "@/components/Founder";
-import Footer from "@/components/Footer";
+import { LanguageProvider } from "@/hooks/useLanguage";
+import HomeNavigation from "@/components/home/HomeNavigation";
+import HomeHero from "@/components/home/HomeHero";
+import HomeConcept from "@/components/home/HomeConcept";
+import HomeKeyNumbers from "@/components/home/HomeKeyNumbers";
+import HomeFacility from "@/components/home/HomeFacility";
+import HomeServices from "@/components/home/HomeServices";
+import HomePricing from "@/components/home/HomePricing";
+import HomeFounder from "@/components/home/HomeFounder";
+import HomeAccess from "@/components/home/HomeAccess";
+import HomeContact from "@/components/home/HomeContact";
+import HomeFooter from "@/components/home/HomeFooter";
 
 export default function Home() {
   return (
-    <main>
-      <Navigation />
-      <Hero />
-      <Introduction />
-      <KeyNumbers />
-      <Concept />
-      <Services />
-      <Founder />
-      <Footer />
-    </main>
+    <LanguageProvider>
+      <main>
+        <HomeNavigation />
+        <HomeHero />
+        <HomeConcept />
+        <HomeKeyNumbers />
+        <HomeFacility />
+        <HomeServices />
+        <HomePricing />
+        <HomeFounder />
+        <HomeAccess />
+        <HomeContact />
+        <HomeFooter />
+      </main>
+    </LanguageProvider>
   );
 }

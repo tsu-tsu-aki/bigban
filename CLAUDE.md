@@ -156,6 +156,13 @@ Blank line between each group. No circular imports.
 - Fonts: `next/font` for zero-layout-shift self-hosted fonts
 - Lighthouse CI in pipeline with performance budgets
 
+## Language
+
+- コミットメッセージ、PRタイトル・説明文、ドキュメント、コードコメントはすべて**日本語**で記載する
+- Conventional Commits のプレフィックス（`feat:`, `fix:` 等）は英語のまま、説明部分は日本語
+- 例: `feat: ティザーページにカウントダウン追加`
+- コード内の変数名・関数名・型名は英語
+
 ## Git Conventions
 
 ### Branches
@@ -167,17 +174,17 @@ Blank line between each group. No circular imports.
 
 ### Commits
 
-Conventional Commits format:
+Conventional Commits 形式（プレフィックスは英語、説明は日本語）:
 - `feat:` / `fix:` / `refactor:` / `chore:` / `docs:` / `test:` / `perf:`
-- Scope optional: `feat(auth): add OAuth2 login`
-- Imperative mood: "add feature" not "added feature"
-- Body explains *why*, not *what*
+- スコープ任意: `feat(teaser): カウントダウン機能を追加`
+- 体言止めまたは動詞終止形: 「追加」「修正」「リファクタ」
+- 本文は *なぜ* を説明する（*何を* は diff で分かる）
 
 ### Pull Requests
 
 - Under 400 lines of diff
 - Title follows Conventional Commits format
-- Description: what changed, why, how to test, screenshots for UI changes
+- 説明文: 変更内容、理由、テスト方法、UI変更はスクリーンショット添付
 - Requires at least one approval before merge
 
 ## Color Palettes
