@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-deep-black: #0A0A0A;
-  --color-off-white: #F5F2EE;
-  --color-accent: #C8FF00;
+  --color-deep-black: #0C0C0C;
+  --color-off-white: #F0EDE8;
+  --color-accent: #D4AF37;
   --color-text-dark: #1A1A1A;
-  --color-text-gray: #8A8A8A;
+  --color-text-gray: #999999;
 
-  --font-serif: "DM Serif Display", "Playfair Display", Georgia, serif;
-  --font-sans: "Inter", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Cormorant Garamond", "Georgia", "Times New Roman", serif;
+  --font-sans: "Noto Sans JP", "Inter", "Hiragino Kaku Gothic ProN", sans-serif;
 }
 
 @layer base {
