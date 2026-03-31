@@ -61,6 +61,12 @@ describe("icon.png", () => {
     expect(width).toBe(192);
     expect(height).toBe(192);
   });
+
+  it("has alpha channel (RGBA color type)", () => {
+    const buffer = readFileSync(join(APP_DIR, "icon.png"));
+    // PNG IHDR chunk: byte offset 25 = color type, 6 = RGBA
+    expect(buffer[25]).toBe(6);
+  });
 });
 
 describe("icon2.png", () => {
@@ -70,6 +76,12 @@ describe("icon2.png", () => {
 
     expect(width).toBe(32);
     expect(height).toBe(32);
+  });
+
+  it("has alpha channel (RGBA color type)", () => {
+    const buffer = readFileSync(join(APP_DIR, "icon2.png"));
+    // PNG IHDR chunk: byte offset 25 = color type, 6 = RGBA
+    expect(buffer[25]).toBe(6);
   });
 });
 
@@ -90,5 +102,11 @@ describe("apple-icon.png", () => {
 
     expect(width).toBe(180);
     expect(height).toBe(180);
+  });
+
+  it("has alpha channel (RGBA color type)", () => {
+    const buffer = readFileSync(join(APP_DIR, "apple-icon.png"));
+    // PNG IHDR chunk: byte offset 25 = color type, 6 = RGBA
+    expect(buffer[25]).toBe(6);
   });
 });
