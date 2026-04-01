@@ -4,9 +4,9 @@ import { readFileSync } from "fs";
 import path from "path";
 
 // next/font/google のモック — 各フォントが CSS 変数クラスを返すことを検証
-const mockDmSerif = vi.fn().mockReturnValue({
-  variable: "--font-dm-serif",
-  className: "mock-dm-serif",
+const mockOrbitron = vi.fn().mockReturnValue({
+  variable: "--font-orbitron",
+  className: "mock-orbitron",
 });
 const mockInter = vi.fn().mockReturnValue({
   variable: "--font-inter",
@@ -18,7 +18,7 @@ const mockNotoSansJP = vi.fn().mockReturnValue({
 });
 
 vi.mock("next/font/google", () => ({
-  DM_Serif_Display: mockDmSerif,
+  Orbitron: mockOrbitron,
   Inter: mockInter,
   Noto_Sans_JP: mockNotoSansJP,
 }));

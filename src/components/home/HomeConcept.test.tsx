@@ -21,9 +21,10 @@ describe("HomeConcept", () => {
     expect(screen.getByText(/すべてがここに/)).toBeInTheDocument();
   });
 
-  it("写真プレースホルダーを表示する（ムーディーな照明）", () => {
+  it("コンセプト写真を表示する", () => {
     render(<HomeConcept />);
-    expect(screen.getByText(/ムーディーな照明/)).toBeInTheDocument();
+    const img = screen.getByAltText("Paddle and ball in atmospheric lighting");
+    expect(img).toBeInTheDocument();
   });
 
   it("bg-off-white 背景クラスを持つ", () => {

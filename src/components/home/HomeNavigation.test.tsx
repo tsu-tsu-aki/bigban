@@ -40,14 +40,14 @@ describe("HomeNavigation", () => {
     renderWithProvider(<HomeNavigation />);
     const logo = screen.getByAltText("THE PICKLE BANG THEORY");
     expect(logo).toBeInTheDocument();
-    expect(logo).toHaveAttribute("src", "/logos/yoko-w.png");
+    expect(logo).toHaveAttribute("src", "/logos/yoko-neon.png");
   });
 
   it("モバイル用マーク画像を表示する", () => {
     renderWithProvider(<HomeNavigation />);
     const mark = screen.getByAltText("THE PICKLE BANG THEORY mark");
     expect(mark).toBeInTheDocument();
-    expect(mark).toHaveAttribute("src", "/logos/mark-w.png");
+    expect(mark).toHaveAttribute("src", "/logos/mark-neon.png");
   });
 
   it("6つのデスクトップナビリンクと正しいhrefを表示する", () => {

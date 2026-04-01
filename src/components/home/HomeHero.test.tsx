@@ -43,11 +43,10 @@ describe("HomeHero", () => {
     expect(screen.getByText("SCROLL")).toBeInTheDocument();
   });
 
-  it("写真プレースホルダーを表示する（説明テキスト含む）", () => {
+  it("ヒーロー写真を表示する", () => {
     renderWithProvider(<HomeHero />);
-    expect(
-      screen.getByText(/PHOTO PLACEHOLDER/i)
-    ).toBeInTheDocument();
+    const img = screen.getByAltText("Player mid-swing");
+    expect(img).toBeInTheDocument();
   });
 
   it("min-h-screenクラスが存在する", () => {
