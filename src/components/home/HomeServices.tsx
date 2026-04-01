@@ -77,7 +77,7 @@ const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 export default function HomeServices() {
   return (
     <section id="services">
-      {SERVICES.map((service, i) => (
+      {SERVICES.map((service) => (
         <div
           key={service.number}
           data-service-row

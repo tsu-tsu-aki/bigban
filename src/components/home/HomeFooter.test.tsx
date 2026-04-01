@@ -6,7 +6,13 @@ import HomeFooter from "./HomeFooter";
 vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => {
     const { fill, priority, ...rest } = props;
-    return <img {...rest} />;
+    return (
+      <img
+        {...rest}
+        data-fill={fill ? "true" : undefined}
+        data-priority={priority ? "true" : undefined}
+      />
+    );
   },
 }));
 

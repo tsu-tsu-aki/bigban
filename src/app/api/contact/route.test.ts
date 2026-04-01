@@ -24,6 +24,10 @@ function createRequest(body: Record<string, unknown>) {
   });
 }
 
+function omit(obj: Record<string, unknown>, key: string): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(obj).filter(([k]) => k !== key));
+}
+
 describe("POST /api/contact", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -68,8 +72,7 @@ describe("POST /api/contact", () => {
 
   it("名前フィールドが存在しない場合400を返す", async () => {
     const { POST } = await import("./route");
-    const { name: _, ...bodyWithoutName } = VALID_BODY;
-    const response = await POST(createRequest(bodyWithoutName));
+    const response = await POST(createRequest(omit(VALID_BODY, "name")));
     const body = await response.json();
 
     expect(response.status).toBe(400);
@@ -91,8 +94,7 @@ describe("POST /api/contact", () => {
 
   it("メールフィールドが存在しない場合400を返す", async () => {
     const { POST } = await import("./route");
-    const { email: _, ...bodyWithoutEmail } = VALID_BODY;
-    const response = await POST(createRequest(bodyWithoutEmail));
+    const response = await POST(createRequest(omit(VALID_BODY, "email")));
     const body = await response.json();
 
     expect(response.status).toBe(400);
@@ -126,8 +128,7 @@ describe("POST /api/contact", () => {
 
   it("カテゴリフィールドが存在しない場合400を返す", async () => {
     const { POST } = await import("./route");
-    const { category: _, ...bodyWithoutCategory } = VALID_BODY;
-    const response = await POST(createRequest(bodyWithoutCategory));
+    const response = await POST(createRequest(omit(VALID_BODY, "category")));
     const body = await response.json();
 
     expect(response.status).toBe(400);
@@ -149,8 +150,7 @@ describe("POST /api/contact", () => {
 
   it("メッセージフィールドが存在しない場合400を返す", async () => {
     const { POST } = await import("./route");
-    const { message: _, ...bodyWithoutMessage } = VALID_BODY;
-    const response = await POST(createRequest(bodyWithoutMessage));
+    const response = await POST(createRequest(omit(VALID_BODY, "message")));
     const body = await response.json();
 
     expect(response.status).toBe(400);
@@ -176,8 +176,7 @@ describe("POST /api/contact", () => {
     mockSend.mockResolvedValue({ data: { id: "email_456" }, error: null });
 
     const { POST } = await import("./route");
-    const { phone: _, ...bodyWithoutPhone } = VALID_BODY;
-    const response = await POST(createRequest(bodyWithoutPhone));
+    const response = await POST(createRequest(omit(VALID_BODY, "phone")));
     const body = await response.json();
 
     expect(response.status).toBe(201);
