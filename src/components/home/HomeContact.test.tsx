@@ -87,6 +87,30 @@ describe("HomeContact", () => {
     });
   });
 
+  it("APIがエラーレスポンス(ok:false)を返した時にエラーメッセージを表示する", async () => {
+    const user = userEvent.setup();
+    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      json: async () => ({ success: false }),
+    });
+
+    render(<HomeContact />);
+
+    await user.type(screen.getByLabelText(/お名前/), "テスト太郎");
+    await user.type(
+      screen.getByLabelText(/メールアドレス/),
+      "test@example.com"
+    );
+    await user.selectOptions(screen.getByLabelText(/お問い合わせ種別/), "court");
+    await user.type(screen.getByLabelText(/お問い合わせ内容/), "テストメッセージ");
+    await user.click(screen.getByRole("button", { name: /SEND MESSAGE/ }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/失敗/)).toBeInTheDocument();
+    });
+  });
+
   it("送信失敗時にエラーメッセージを表示する", async () => {
     const user = userEvent.setup();
     (global.fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(

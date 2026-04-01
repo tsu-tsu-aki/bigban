@@ -65,6 +65,24 @@ describe("useActiveSection", () => {
     document.body.removeChild(section);
   });
 
+  it("isIntersectingがfalseの場合はアクティブセクションを更新しない", () => {
+    const section = document.createElement("section");
+    section.id = "facility";
+    document.body.appendChild(section);
+
+    const { result } = renderHook(() => useActiveSection(SECTION_IDS));
+
+    act(() => {
+      observerCallback(
+        [{ isIntersecting: false, target: section }] as unknown as IntersectionObserverEntry[],
+        {} as IntersectionObserver
+      );
+    });
+
+    expect(result.current).toBe("");
+    document.body.removeChild(section);
+  });
+
   it("アンマウント時にdisconnectする", () => {
     const { unmount } = renderHook(() => useActiveSection(SECTION_IDS));
     unmount();
