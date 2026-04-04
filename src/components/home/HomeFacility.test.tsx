@@ -2,8 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import HomeFacility from "./HomeFacility";
 
-type EmblaEventCallback = () => void;
-
 const mockScrollTo = vi.fn();
 const mockSelectedScrollSnap = vi.fn(() => 0);
 const mockOn = vi.fn();
@@ -117,9 +115,10 @@ describe("HomeFacility", () => {
 
   it("selectコールバックでselectedScrollSnapを呼ぶ", () => {
     render(<HomeFacility />);
-    const selectCallback = mockOn.mock.calls.find(
-      (call: [string, EmblaEventCallback]) => call[0] === "select"
-    )?.[1] as EmblaEventCallback | undefined;
+    const selectCall = mockOn.mock.calls.find(
+      (call) => call[0] === "select"
+    );
+    const selectCallback = selectCall?.[1] as (() => void) | undefined;
     expect(selectCallback).toBeDefined();
     mockSelectedScrollSnap.mockReturnValue(2);
     selectCallback!();
