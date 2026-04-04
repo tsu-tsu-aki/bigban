@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { BigBangCanvas } from "@/components/teaser/BigBangCanvas";
@@ -11,22 +11,19 @@ import type { ReactNode } from "react";
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 const SESSION_KEY = "bigban-intro-played";
 
+function hasPlayedIntro(): boolean {
+  if (typeof window === "undefined") return true;
+  return sessionStorage.getItem(SESSION_KEY) === "true";
+}
+
 interface HomeIntroProps {
   children: ReactNode;
 }
 
 export default function HomeIntro({ children }: HomeIntroProps) {
-  const [shouldShowIntro, setShouldShowIntro] = useState(false);
+  const [shouldShowIntro] = useState(() => !hasPlayedIntro());
   const [phase, setPhase] = useState<AnimationPhase>("dark");
-  const [isIntroComplete, setIsIntroComplete] = useState(true);
-
-  useEffect(() => {
-    const alreadyPlayed = sessionStorage.getItem(SESSION_KEY);
-    if (!alreadyPlayed) {
-      setShouldShowIntro(true);
-      setIsIntroComplete(false);
-    }
-  }, []);
+  const [isIntroComplete, setIsIntroComplete] = useState(() => hasPlayedIntro());
 
   const handlePhaseChange = useCallback((newPhase: AnimationPhase) => {
     setPhase(newPhase);
