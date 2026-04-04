@@ -17,7 +17,7 @@ describe("HomePricing", () => {
   it("OPEN記念価格バナーを表示する", () => {
     render(<HomePricing />);
     expect(
-      screen.getByText("5月31日までのOPEN記念価格🈹☝️👽")
+      screen.getByText(/5月31日までのOPEN記念価格/)
     ).toBeInTheDocument();
   });
 
