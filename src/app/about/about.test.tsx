@@ -65,6 +65,21 @@ describe("AboutPage", () => {
     expect(emailElements).toHaveLength(0);
   });
 
+  it("ハッシュ付きURLではスクロールリセットしない", () => {
+    Object.defineProperty(window, "location", {
+      value: { ...window.location, hash: "#contact" },
+      writable: true,
+    });
+    const scrollSpy = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+    render(<AboutPage />);
+    expect(scrollSpy).not.toHaveBeenCalled();
+    scrollSpy.mockRestore();
+    Object.defineProperty(window, "location", {
+      value: { ...window.location, hash: "" },
+      writable: true,
+    });
+  });
+
   it("HOMEリンクを表示する", () => {
     render(<AboutPage />);
     expect(screen.getByText("← HOME")).toBeInTheDocument();
