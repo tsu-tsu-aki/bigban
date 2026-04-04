@@ -9,40 +9,63 @@ describe("HomePricing", () => {
     expect(section).toBeInTheDocument();
   });
 
-  it("近日公開見出しを表示する", () => {
+  it("PRICINGタイトルを表示する", () => {
     render(<HomePricing />);
-    expect(screen.getByText("料金の詳細は近日公開")).toBeInTheDocument();
+    expect(screen.getByText("PRICING")).toBeInTheDocument();
   });
 
-  it("Instagram言及を表示する", () => {
+  it("OPEN記念価格バナーを表示する", () => {
     render(<HomePricing />);
     expect(
-      screen.getByText(/最新情報はInstagramでお知らせいたします/)
+      screen.getByText("5月31日までのOPEN記念価格🈹☝️👽")
     ).toBeInTheDocument();
-    const link = screen.getByText("@thepicklebangtheory");
-    expect(link).toBeInTheDocument();
-    expect(link.closest("a")).toHaveAttribute(
-      "href",
-      "https://www.instagram.com/thepicklebangtheory"
-    );
   });
 
-  it("3つの料金プランを表示する（VISITOR, REGULAR, PREMIUM）", () => {
+  it("COURT RENTALラベルを表示する", () => {
     render(<HomePricing />);
-    expect(screen.getByText(/VISITOR/)).toBeInTheDocument();
-    expect(screen.getByText(/REGULAR/)).toBeInTheDocument();
-    expect(screen.getByText(/PREMIUM/)).toBeInTheDocument();
+    expect(screen.getByText("COURT RENTAL")).toBeInTheDocument();
   });
 
-  it("COMING SOON を3つ表示する", () => {
+  it("全時間帯の料金を表示する", () => {
     render(<HomePricing />);
-    const comingSoons = screen.getAllByText("COMING SOON");
-    expect(comingSoons).toHaveLength(3);
+    expect(screen.getByText("6:00-9:00")).toBeInTheDocument();
+    expect(screen.getByText("9:00-18:00")).toBeInTheDocument();
+    expect(screen.getByText("18:00-23:00")).toBeInTheDocument();
+    expect(screen.getByText("¥4,980")).toBeInTheDocument();
+    expect(screen.getByText("¥5,960")).toBeInTheDocument();
+    const prices7980 = screen.getAllByText("¥7,980");
+    expect(prices7980.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("平日・週末ヘッダーを表示する", () => {
+    render(<HomePricing />);
+    expect(screen.getByText("平日")).toBeInTheDocument();
+    expect(screen.getByText("週末・祝日")).toBeInTheDocument();
+  });
+
+  it("トレーニングエリアを準備中で表示する", () => {
+    render(<HomePricing />);
+    expect(screen.getByText("TRAINING AREA")).toBeInTheDocument();
+    expect(screen.getByText("トレーニングエリア")).toBeInTheDocument();
+    expect(screen.getByText("準備中")).toBeInTheDocument();
+  });
+
+  it("会員制度を近日公開で表示する", () => {
+    render(<HomePricing />);
+    expect(screen.getByText("MEMBERSHIP")).toBeInTheDocument();
+    expect(screen.getByText("会員制度")).toBeInTheDocument();
+    expect(screen.getByText("近日公開")).toBeInTheDocument();
   });
 
   it("レンタル案内を表示する", () => {
     render(<HomePricing />);
-    expect(screen.getByText(/手ぶらでお気軽に/)).toBeInTheDocument();
+    expect(screen.getByText("イベント利用もしくは貸切のみレンタルパドルあり")).toBeInTheDocument();
+  });
+
+  it("貸切・法人利用の案内とリンクを表示する", () => {
+    render(<HomePricing />);
+    const link = screen.getByText("お問い合わせ");
+    expect(link.closest("a")).toHaveAttribute("href", "/about#contact");
   });
 
   it("bg-deep-black背景を持つ", () => {

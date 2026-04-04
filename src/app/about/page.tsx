@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -53,7 +53,7 @@ function SectionHeader({ number, labelEn, id }: SectionHeaderProps) {
   return (
     <motion.div
       id={id}
-      className="mb-12"
+      className="mb-12 scroll-mt-24"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -71,6 +71,10 @@ function SectionHeader({ number, labelEn, id }: SectionHeaderProps) {
 }
 
 export default function AboutPage() {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
   >("idle");
