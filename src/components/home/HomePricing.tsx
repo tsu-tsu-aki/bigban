@@ -29,8 +29,8 @@ export default function HomePricing() {
           className="text-center mb-20 lg:mb-28"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.1, ease: EASE }}
         >
           <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em]">
             PRICING
@@ -43,8 +43,8 @@ export default function HomePricing() {
           className="text-center mb-6"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.0, ease: EASE }}
         >
           <p className="text-accent text-sm sm:text-base font-semibold tracking-wide opacity-85">
           5月31日までのOPEN記念価格{"\u{1F239}\uFE0F"}☝️👽
@@ -57,8 +57,8 @@ export default function HomePricing() {
           className="mb-8"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.1, delay: 0.1, ease: EASE }}
         >
           <p className="text-[10px] tracking-[0.25em] text-accent mb-4">
             COURT RENTAL
@@ -104,8 +104,8 @@ export default function HomePricing() {
             className="border border-text-gray/15 rounded-sm px-5 py-4 flex items-center justify-between"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.0, delay: 0.2, ease: EASE }}
           >
             <div>
               <span className="text-[10px] tracking-[0.25em] text-accent block mb-1">
@@ -124,8 +124,8 @@ export default function HomePricing() {
             className="border border-text-gray/15 rounded-sm px-5 py-4 flex items-center justify-between"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.25, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.0, delay: 0.25, ease: EASE }}
           >
             <div>
               <span className="text-[10px] tracking-[0.25em] text-accent block mb-1">
@@ -144,8 +144,8 @@ export default function HomePricing() {
           className="border-t border-text-gray/10 pt-8 space-y-3"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.0, delay: 0.3, ease: EASE }}
         >
           <div className="flex items-start gap-3">
             <span className="text-accent text-xs mt-0.5">▸</span>

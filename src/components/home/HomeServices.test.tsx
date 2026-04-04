@@ -45,6 +45,19 @@ describe("HomeServices", () => {
     expect(screen.getByText(/異業種コラボレーション/)).toBeInTheDocument();
   });
 
+  it("コートレンタルにRESERVEボタンを表示する", () => {
+    render(<HomeServices />);
+    const reserveButton = screen.getByText("RESERVE");
+    expect(reserveButton).toBeInTheDocument();
+    expect(reserveButton.closest("a")).toHaveAttribute("href", "#");
+  });
+
+  it("他のサービスにはRESERVEボタンを表示しない", () => {
+    render(<HomeServices />);
+    const reserveButtons = screen.getAllByText("RESERVE");
+    expect(reserveButtons).toHaveLength(1);
+  });
+
   it("data-service-row属性で背景色が交互になる（奇数:bg-deep-black, 偶数:bg-off-white）", () => {
     render(<HomeServices />);
     const rows = document.querySelectorAll("[data-service-row]");

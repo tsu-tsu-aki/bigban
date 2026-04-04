@@ -60,8 +60,8 @@ export default function HomeContact() {
             className="order-first lg:order-last"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.0, ease: EASE }}
           >
             <p className="text-xs tracking-[0.3em] text-text-gray uppercase mb-8">
               GET IN TOUCH
@@ -98,8 +98,8 @@ export default function HomeContact() {
             className="order-last lg:order-first"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.0, delay: 0.1, ease: EASE }}
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>

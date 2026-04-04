@@ -40,8 +40,8 @@ export default function HomeAccess() {
           className="mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.1, ease: EASE }}
         >
           <iframe
             src={MAPS_EMBED_URL}
@@ -59,8 +59,8 @@ export default function HomeAccess() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.0, ease: EASE }}
           >
             <p className="text-lg font-semibold mb-4">THE PICKLE BANG THEORY</p>
             <div className="space-y-1 text-base leading-relaxed">
@@ -83,8 +83,8 @@ export default function HomeAccess() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.0, delay: 0.1, ease: EASE }}
           >
             <ul>
               {ACCESS_ROUTES.map((route, i) => (
