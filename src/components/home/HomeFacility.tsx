@@ -80,19 +80,17 @@ export default function HomeFacility() {
     Autoplay({ delay: 5000, stopOnInteraction: true, stopOnMouseEnter: true }),
   ]);
 
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
-
   useEffect(() => {
     if (!emblaApi) return;
+    const onSelect = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+    };
     emblaApi.on("select", onSelect);
     onSelect();
     return () => {
       emblaApi.off("select", onSelect);
     };
-  }, [emblaApi, onSelect]);
+  }, [emblaApi]);
 
   const scrollTo = useCallback(
     (index: number) => {
