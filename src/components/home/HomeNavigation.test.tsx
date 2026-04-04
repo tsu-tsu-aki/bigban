@@ -32,8 +32,8 @@ const NAV_ITEMS = [
   { label: "FACILITY", href: "#facility" },
   { label: "SERVICES", href: "#services" },
   { label: "PRICING", href: "#pricing" },
+  { label: "ABOUT", href: "#about" },
   { label: "ACCESS", href: "#access" },
-  { label: "CONTACT", href: "#contact" },
 ];
 
 describe("HomeNavigation", () => {
