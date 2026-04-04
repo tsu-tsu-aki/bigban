@@ -142,6 +142,44 @@ describe("HomeNavigation", () => {
     expect(header.className).toContain("fixed");
   });
 
+  it("スクロールダウンでナビが非表示になる", () => {
+    renderWithProvider(<HomeNavigation />);
+    const header = screen.getByRole("banner");
+
+    // 初期状態: 表示
+    expect(header.className).toContain("translate-y-0");
+
+    // 200pxスクロールダウン
+    Object.defineProperty(window, "scrollY", { value: 200, writable: true });
+    fireEvent.scroll(window);
+    expect(header.className).toContain("-translate-y-full");
+  });
+
+  it("スクロールアップでナビが再表示される", () => {
+    renderWithProvider(<HomeNavigation />);
+    const header = screen.getByRole("banner");
+
+    // まず下にスクロール
+    Object.defineProperty(window, "scrollY", { value: 200, writable: true });
+    fireEvent.scroll(window);
+    expect(header.className).toContain("-translate-y-full");
+
+    // 上にスクロール
+    Object.defineProperty(window, "scrollY", { value: 100, writable: true });
+    fireEvent.scroll(window);
+    expect(header.className).toContain("translate-y-0");
+  });
+
+  it("スクロール位置が100px未満ではナビが表示される", () => {
+    renderWithProvider(<HomeNavigation />);
+    const header = screen.getByRole("banner");
+
+    // 50pxの位置
+    Object.defineProperty(window, "scrollY", { value: 50, writable: true });
+    fireEvent.scroll(window);
+    expect(header.className).toContain("translate-y-0");
+  });
+
   it("モバイルメニュー内にRESERVEボタンがある", () => {
     renderWithProvider(<HomeNavigation />);
     fireEvent.click(screen.getByLabelText("メニューを開く"));
