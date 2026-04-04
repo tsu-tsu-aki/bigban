@@ -19,9 +19,16 @@ function renderWithProvider(ui: ReactElement) {
 }
 
 describe("HomeHero", () => {
-  it("「ビッグバン」がアクセントカラーでハイライトされている", () => {
+  it("ヘッドラインを3行で表示する", () => {
     renderWithProvider(<HomeHero />);
-    const bigbang = screen.getByText("ビッグバン");
+    expect(screen.getByText("ピックルボールの")).toBeInTheDocument();
+    expect(screen.getByText("ビッグバンが")).toBeInTheDocument();
+    expect(screen.getByText("ここから始まる。")).toBeInTheDocument();
+  });
+
+  it("「ビッグバンが」がアクセントカラーでハイライトされている", () => {
+    renderWithProvider(<HomeHero />);
+    const bigbang = screen.getByText("ビッグバンが");
     expect(bigbang.className).toContain("text-accent");
   });
 
@@ -51,7 +58,7 @@ describe("HomeHero", () => {
 
   it("min-h-screenクラスが存在する", () => {
     const { container } = renderWithProvider(<HomeHero />);
-    const section = container.firstElementChild;
-    expect(section?.className).toContain("min-h-screen");
+    const heroDiv = container.querySelector(".min-h-screen");
+    expect(heroDiv).toBeInTheDocument();
   });
 });

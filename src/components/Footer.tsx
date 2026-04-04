@@ -69,12 +69,6 @@ export default function Footer() {
             </p>
             <div className="flex flex-col gap-3 text-[13px] text-off-white/70 font-[var(--font-inter)]">
               <p>千葉県市川市八幡2-16-6 6階</p>
-              <a
-                href="mailto:hello@rstagency.com"
-                className="hover:text-off-white transition-colors duration-300"
-              >
-                hello@rstagency.com
-              </a>
             </div>
           </motion.div>
 

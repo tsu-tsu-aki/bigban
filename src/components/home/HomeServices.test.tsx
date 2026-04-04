@@ -9,6 +9,11 @@ describe("HomeServices", () => {
     expect(section).toBeInTheDocument();
   });
 
+  it("SERVICESタイトルを表示する", () => {
+    render(<HomeServices />);
+    expect(screen.getByText("SERVICES")).toBeInTheDocument();
+  });
+
   it("5つのサービス番号（01〜05）を表示する", () => {
     render(<HomeServices />);
     expect(screen.getByText("01")).toBeInTheDocument();
