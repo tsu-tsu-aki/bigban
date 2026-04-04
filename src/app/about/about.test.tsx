@@ -1,11 +1,15 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import AboutPage from "./page";
 
-// Mock fetch for contact form
-global.fetch = vi.fn();
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 describe("AboutPage", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("ABOUT USタイトルを表示する", () => {
     render(<AboutPage />);
     const headings = screen.getAllByText("ABOUT US");
@@ -64,5 +68,80 @@ describe("AboutPage", () => {
   it("HOMEリンクを表示する", () => {
     render(<AboutPage />);
     expect(screen.getByText("← HOME")).toBeInTheDocument();
+  });
+
+  it("フォーム送信成功時にメッセージを表示する", async () => {
+    mockFetch.mockResolvedValueOnce({ ok: true });
+    render(<AboutPage />);
+
+    fireEvent.change(screen.getByPlaceholderText("お名前 *"), {
+      target: { value: "テスト太郎" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("メールアドレス *"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("お問い合わせ種別"), {
+      target: { value: "other" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("お問い合わせ内容 *"), {
+      target: { value: "テストメッセージ" },
+    });
+    fireEvent.click(screen.getByText("SEND MESSAGE →"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("送信しました。ありがとうございます。")
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("フォーム送信失敗時にエラーメッセージを表示する", async () => {
+    mockFetch.mockResolvedValueOnce({ ok: false });
+    render(<AboutPage />);
+
+    fireEvent.change(screen.getByPlaceholderText("お名前 *"), {
+      target: { value: "テスト太郎" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("メールアドレス *"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("お問い合わせ種別"), {
+      target: { value: "other" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("お問い合わせ内容 *"), {
+      target: { value: "テストメッセージ" },
+    });
+    fireEvent.click(screen.getByText("SEND MESSAGE →"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("送信に失敗しました。もう一度お試しください。")
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("ネットワークエラー時にエラーメッセージを表示する", async () => {
+    mockFetch.mockRejectedValueOnce(new Error("Network error"));
+    render(<AboutPage />);
+
+    fireEvent.change(screen.getByPlaceholderText("お名前 *"), {
+      target: { value: "テスト太郎" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("メールアドレス *"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("お問い合わせ種別"), {
+      target: { value: "other" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("お問い合わせ内容 *"), {
+      target: { value: "テストメッセージ" },
+    });
+    fireEvent.click(screen.getByText("SEND MESSAGE →"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("送信に失敗しました。もう一度お試しください。")
+      ).toBeInTheDocument();
+    });
   });
 });
