@@ -3,30 +3,50 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-interface CourtSpec {
-  label: string;
+interface KeyNumber {
   value: string;
+  labelEn: string;
+  labelJa: string;
 }
 
-interface Amenity {
-  name: string;
+interface PrimarySpec {
+  labelEn: string;
+  labelJa: string;
   description: string;
 }
 
-const COURT_SPECS: CourtSpec[] = [
-  { label: "SURFACE", value: "PickleRoll Pro（PPA Asia公式採用）" },
-  { label: "COURTS", value: "3面（ハードコート）" },
-  { label: "LAYOUT", value: "観戦可能な1面ショーコートに変更可能" },
-  { label: "TYPE", value: "全天候型インドア / 空調完備" },
+interface FacilityFeature {
+  label: string;
+  note?: string;
+}
+
+const KEY_NUMBERS: KeyNumber[] = [
+  { value: "3", labelEn: "COURTS", labelJa: "プロ仕様コート" },
+  { value: "6:00–23:00", labelEn: "HOURS", labelJa: "営業時間" },
+  { value: "1 min", labelEn: "FROM STATION", labelJa: "駅徒歩1分" },
 ];
 
-const AMENITIES: Amenity[] = [
-  { name: "空調完備", description: "年間を通じて快適なプレー環境を維持" },
-  { name: "更衣室", description: "シャワー・ロッカー完備の清潔な更衣室" },
-  { name: "トレーニングエリア", description: "ウォームアップ・ストレッチ用スペース" },
-  { name: "ラウンジスペース", description: "観戦・休憩に最適なくつろぎの空間" },
-  { name: "レンタル用品", description: "パドル・シューズなど手ぶらで利用可能" },
-  { name: "無人チェックイン対応", description: "QRコードで24時間スムーズに入館" },
+const PRIMARY_SPECS: PrimarySpec[] = [
+  {
+    labelEn: "SURFACE",
+    labelJa: "ハードコートデコターフ",
+    description: "世界トップレベルの大会で採用されてきた高性能サーフェス",
+  },
+  {
+    labelEn: "TYPE",
+    labelJa: "全天候型インドア",
+    description: "空調完備で年間を通じて快適なプレー環境",
+  },
+];
+
+const FACILITY_FEATURES: FacilityFeature[] = [
+  { label: "トレーニングエリア", note: "準備中" },
+  { label: "ラウンジスペース" },
+  { label: "男女別更衣室" },
+  { label: "空調完備" },
+  { label: "レンタル用具あり" },
+  { label: "無人チェックイン対応予定" },
+  { label: "ショーコート1面に変更可能" },
 ];
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
@@ -35,18 +55,56 @@ export default function HomeFacility() {
   return (
     <section id="facility" className="bg-deep-black py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
-        {/* Section label */}
-        <motion.p
-          className="text-xs tracking-[0.3em] text-text-gray mb-12"
-          initial={{ opacity: 0, y: 16 }}
+        {/* Section Title */}
+        <motion.div
+          className="text-center mb-20 lg:mb-28"
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: EASE }}
+          transition={{ duration: 0.7, ease: EASE }}
         >
-          FACILITY
-        </motion.p>
+          <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em] text-text-light">
+            FACILITY
+          </h2>
+          <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
+        </motion.div>
 
-        {/* Court showcase */}
+        {/* Key Numbers */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 mb-20 lg:mb-28">
+          {KEY_NUMBERS.map((item, i) => (
+            <motion.div
+              key={item.labelEn}
+              className={`flex flex-col items-center text-center py-10 sm:py-12${
+                i < KEY_NUMBERS.length - 1
+                  ? " sm:border-r sm:border-accent/20"
+                  : ""
+              }${i > 0 ? " border-t sm:border-t-0 border-text-gray/10" : ""}`}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.7,
+                delay: i * 0.15,
+                ease: EASE,
+              }}
+            >
+              <span
+                className="font-serif text-text-light font-bold leading-none"
+                style={{ fontSize: "clamp(3.5rem, 7vw, 7rem)" }}
+              >
+                {item.value}
+              </span>
+              <span className="text-xs tracking-[0.25em] text-accent mt-4">
+                {item.labelEn}
+              </span>
+              <span className="text-sm text-text-gray mt-1">
+                {item.labelJa}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Court Image */}
         <motion.div
           className="relative aspect-[16/9] w-full overflow-hidden rounded-sm mb-16"
           initial={{ opacity: 0, y: 32 }}
@@ -56,53 +114,76 @@ export default function HomeFacility() {
         >
           <Image
             src="/images/sarasota-guide-uHdY8VYTfbI-unsplash.jpg"
-            alt="Aerial view of pickleball court"
+            alt="プロ仕様ピクルボールコートの俯瞰"
             fill
             className="object-cover"
           />
-          {/* Gradient overlay at bottom */}
-          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-deep-black/95 via-deep-black/60 to-transparent" />
-
-          {/* Specs overlay */}
-          <div className="absolute inset-x-0 bottom-0 p-6 lg:p-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-              {COURT_SPECS.map((spec, i) => (
-                <motion.div
-                  key={spec.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.3 + i * 0.1,
-                    ease: EASE,
-                  }}
-                >
-                  <span className="block text-xs tracking-[0.2em] text-accent mb-1">
-                    {spec.label}
-                  </span>
-                  <span className="block text-sm text-text-light leading-relaxed">
-                    {spec.value}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-deep-black via-deep-black/30 to-transparent" />
         </motion.div>
 
-        {/* Amenities list */}
+        {/* Primary Specs - Glow Header */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
+          {PRIMARY_SPECS.map((spec, i) => (
+            <motion.div
+              key={spec.labelEn}
+              className="relative bg-gradient-to-b from-accent/[0.07] to-transparent px-8 py-10"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.7,
+                delay: i * 0.15,
+                ease: EASE,
+              }}
+            >
+              <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent" />
+              <span className="text-[10px] tracking-[0.25em] text-accent block mb-3">
+                {spec.labelEn}
+              </span>
+              <span className="text-text-light text-lg lg:text-xl font-bold tracking-wide block mb-2">
+                {spec.labelJa}
+              </span>
+              <span className="text-text-gray text-xs lg:text-sm">
+                {spec.description}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* DecoTurf Description - Lead Copy + Horizontal Line */}
         <motion.div
-          className="border-t border-text-gray/20"
+          className="max-w-3xl mb-16 lg:mb-20"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: EASE }}
+        >
+          <p className="text-text-light text-xl lg:text-2xl leading-relaxed font-semibold tracking-wide mb-6">
+            デコターフは世界トップレベルの大会で採用されてきた高性能ハードコートサーフェスです。
+          </p>
+          <div className="w-10 h-[2px] bg-accent mb-6" />
+          <p className="text-text-gray text-sm lg:text-base leading-loose mb-3">
+            THE PICKLE BANG
+            THEORYでは、プレイヤーが「本気で上達できる環境」を追求し、デコターフを採用しています。
+          </p>
+          <p className="text-text-gray text-sm lg:text-base leading-loose">
+            単なるレンタルコートではなく、技術向上・競技力向上にフォーカスした本格的なプレー環境を提供します。
+          </p>
+        </motion.div>
+
+        {/* Secondary Features - Left Bar Lines */}
+        <motion.div
+          className="columns-1 sm:columns-2 gap-x-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
         >
-          {AMENITIES.map((amenity, i) => (
+          {FACILITY_FEATURES.map((feature, i) => (
             <motion.div
-              key={amenity.name}
-              className="group border-b border-text-gray/20 py-4 lg:py-5 flex items-baseline justify-between cursor-default"
-              initial={{ opacity: 0, x: -16 }}
+              key={feature.label}
+              className="break-inside-avoid border-l-2 border-accent/15 pl-4 py-3 mb-1 transition-colors duration-300 hover:border-accent/50"
+              initial={{ opacity: 0, x: -12 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{
@@ -112,11 +193,13 @@ export default function HomeFacility() {
               }}
             >
               <span className="text-text-light text-sm lg:text-base">
-                {amenity.name}
+                {feature.label}
               </span>
-              <span className="text-text-gray text-xs lg:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-4 text-right">
-                {amenity.description}
-              </span>
+              {feature.note && (
+                <span className="text-accent/60 text-xs ml-2 tracking-wider">
+                  {feature.note}
+                </span>
+              )}
             </motion.div>
           ))}
         </motion.div>
