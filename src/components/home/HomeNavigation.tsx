@@ -6,15 +6,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useActiveSection } from "@/hooks/useActiveSection";
 
-const SECTION_IDS = ["concept", "facility", "services", "pricing", "access", "contact"];
+const SECTION_IDS = ["concept", "facility", "services", "pricing", "about", "access"];
 
 const NAV_ITEMS = [
   { label: "CONCEPT", href: "#concept", id: "concept" },
   { label: "FACILITY", href: "#facility", id: "facility" },
   { label: "SERVICES", href: "#services", id: "services" },
   { label: "PRICING", href: "#pricing", id: "pricing" },
+  { label: "ABOUT", href: "#about", id: "about" },
   { label: "ACCESS", href: "#access", id: "access" },
-  { label: "CONTACT", href: "#contact", id: "contact" },
 ];
 
 export default function HomeNavigation() {

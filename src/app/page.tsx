@@ -5,9 +5,8 @@ import HomeConcept from "@/components/home/HomeConcept";
 import HomeFacility from "@/components/home/HomeFacility";
 import HomeServices from "@/components/home/HomeServices";
 import HomePricing from "@/components/home/HomePricing";
-import HomeFounder from "@/components/home/HomeFounder";
+import HomeAbout from "@/components/home/HomeAbout";
 import HomeAccess from "@/components/home/HomeAccess";
-import HomeContact from "@/components/home/HomeContact";
 import HomeFooter from "@/components/home/HomeFooter";
 
 export default function Home() {
@@ -20,9 +19,8 @@ export default function Home() {
         <HomeFacility />
         <HomeServices />
         <HomePricing />
-        <HomeFounder />
+        <HomeAbout />
         <HomeAccess />
-        <HomeContact />
         <HomeFooter />
       </main>
     </LanguageProvider>
