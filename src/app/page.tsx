@@ -1,4 +1,5 @@
 import { LanguageProvider } from "@/hooks/useLanguage";
+import HomeIntro from "@/components/home/HomeIntro";
 import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeHero from "@/components/home/HomeHero";
 import HomeConcept from "@/components/home/HomeConcept";
@@ -12,17 +13,19 @@ import HomeFooter from "@/components/home/HomeFooter";
 export default function Home() {
   return (
     <LanguageProvider>
-      <main>
-        <HomeNavigation />
-        <HomeHero />
-        <HomeConcept />
-        <HomeFacility />
-        <HomeServices />
-        <HomePricing />
-        <HomeAbout />
-        <HomeAccess />
-        <HomeFooter />
-      </main>
+      <HomeIntro>
+        <main>
+          <HomeNavigation />
+          <HomeHero />
+          <HomeConcept />
+          <HomeFacility />
+          <HomeServices />
+          <HomePricing />
+          <HomeAbout />
+          <HomeAccess />
+          <HomeFooter />
+        </main>
+      </HomeIntro>
     </LanguageProvider>
   );
 }
