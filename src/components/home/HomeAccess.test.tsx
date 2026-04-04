@@ -28,12 +28,6 @@ describe("HomeAccess", () => {
     expect(screen.getByText(/23:00/)).toBeInTheDocument();
   });
 
-  it('メール "hello@rstagency.com" をmailtoリンクで表示する', () => {
-    render(<HomeAccess />);
-    const link = screen.getByRole("link", { name: /hello@rstagency.com/ });
-    expect(link).toHaveAttribute("href", "mailto:hello@rstagency.com");
-  });
-
   it("3つの駅アクセスを表示する", () => {
     render(<HomeAccess />);
     expect(screen.getByText(/本八幡駅.*北口/)).toBeInTheDocument();

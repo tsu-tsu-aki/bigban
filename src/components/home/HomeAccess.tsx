@@ -67,15 +67,6 @@ export default function HomeAccess() {
               <p>〒272-0021</p>
               <p>千葉県市川市八幡2-16-6 6階</p>
               <p>営業時間：6:00 – 23:00（不定休）</p>
-              <p>
-                Email:{" "}
-                <a
-                  href="mailto:hello@rstagency.com"
-                  className="underline hover:text-accent transition-colors"
-                >
-                  hello@rstagency.com
-                </a>
-              </p>
             </div>
           </motion.div>
 

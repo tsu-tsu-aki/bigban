@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -21,6 +21,24 @@ export default function HomeNavigation() {
   const { language, toggleLanguage } = useLanguage();
   const activeSection = useActiveSection(SECTION_IDS);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNavVisible, setIsNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    function handleScroll() {
+      const currentY = window.scrollY;
+      if (currentY < 100) {
+        setIsNavVisible(true);
+      } else if (currentY > lastScrollY.current) {
+        setIsNavVisible(false);
+      } else {
+        setIsNavVisible(true);
+      }
+      lastScrollY.current = currentY;
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleOpenMenu = useCallback(() => {
     setIsMobileMenuOpen(true);
@@ -37,7 +55,11 @@ export default function HomeNavigation() {
   const isJa = language === "ja";
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50">
+    <header
+      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
+        isNavVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <div className="backdrop-blur-md bg-deep-black/80">
         <div className="mx-auto flex items-center justify-between px-6 py-4 max-w-7xl">
           {/* Desktop: Logo */}
@@ -69,7 +91,7 @@ export default function HomeNavigation() {
               <a
                 key={item.id}
                 href={item.href}
-                className={`text-xs uppercase tracking-widest transition-colors hover:text-text-light ${
+                className={`text-sm uppercase tracking-widest transition-colors hover:text-text-light ${
                   activeSection === item.id ? "text-accent" : "text-text-gray"
                 }`}
               >

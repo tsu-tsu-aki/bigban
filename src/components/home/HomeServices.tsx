@@ -81,6 +81,21 @@ const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 export default function HomeServices() {
   return (
     <section id="services">
+      {/* Section Title */}
+      <div className="bg-deep-black text-text-light py-24 lg:py-32 pb-0 lg:pb-0">
+        <motion.div
+          className="text-center mb-20 lg:mb-28 mx-auto max-w-7xl px-6 lg:px-12"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.1, ease: EASE }}
+        >
+          <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em]">
+            SERVICES
+          </h2>
+          <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
+        </motion.div>
+      </div>
       {SERVICES.map((service) => (
         <div
           key={service.number}
