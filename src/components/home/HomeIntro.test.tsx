@@ -11,6 +11,7 @@ vi.mock("@/components/teaser/BigBangCanvas", () => ({
     <canvas
       data-testid="bigbang-canvas"
       onClick={() => onPhaseChange("content")}
+      onDoubleClick={() => onPhaseChange("explode")}
     />
   ),
 }));
@@ -72,6 +73,19 @@ describe("HomeIntro", () => {
     expect(screen.getByTestId("home-content")).toBeInTheDocument();
   });
 
+  it("content以外のフェーズではロゴを表示しない", () => {
+    render(
+      <HomeIntro>
+        <div data-testid="home-content">Home</div>
+      </HomeIntro>
+    );
+    const canvas = screen.getByTestId("bigbang-canvas");
+    act(() => {
+      canvas.dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
+    });
+    expect(screen.queryByAltText("THE PICKLE BANG THEORY")).not.toBeInTheDocument();
+  });
+
   it("contentフェーズでロゴを表示する", () => {
     render(
       <HomeIntro>
@@ -122,6 +136,26 @@ describe("HomeIntro", () => {
         <div data-testid="home-content">Home</div>
       </HomeIntro>
     );
+    expect(screen.getByTestId("home-content")).toBeInTheDocument();
+  });
+
+  it("sessionStorageアクセスエラー時はイントロをスキップする", () => {
+    Object.defineProperty(window, "sessionStorage", {
+      value: {
+        getItem: () => {
+          throw new Error("SecurityError");
+        },
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+      },
+      writable: true,
+    });
+    render(
+      <HomeIntro>
+        <div data-testid="home-content">Home</div>
+      </HomeIntro>
+    );
+    expect(screen.queryByTestId("bigbang-canvas")).not.toBeInTheDocument();
     expect(screen.getByTestId("home-content")).toBeInTheDocument();
   });
 });
