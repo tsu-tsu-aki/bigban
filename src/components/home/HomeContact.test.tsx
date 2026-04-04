@@ -19,7 +19,6 @@ describe("HomeContact", () => {
     render(<HomeContact />);
     expect(screen.getByLabelText(/お名前/)).toBeInTheDocument();
     expect(screen.getByLabelText(/メールアドレス/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/電話番号/)).toBeInTheDocument();
     expect(screen.getByLabelText(/お問い合わせ種別/)).toBeInTheDocument();
     expect(screen.getByLabelText(/お問い合わせ内容/)).toBeInTheDocument();
   });
@@ -34,7 +33,6 @@ describe("HomeContact", () => {
   it("連絡先情報を表示する", () => {
     render(<HomeContact />);
     expect(screen.getByText(/GET IN TOUCH/)).toBeInTheDocument();
-    expect(screen.getByText(/hello@rstagency\.com/)).toBeInTheDocument();
     expect(screen.getByText(/@thepicklebangtheory/)).toBeInTheDocument();
   });
 

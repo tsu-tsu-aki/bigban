@@ -40,15 +40,6 @@ export default function HomeFooter() {
             ))}
           </nav>
 
-          {/* Right: Email */}
-          <div className="lg:text-right">
-            <a
-              href="mailto:hello@rstagency.com"
-              className="text-sm text-text-gray hover:text-accent transition-colors"
-            >
-              hello@rstagency.com
-            </a>
-          </div>
         </div>
       </div>
 

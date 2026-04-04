@@ -431,10 +431,6 @@ export default function AboutPage() {
                   <input id="about-contact-email" name="email" type="email" required placeholder="メールアドレス *" className={inputClass} />
                 </div>
                 <div>
-                  <label htmlFor="about-contact-phone" className="sr-only">電話番号</label>
-                  <input id="about-contact-phone" name="phone" type="tel" placeholder="電話番号" className={inputClass} />
-                </div>
-                <div>
                   <label htmlFor="about-contact-category" className="sr-only">お問い合わせ種別</label>
                   <select id="about-contact-category" name="category" required className={`${inputClass} cursor-pointer`} defaultValue="">
                     {CATEGORIES.map((cat) => (

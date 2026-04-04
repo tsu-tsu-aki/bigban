@@ -68,15 +68,6 @@ export default function HomeContact() {
             </p>
             <div className="space-y-6">
               <div>
-                <p className="text-sm text-text-gray mb-1">Email</p>
-                <a
-                  href="mailto:hello@rstagency.com"
-                  className="text-xl text-accent hover:underline transition-colors"
-                >
-                  hello@rstagency.com
-                </a>
-              </div>
-              <div>
                 <p className="text-sm text-text-gray mb-1">Instagram</p>
                 <p className="text-lg text-text-light">@thepicklebangtheory</p>
               </div>
@@ -126,19 +117,6 @@ export default function HomeContact() {
                   type="email"
                   required
                   placeholder="メールアドレス *"
-                  className={inputClass}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="contact-phone" className="sr-only">
-                  電話番号
-                </label>
-                <input
-                  id="contact-phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="電話番号"
                   className={inputClass}
                 />
               </div>

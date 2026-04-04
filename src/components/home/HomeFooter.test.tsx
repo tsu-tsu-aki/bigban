@@ -48,15 +48,6 @@ describe("HomeFooter", () => {
     }
   });
 
-  it("メールリンクを表示する", () => {
-    render(<HomeFooter />);
-    const mailLink = screen.getByRole("link", {
-      name: /hello@rstagency\.com/,
-    });
-    expect(mailLink).toBeInTheDocument();
-    expect(mailLink).toHaveAttribute("href", "mailto:hello@rstagency.com");
-  });
-
   it("コピーライトを表示する", () => {
     render(<HomeFooter />);
     expect(
