@@ -1,9 +1,25 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 import HomeFacility from "./HomeFacility";
 
+type EmblaEventCallback = () => void;
+
+const mockScrollTo = vi.fn();
+const mockSelectedScrollSnap = vi.fn(() => 0);
+const mockOn = vi.fn();
+const mockOff = vi.fn();
+
+const mockEmblaApi = {
+  scrollTo: mockScrollTo,
+  selectedScrollSnap: mockSelectedScrollSnap,
+  on: mockOn,
+  off: mockOff,
+};
+
+let returnApi: typeof mockEmblaApi | null = mockEmblaApi;
+
 vi.mock("embla-carousel-react", () => ({
-  default: () => [vi.fn(), null],
+  default: () => [vi.fn(), returnApi],
 }));
 
 vi.mock("embla-carousel-autoplay", () => ({
@@ -11,6 +27,12 @@ vi.mock("embla-carousel-autoplay", () => ({
 }));
 
 describe("HomeFacility", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockSelectedScrollSnap.mockReturnValue(0);
+    returnApi = mockEmblaApi;
+  });
+
   it('セクションID "facility" を持つ', () => {
     render(<HomeFacility />);
     const section = document.getElementById("facility");
@@ -79,5 +101,42 @@ describe("HomeFacility", () => {
     render(<HomeFacility />);
     const images = screen.getAllByRole("img");
     expect(images.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("ドットクリックでscrollToが呼ばれる", () => {
+    render(<HomeFacility />);
+    const dots = screen.getAllByRole("button", { name: /画像.*を表示/ });
+    fireEvent.click(dots[1]);
+    expect(mockScrollTo).toHaveBeenCalledWith(1);
+  });
+
+  it("emblaApiのselectイベントを登録する", () => {
+    render(<HomeFacility />);
+    expect(mockOn).toHaveBeenCalledWith("select", expect.any(Function));
+  });
+
+  it("selectコールバックでselectedScrollSnapを呼ぶ", () => {
+    render(<HomeFacility />);
+    const selectCallback = mockOn.mock.calls.find(
+      (call: [string, EmblaEventCallback]) => call[0] === "select"
+    )?.[1] as EmblaEventCallback | undefined;
+    expect(selectCallback).toBeDefined();
+    mockSelectedScrollSnap.mockReturnValue(2);
+    selectCallback!();
+    expect(mockSelectedScrollSnap).toHaveBeenCalled();
+  });
+
+  it("emblaApiがnullの時にscrollToが何もしない", () => {
+    returnApi = null;
+    render(<HomeFacility />);
+    const dots = screen.getAllByRole("button", { name: /画像.*を表示/ });
+    fireEvent.click(dots[1]);
+    expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
+  it("emblaApiがnullの時にイベント登録しない", () => {
+    returnApi = null;
+    render(<HomeFacility />);
+    expect(mockOn).not.toHaveBeenCalled();
   });
 });
