@@ -12,6 +12,8 @@ interface ServiceItem {
   isDark: boolean;
   imageSrc: string;
   imageAlt: string;
+  ctaLabel?: string;
+  ctaHref?: string;
 }
 
 const SERVICES: ServiceItem[] = [
@@ -25,6 +27,8 @@ const SERVICES: ServiceItem[] = [
     isDark: true,
     imageSrc: "/images/alex-saks-3k-yNMhYl5k-unsplash.jpg",
     imageAlt: "Empty court with net and balls",
+    ctaLabel: "RESERVE",
+    ctaHref: "#",
   },
   {
     number: "02",
@@ -97,8 +101,8 @@ export default function HomeServices() {
               className="relative w-full lg:w-[60%] aspect-[16/10] rounded-sm overflow-hidden"
               initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: EASE }}
+              viewport={{ once: true, margin: "-150px" }}
+              transition={{ duration: 1.2, ease: EASE }}
             >
               <Image
                 src={service.imageSrc}
@@ -113,8 +117,8 @@ export default function HomeServices() {
               className="w-full lg:w-[40%]"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+              viewport={{ once: true, margin: "-150px" }}
+              transition={{ duration: 1.1, delay: 0.15, ease: EASE }}
             >
               <span className="font-serif text-5xl lg:text-7xl text-accent block mb-4">
                 {service.number}
@@ -128,6 +132,14 @@ export default function HomeServices() {
               <p className="text-base leading-relaxed">
                 {service.description}
               </p>
+              {service.ctaLabel && service.ctaHref && (
+                <a
+                  href={service.ctaHref}
+                  className="inline-block mt-6 bg-accent text-deep-black px-8 py-3 text-xs font-bold uppercase tracking-widest hover:bg-accent/90 transition-colors"
+                >
+                  {service.ctaLabel}
+                </a>
+              )}
             </motion.div>
           </div>
         </div>

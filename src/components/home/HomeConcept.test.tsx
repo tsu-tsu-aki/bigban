@@ -9,16 +9,24 @@ describe("HomeConcept", () => {
     expect(section).toBeInTheDocument();
   });
 
-  it("CONCEPTラベルを表示する", () => {
+  it("CONCEPTタイトルを表示する", () => {
     render(<HomeConcept />);
-    const labels = screen.getAllByText("CONCEPT");
-    expect(labels.length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("CONCEPT")).toBeInTheDocument();
   });
 
-  it("段落テキストを表示する（クロスミントン世界王者 と すべてがここに）", () => {
+  it("1段落目のテキストを表示する", () => {
     render(<HomeConcept />);
-    expect(screen.getByText(/クロスミントン世界王者/)).toBeInTheDocument();
-    expect(screen.getByText(/すべてがここに/)).toBeInTheDocument();
+    expect(screen.getByText(/ビッグバンによって誕生したように/)).toBeInTheDocument();
+  });
+
+  it("2段落目のテキストを表示する", () => {
+    render(<HomeConcept />);
+    expect(screen.getByText(/一つの小さなプレー/)).toBeInTheDocument();
+  });
+
+  it("キャッチコピーを表示する", () => {
+    render(<HomeConcept />);
+    expect(screen.getByText("小さなディンクから、大きなムーブメントへ")).toBeInTheDocument();
   });
 
   it("コンセプト写真を表示する", () => {
