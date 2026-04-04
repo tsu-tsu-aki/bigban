@@ -64,32 +64,40 @@ export default function HomePricing() {
             COURT RENTAL
           </p>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full">
               <thead>
-                <tr className="border-b border-text-gray/20">
-                  <th className="text-left py-3 px-3 text-text-gray font-normal text-xs" />
-                  <th className="text-right py-3 px-3 text-text-gray font-normal text-xs">
+                <tr className="border-b-2 border-accent/20">
+                  <th className="text-center py-3 px-4 text-text-light text-xs font-semibold tracking-[0.15em] bg-accent/[0.06]">
+                    時間帯
+                  </th>
+                  <th className="text-center py-3 px-4 text-text-light text-xs font-semibold tracking-[0.15em] bg-accent/[0.06]">
                     平日
                   </th>
-                  <th className="text-right py-3 px-3 text-text-gray font-normal text-xs">
+                  <th className="text-center py-3 px-4 text-text-light text-xs font-semibold tracking-[0.15em] bg-accent/[0.06]">
                     週末・祝日
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {COURT_PRICES.map((row) => (
+                {COURT_PRICES.map((row, i) => (
                   <tr
                     key={row.timeSlot}
-                    className="border-b border-text-gray/10"
+                    className={`border-b border-white/[0.04] ${
+                      i % 2 === 1 ? "bg-white/[0.02]" : ""
+                    }`}
                   >
-                    <td className="py-4 px-3 text-text-light">
+                    <td className="py-5 px-4 text-text-light text-sm font-medium">
                       {row.timeSlot}
                     </td>
-                    <td className="py-4 px-3 text-text-light text-right font-semibold">
-                      {row.weekday}
+                    <td className="py-5 px-4 text-center">
+                      <span className="text-xl font-bold text-text-light">
+                        {row.weekday}
+                      </span>
                     </td>
-                    <td className="py-4 px-3 text-text-light text-right font-semibold">
-                      {row.weekend}
+                    <td className="py-5 px-4 text-center">
+                      <span className="text-xl font-bold text-text-light">
+                        {row.weekend}
+                      </span>
                     </td>
                   </tr>
                 ))}
