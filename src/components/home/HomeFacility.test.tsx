@@ -1,6 +1,14 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import HomeFacility from "./HomeFacility";
+
+vi.mock("embla-carousel-react", () => ({
+  default: () => [vi.fn(), null],
+}));
+
+vi.mock("embla-carousel-autoplay", () => ({
+  default: () => ({}),
+}));
 
 describe("HomeFacility", () => {
   it('セクションID "facility" を持つ', () => {
@@ -59,5 +67,17 @@ describe("HomeFacility", () => {
     render(<HomeFacility />);
     const section = document.getElementById("facility");
     expect(section?.className).toContain("bg-deep-black");
+  });
+
+  it("カルーセルのドットインジケーターを表示する", () => {
+    render(<HomeFacility />);
+    const dots = screen.getAllByRole("button", { name: /画像.*を表示/ });
+    expect(dots).toHaveLength(3);
+  });
+
+  it("全施設画像をレンダリングする", () => {
+    render(<HomeFacility />);
+    const images = screen.getAllByRole("img");
+    expect(images.length).toBeGreaterThanOrEqual(3);
   });
 });
