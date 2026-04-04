@@ -1,7 +1,10 @@
 "use client";
 
+import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 interface KeyNumber {
   value: string;
@@ -49,9 +52,56 @@ const FACILITY_FEATURES: FacilityFeature[] = [
   { label: "ショーコート1面に変更可能" },
 ];
 
+interface FacilityImage {
+  src: string;
+  alt: string;
+}
+
+const FACILITY_IMAGES: FacilityImage[] = [
+  {
+    src: "/images/sarasota-guide-uHdY8VYTfbI-unsplash.jpg",
+    alt: "プロ仕様ピクルボールコートの俯瞰",
+  },
+  {
+    src: "/images/facility-interior-01.png",
+    alt: "トレーニングエリア",
+  },
+  {
+    src: "/images/facility-interior-02.png",
+    alt: "ラウンジスペース",
+  },
+];
+
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
 export default function HomeFacility() {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
+    Autoplay({ delay: 5000, stopOnInteraction: true, stopOnMouseEnter: true }),
+  ]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on("select", onSelect);
+    onSelect();
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  const scrollTo = useCallback(
+    (index: number) => {
+      if (!emblaApi) return;
+      emblaApi.scrollTo(index);
+    },
+    [emblaApi]
+  );
+
   return (
     <section id="facility" className="bg-deep-black py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
@@ -104,21 +154,49 @@ export default function HomeFacility() {
           ))}
         </div>
 
-        {/* Court Image */}
+        {/* Facility Image Carousel */}
         <motion.div
-          className="relative aspect-[16/9] w-full overflow-hidden rounded-sm mb-16"
+          className="relative mb-16"
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: EASE }}
         >
-          <Image
-            src="/images/sarasota-guide-uHdY8VYTfbI-unsplash.jpg"
-            alt="プロ仕様ピクルボールコートの俯瞰"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-deep-black via-deep-black/30 to-transparent" />
+          <div className="overflow-hidden rounded-sm" ref={emblaRef}>
+            <div className="flex">
+              {FACILITY_IMAGES.map((image) => (
+                <div
+                  key={image.src}
+                  className="relative aspect-[16/9] min-w-0 flex-[0_0_100%]"
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-deep-black via-deep-black/30 to-transparent" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Dot Indicators */}
+          <div className="flex justify-center gap-3 mt-6">
+            {FACILITY_IMAGES.map((image, i) => (
+              <button
+                key={image.src}
+                type="button"
+                onClick={() => scrollTo(i)}
+                aria-label={`画像${i + 1}を表示: ${image.alt}`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  i === selectedIndex
+                    ? "bg-accent scale-125"
+                    : "bg-text-gray/30 hover:bg-text-gray/60"
+                }`}
+              />
+            ))}
+          </div>
         </motion.div>
 
         {/* Primary Specs - Glow Header */}
