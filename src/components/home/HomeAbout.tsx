@@ -36,8 +36,8 @@ export default function HomeAbout() {
           className="text-center mb-20 lg:mb-28"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.1, ease: EASE }}
         >
           <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em] text-text-light">
             ABOUT US
@@ -52,8 +52,8 @@ export default function HomeAbout() {
             className="lg:w-[40%] shrink-0"
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.1, ease: EASE }}
           >
             <div className="relative aspect-[3/4] w-full max-w-sm mx-auto lg:mx-0 overflow-hidden rounded-sm">
               <Image
@@ -71,8 +71,8 @@ export default function HomeAbout() {
             className="flex-1 flex flex-col justify-center"
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.1, delay: 0.15, ease: EASE }}
           >
             <span className="text-[10px] tracking-[0.25em] text-accent block mb-4">
               FOUNDER & CEO

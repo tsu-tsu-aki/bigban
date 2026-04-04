@@ -108,8 +108,8 @@ export default function HomeFacility() {
           className="text-center mb-20 lg:mb-28"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.1, ease: EASE }}
         >
           <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em] text-text-light">
             FACILITY
@@ -129,9 +129,9 @@ export default function HomeFacility() {
               }${i > 0 ? " border-t sm:border-t-0 border-text-gray/10" : ""}`}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-150px" }}
               transition={{
-                duration: 0.7,
+                duration: 1.1,
                 delay: i * 0.15,
                 ease: EASE,
               }}
@@ -157,8 +157,8 @@ export default function HomeFacility() {
           className="relative mb-16"
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.2, ease: EASE }}
         >
           <div className="overflow-hidden rounded-sm" ref={emblaRef}>
             <div className="flex">
@@ -205,9 +205,9 @@ export default function HomeFacility() {
               className="relative bg-gradient-to-b from-accent/[0.07] to-transparent px-8 py-10"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-150px" }}
               transition={{
-                duration: 0.7,
+                duration: 1.1,
                 delay: i * 0.15,
                 ease: EASE,
               }}
@@ -231,8 +231,8 @@ export default function HomeFacility() {
           className="max-w-3xl mb-16 lg:mb-20"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.1, ease: EASE }}
         >
           <p className="text-text-light text-xl lg:text-2xl leading-relaxed font-semibold tracking-wide mb-6">
             デコターフは世界トップレベルの大会で採用されてきた高性能ハードコートサーフェスです。
@@ -252,8 +252,8 @@ export default function HomeFacility() {
           className="columns-1 sm:columns-2 gap-x-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.0, delay: 0.2, ease: EASE }}
         >
           {FACILITY_FEATURES.map((feature, i) => (
             <motion.div
@@ -261,9 +261,9 @@ export default function HomeFacility() {
               className="break-inside-avoid border-l-2 border-accent/15 pl-4 py-3 mb-1 transition-colors duration-300 hover:border-accent/50"
               initial={{ opacity: 0, x: -12 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-150px" }}
               transition={{
-                duration: 0.5,
+                duration: 1.0,
                 delay: 0.1 + i * 0.06,
                 ease: EASE,
               }}

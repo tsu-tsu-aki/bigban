@@ -61,8 +61,8 @@ export default function HomeFounder() {
           className="block text-xs tracking-[0.3em] text-text-gray font-bold mb-12"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: EASE }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.0, ease: EASE }}
         >
           FOUNDER
         </motion.span>
@@ -74,8 +74,8 @@ export default function HomeFounder() {
               className="font-serif text-5xl lg:text-7xl text-text-light mb-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, ease: EASE }}
+              viewport={{ once: true, margin: "-150px" }}
+              transition={{ duration: 1.1, ease: EASE }}
             >
               西村昭彦
             </motion.h2>
@@ -83,8 +83,8 @@ export default function HomeFounder() {
               className="text-sm tracking-[0.2em] text-text-gray"
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
+              viewport={{ once: true, margin: "-150px" }}
+              transition={{ duration: 1.0, delay: 0.2, ease: EASE }}
             >
               AKIHIKO NISHIMURA
             </motion.p>
@@ -99,9 +99,9 @@ export default function HomeFounder() {
                   className="flex items-start gap-4 text-text-light/90 text-base lg:text-lg leading-relaxed"
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, margin: "-150px" }}
                   transition={{
-                    duration: 0.6,
+                    duration: 1.0,
                     delay: i * 0.1,
                     ease: EASE,
                   }}
@@ -127,8 +127,8 @@ export default function HomeFounder() {
             className="block text-xs tracking-[0.3em] text-text-gray font-bold mb-6"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.0, ease: EASE }}
           >
             PRESS
           </motion.span>
@@ -137,8 +137,8 @@ export default function HomeFounder() {
             className="text-text-light/80 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl"
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.0, delay: 0.1, ease: EASE }}
           >
             {PRESS_TITLE}
           </motion.p>
@@ -150,8 +150,8 @@ export default function HomeFounder() {
             className="inline-block text-accent text-sm tracking-wide hover:underline"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
+            viewport={{ once: true, margin: "-150px" }}
+            transition={{ duration: 1.0, delay: 0.2, ease: EASE }}
           >
             PR TIMES →
           </motion.a>
