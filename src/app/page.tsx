@@ -2,7 +2,6 @@ import { LanguageProvider } from "@/hooks/useLanguage";
 import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeHero from "@/components/home/HomeHero";
 import HomeConcept from "@/components/home/HomeConcept";
-import HomeKeyNumbers from "@/components/home/HomeKeyNumbers";
 import HomeFacility from "@/components/home/HomeFacility";
 import HomeServices from "@/components/home/HomeServices";
 import HomePricing from "@/components/home/HomePricing";
@@ -18,7 +17,6 @@ export default function Home() {
         <HomeNavigation />
         <HomeHero />
         <HomeConcept />
-        <HomeKeyNumbers />
         <HomeFacility />
         <HomeServices />
         <HomePricing />
