@@ -11,25 +11,27 @@ import type { ReactNode } from "react";
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 const SESSION_KEY = "bigban-intro-played";
 
-const subscribe = () => () => {};
-const getSnapshot = () => true;
-const getServerSnapshot = () => false;
-
-function checkShouldShowIntro(): boolean {
-  try {
-    return sessionStorage.getItem(SESSION_KEY) !== "true";
-  } catch {
-    return false;
-  }
-}
-
 interface HomeIntroProps {
   children: ReactNode;
 }
 
+/* istanbul ignore next -- SSR-only snapshot */
+const noop = () => () => {};
+
 export default function HomeIntro({ children }: HomeIntroProps) {
-  const isMounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const [shouldShowIntro] = useState(checkShouldShowIntro);
+  const isMounted = useSyncExternalStore(
+    noop,
+    () => true,
+    /* istanbul ignore next -- SSR-only snapshot */
+    () => false
+  );
+  const [shouldShowIntro] = useState(() => {
+    try {
+      return sessionStorage.getItem(SESSION_KEY) !== "true";
+    } catch {
+      return false;
+    }
+  });
   const [phase, setPhase] = useState<AnimationPhase>("dark");
   const [isIntroComplete, setIsIntroComplete] = useState(!shouldShowIntro);
 
