@@ -105,7 +105,7 @@ export default function HomeFacility() {
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Section Title */}
         <motion.div
-          className="text-center mb-20 lg:mb-28"
+          className="text-center mb-12 lg:mb-16"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-150px" }}
@@ -118,7 +118,7 @@ export default function HomeFacility() {
         </motion.div>
 
         {/* Key Numbers */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 mb-20 lg:mb-28">
+        <div className="grid grid-cols-1 sm:grid-cols-3 mb-12 lg:mb-16">
           {KEY_NUMBERS.map((item, i) => (
             <motion.div
               key={item.labelEn}

@@ -17,9 +17,9 @@ export default function HomeHero() {
     useMagneticButton();
 
   return (
-    <section className="relative bg-deep-black overflow-hidden">
+    <section className="relative bg-deep-black overflow-hidden pt-[100px]">
       {/* Full-width 16:9 background image */}
-      <div className="relative aspect-[16/9] min-h-screen w-full">
+      <div className="relative aspect-[16/9] min-h-[calc(100vh-100px)] w-full">
         <Image
           src="/images/jon-matthews-YFNDwuYoyCA-unsplash.jpg"
           alt="Player mid-swing"
@@ -65,7 +65,7 @@ export default function HomeHero() {
 
             {/* English tagline */}
             <motion.p
-              className="mt-8 text-sm tracking-[0.3em] text-text-gray md:text-base"
+              className="mt-4 text-sm tracking-[0.3em] text-text-gray md:text-base"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 1.2, ease: EASE }}
@@ -75,7 +75,7 @@ export default function HomeHero() {
 
             {/* CTA */}
             <motion.div
-              className="mt-12"
+              className="mt-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.5, ease: EASE }}
@@ -83,14 +83,14 @@ export default function HomeHero() {
               <a
                 ref={ref as React.RefObject<HTMLAnchorElement>}
                 href="#reserve"
-                className="inline-block bg-accent px-8 py-4 text-sm font-bold tracking-widest text-deep-black transition-transform"
+                className="inline-block bg-accent px-8 py-3 text-sm font-bold tracking-widest text-deep-black transition-transform"
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 style={{
                   transform: `translate(${position.x}px, ${position.y}px)`,
                 }}
               >
-                RESERVE A COURT →
+                RESERVE A COURT
               </a>
             </motion.div>
           </div>

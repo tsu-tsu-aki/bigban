@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { BigBangCanvas } from "@/components/teaser/BigBangCanvas";
@@ -16,27 +16,39 @@ interface HomeIntroProps {
 }
 
 export default function HomeIntro({ children }: HomeIntroProps) {
-  const [shouldShowIntro] = useState(() => {
-    try {
-      return sessionStorage.getItem(SESSION_KEY) !== "true";
-    } catch {
-      return false;
-    }
-  });
+  const [mounted, setMounted] = useState(false);
+  const [shouldShowIntro, setShouldShowIntro] = useState(false);
   const [phase, setPhase] = useState<AnimationPhase>("dark");
-  const [isIntroComplete, setIsIntroComplete] = useState(!shouldShowIntro);
+  const [isIntroComplete, setIsIntroComplete] = useState(true);
+
+  useEffect(() => {
+    setMounted(true);
+    try {
+      const alreadyPlayed = sessionStorage.getItem(SESSION_KEY) === "true";
+      if (!alreadyPlayed) {
+        setShouldShowIntro(true);
+        setIsIntroComplete(false);
+      }
+    } catch {
+      // sessionStorage unavailable
+    }
+  }, []);
 
   const handlePhaseChange = useCallback((newPhase: AnimationPhase) => {
     setPhase(newPhase);
     if (newPhase === "content") {
-      sessionStorage.setItem(SESSION_KEY, "true");
+      try {
+        sessionStorage.setItem(SESSION_KEY, "true");
+      } catch {
+        // sessionStorage unavailable
+      }
       setTimeout(() => {
         setIsIntroComplete(true);
       }, 2000);
     }
   }, []);
 
-  if (!shouldShowIntro) {
+  if (!mounted || !shouldShowIntro) {
     return <>{children}</>;
   }
 
