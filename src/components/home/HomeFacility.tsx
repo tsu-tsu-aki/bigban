@@ -122,7 +122,7 @@ export default function HomeFacility() {
           {KEY_NUMBERS.map((item, i) => (
             <motion.div
               key={item.labelEn}
-              className={`flex flex-col items-center text-center py-10 sm:py-12${
+              className={`flex flex-col items-center text-center py-6 sm:py-8${
                 i < KEY_NUMBERS.length - 1
                   ? " sm:border-r sm:border-accent/20"
                   : ""
