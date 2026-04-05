@@ -32,7 +32,7 @@ describe("HomePricing", () => {
     expect(screen.getByText("9:00-18:00")).toBeInTheDocument();
     expect(screen.getByText("18:00-23:00")).toBeInTheDocument();
     expect(screen.getByText("¥4,980")).toBeInTheDocument();
-    expect(screen.getByText("¥5,960")).toBeInTheDocument();
+    expect(screen.getByText("¥5,980")).toBeInTheDocument();
     const prices7980 = screen.getAllByText("¥7,980");
     expect(prices7980.length).toBeGreaterThanOrEqual(3);
   });

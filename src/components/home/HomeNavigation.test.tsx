@@ -5,6 +5,12 @@ import HomeNavigation from "./HomeNavigation";
 
 import type { ReactElement } from "react";
 
+let mockPathname = "/";
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => mockPathname,
+}));
+
 vi.mock("@/hooks/useActiveSection", () => ({
   useActiveSection: () => "concept",
 }));
@@ -178,6 +184,27 @@ describe("HomeNavigation", () => {
     Object.defineProperty(window, "scrollY", { value: 50, writable: true });
     fireEvent.scroll(window);
     expect(header.className).toContain("translate-y-0");
+  });
+
+  it("ホームでロゴクリックするとページ最上部にスクロールする", () => {
+    mockPathname = "/";
+    const scrollSpy = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+    renderWithProvider(<HomeNavigation />);
+    const logo = screen.getByAltText("THE PICKLE BANG THEORY");
+    fireEvent.click(logo);
+    expect(scrollSpy).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
+    scrollSpy.mockRestore();
+  });
+
+  it("他ページでロゴクリックしてもscrollToは呼ばれない", () => {
+    mockPathname = "/about";
+    const scrollSpy = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+    renderWithProvider(<HomeNavigation />);
+    const logo = screen.getByAltText("THE PICKLE BANG THEORY");
+    fireEvent.click(logo);
+    expect(scrollSpy).not.toHaveBeenCalled();
+    scrollSpy.mockRestore();
+    mockPathname = "/";
   });
 
   it("モバイルメニュー内にRESERVEボタンがある", () => {

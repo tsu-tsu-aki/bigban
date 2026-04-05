@@ -11,7 +11,7 @@ interface PriceRow {
 
 const COURT_PRICES: PriceRow[] = [
   { timeSlot: "6:00-9:00", weekday: "¥4,980", weekend: "¥7,980" },
-  { timeSlot: "9:00-18:00", weekday: "¥5,960", weekend: "¥7,980" },
+  { timeSlot: "9:00-18:00", weekday: "¥5,980", weekend: "¥7,980" },
   { timeSlot: "18:00-23:00", weekday: "¥7,980", weekend: "¥7,980" },
 ];
 
@@ -21,12 +21,12 @@ export default function HomePricing() {
   return (
     <section
       id="pricing"
-      className="bg-deep-black py-24 lg:py-32 text-text-light"
+      className="bg-deep-black pt-12 lg:pt-16 pb-24 lg:pb-32 text-text-light"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Section Title */}
         <motion.div
-          className="text-center mb-20 lg:mb-28"
+          className="text-center mb-12 lg:mb-16"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-150px" }}
@@ -46,6 +46,9 @@ export default function HomePricing() {
           viewport={{ once: true, margin: "-150px" }}
           transition={{ duration: 1.0, ease: EASE }}
         >
+          <p className="text-text-light text-sm mb-2">
+            1時間あたりの料金
+          </p>
           <p className="text-accent text-sm sm:text-base font-semibold tracking-wide opacity-85">
           5月31日までのOPEN記念価格{"\u{1F239}\uFE0F"}☝️👽
           </p>

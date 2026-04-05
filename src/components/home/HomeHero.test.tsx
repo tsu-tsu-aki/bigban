@@ -56,9 +56,9 @@ describe("HomeHero", () => {
     expect(img).toBeInTheDocument();
   });
 
-  it("min-h-screenクラスが存在する", () => {
+  it("ヘッダー分のパディングが設定されている", () => {
     const { container } = renderWithProvider(<HomeHero />);
-    const heroDiv = container.querySelector(".min-h-screen");
-    expect(heroDiv).toBeInTheDocument();
+    const section = container.querySelector("section");
+    expect(section?.className).toContain("pt-[100px]");
   });
 });
