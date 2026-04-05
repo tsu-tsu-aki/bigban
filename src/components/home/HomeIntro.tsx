@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { BigBangCanvas } from "@/components/teaser/BigBangCanvas";
@@ -11,28 +11,27 @@ import type { ReactNode } from "react";
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 const SESSION_KEY = "bigban-intro-played";
 
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
+function checkShouldShowIntro(): boolean {
+  try {
+    return sessionStorage.getItem(SESSION_KEY) !== "true";
+  } catch {
+    return false;
+  }
+}
+
 interface HomeIntroProps {
   children: ReactNode;
 }
 
 export default function HomeIntro({ children }: HomeIntroProps) {
-  const [mounted, setMounted] = useState(false);
-  const [shouldShowIntro, setShouldShowIntro] = useState(false);
+  const isMounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const [shouldShowIntro] = useState(checkShouldShowIntro);
   const [phase, setPhase] = useState<AnimationPhase>("dark");
-  const [isIntroComplete, setIsIntroComplete] = useState(true);
-
-  useEffect(() => {
-    setMounted(true);
-    try {
-      const alreadyPlayed = sessionStorage.getItem(SESSION_KEY) === "true";
-      if (!alreadyPlayed) {
-        setShouldShowIntro(true);
-        setIsIntroComplete(false);
-      }
-    } catch {
-      // sessionStorage unavailable
-    }
-  }, []);
+  const [isIntroComplete, setIsIntroComplete] = useState(!shouldShowIntro);
 
   const handlePhaseChange = useCallback((newPhase: AnimationPhase) => {
     setPhase(newPhase);
@@ -48,7 +47,7 @@ export default function HomeIntro({ children }: HomeIntroProps) {
     }
   }, []);
 
-  if (!mounted || !shouldShowIntro) {
+  if (!isMounted || !shouldShowIntro) {
     return <>{children}</>;
   }
 
