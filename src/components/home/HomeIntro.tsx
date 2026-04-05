@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { BigBangCanvas } from "@/components/teaser/BigBangCanvas";
@@ -15,7 +15,16 @@ interface HomeIntroProps {
   children: ReactNode;
 }
 
+/* istanbul ignore next -- SSR-only snapshot */
+const noop = () => () => {};
+
 export default function HomeIntro({ children }: HomeIntroProps) {
+  const isMounted = useSyncExternalStore(
+    noop,
+    () => true,
+    /* istanbul ignore next -- SSR-only snapshot */
+    () => false
+  );
   const [shouldShowIntro] = useState(() => {
     try {
       return sessionStorage.getItem(SESSION_KEY) !== "true";
@@ -29,14 +38,18 @@ export default function HomeIntro({ children }: HomeIntroProps) {
   const handlePhaseChange = useCallback((newPhase: AnimationPhase) => {
     setPhase(newPhase);
     if (newPhase === "content") {
-      sessionStorage.setItem(SESSION_KEY, "true");
+      try {
+        sessionStorage.setItem(SESSION_KEY, "true");
+      } catch {
+        // sessionStorage unavailable
+      }
       setTimeout(() => {
         setIsIntroComplete(true);
       }, 2000);
     }
   }, []);
 
-  if (!shouldShowIntro) {
+  if (!isMounted || !shouldShowIntro) {
     return <>{children}</>;
   }
 

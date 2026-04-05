@@ -83,7 +83,9 @@ describe("HomeIntro", () => {
     act(() => {
       canvas.dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
     });
-    expect(screen.queryByAltText("THE PICKLE BANG THEORY")).not.toBeInTheDocument();
+    expect(
+      screen.queryByAltText("THE PICKLE BANG THEORY")
+    ).not.toBeInTheDocument();
   });
 
   it("contentフェーズでロゴを表示する", () => {
@@ -96,9 +98,7 @@ describe("HomeIntro", () => {
     act(() => {
       canvas.click();
     });
-    expect(
-      screen.getByAltText("THE PICKLE BANG THEORY")
-    ).toBeInTheDocument();
+    expect(screen.getByAltText("THE PICKLE BANG THEORY")).toBeInTheDocument();
   });
 
   it("contentフェーズでsessionStorageにフラグを保存する", () => {

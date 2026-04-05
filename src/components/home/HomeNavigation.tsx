@@ -2,6 +2,8 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useActiveSection } from "@/hooks/useActiveSection";
@@ -19,8 +21,19 @@ const NAV_ITEMS = [
 
 export default function HomeNavigation() {
   const { language, toggleLanguage } = useLanguage();
+  const pathname = usePathname();
   const activeSection = useActiveSection(SECTION_IDS);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleLogoClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (pathname === "/") {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    },
+    [pathname]
+  );
   const [isNavVisible, setIsNavVisible] = useState(true);
   const lastScrollY = useRef(0);
 
@@ -63,24 +76,24 @@ export default function HomeNavigation() {
       <div className="backdrop-blur-md bg-deep-black/80">
         <div className="mx-auto flex items-center justify-between px-6 py-4 max-w-7xl">
           {/* Desktop: Logo */}
-          <div className="hidden md:block">
+          <Link href="/" className="hidden md:block" onClick={handleLogoClick}>
             <Image
               src="/logos/yoko-neon.png"
               alt="THE PICKLE BANG THEORY"
               width={180}
               height={40}
             />
-          </div>
+          </Link>
 
           {/* Mobile: Mark */}
-          <div className="block md:hidden">
+          <Link href="/" className="block md:hidden" onClick={handleLogoClick}>
             <Image
               src="/logos/mark-neon.png"
               alt="THE PICKLE BANG THEORY mark"
               width={40}
               height={40}
             />
-          </div>
+          </Link>
 
           {/* Desktop: Nav links */}
           <nav

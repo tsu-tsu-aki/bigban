@@ -35,7 +35,7 @@ const SERVICES: ServiceItem[] = [
     titleJa: "レッスン & クリニック",
     titleEn: "LESSONS & CLINICS",
     description:
-      "プロ選手による直接指導。レベル別プログラムで初心者から上級者まで対応。海外トッププレーヤーを招聘した特別クリニックも定期開催。",
+      "トップ選手による直接指導。レベル別プログラムで初心者から上級者まで対応。海外トッププレーヤーを招聘した特別クリニックも開催予定。",
     isReversed: true,
     isDark: false,
     imageSrc: "/images/jon-matthews-usqfZcs_GfM-unsplash.jpg",
@@ -82,9 +82,9 @@ export default function HomeServices() {
   return (
     <section id="services">
       {/* Section Title */}
-      <div className="bg-deep-black text-text-light py-24 lg:py-32 pb-0 lg:pb-0">
+      <div className="bg-deep-black text-text-light pt-8 lg:pt-12">
         <motion.div
-          className="text-center mb-20 lg:mb-28 mx-auto max-w-7xl px-6 lg:px-12"
+          className="text-center mb-6 lg:mb-8 mx-auto max-w-7xl px-6 lg:px-12"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-150px" }}
