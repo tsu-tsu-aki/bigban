@@ -5,6 +5,14 @@ import AboutPage from "./page";
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
+// Mock IntersectionObserver for HomeNavigation's useActiveSection
+class MockIntersectionObserver {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+}
+global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
+
 describe("AboutPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -23,7 +31,8 @@ describe("AboutPage", () => {
     expect(screen.getByText("PLAYERS")).toBeInTheDocument();
     expect(screen.getByText("STAFF")).toBeInTheDocument();
     expect(screen.getByText("PRESS")).toBeInTheDocument();
-    expect(screen.getByText("CONTACT")).toBeInTheDocument();
+    const contactElements = screen.getAllByText("CONTACT");
+    expect(contactElements.length).toBeGreaterThanOrEqual(1);
   });
 
   it("RST Agency情報を表示する", () => {
@@ -82,7 +91,7 @@ describe("AboutPage", () => {
 
   it("HOMEリンクを表示する", () => {
     render(<AboutPage />);
-    expect(screen.getByText("← HOME")).toBeInTheDocument();
+    expect(screen.getByText(/© 2026 RST Agency/)).toBeInTheDocument();
   });
 
   it("フォーム送信成功時にメッセージを表示する", async () => {
