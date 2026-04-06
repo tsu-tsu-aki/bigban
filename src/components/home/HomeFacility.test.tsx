@@ -3,12 +3,16 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import HomeFacility from "./HomeFacility";
 
 const mockScrollTo = vi.fn();
+const mockScrollPrev = vi.fn();
+const mockScrollNext = vi.fn();
 const mockSelectedScrollSnap = vi.fn(() => 0);
 const mockOn = vi.fn();
 const mockOff = vi.fn();
 
 const mockEmblaApi = {
   scrollTo: mockScrollTo,
+  scrollPrev: mockScrollPrev,
+  scrollNext: mockScrollNext,
   selectedScrollSnap: mockSelectedScrollSnap,
   on: mockOn,
   off: mockOff,
@@ -127,12 +131,35 @@ describe("HomeFacility", () => {
     expect(mockSelectedScrollSnap).toHaveBeenCalled();
   });
 
+  it("前の画像ボタンでscrollPrevが呼ばれる", () => {
+    render(<HomeFacility />);
+    const prevBtn = screen.getByRole("button", { name: "前の画像" });
+    fireEvent.click(prevBtn);
+    expect(mockScrollPrev).toHaveBeenCalled();
+  });
+
+  it("次の画像ボタンでscrollNextが呼ばれる", () => {
+    render(<HomeFacility />);
+    const nextBtn = screen.getByRole("button", { name: "次の画像" });
+    fireEvent.click(nextBtn);
+    expect(mockScrollNext).toHaveBeenCalled();
+  });
+
   it("emblaApiがnullの時にscrollToが何もしない", () => {
     returnApi = null;
     render(<HomeFacility />);
     const dots = screen.getAllByRole("button", { name: /画像.*を表示/ });
     fireEvent.click(dots[1]);
     expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
+  it("emblaApiがnullの時に矢印ボタンが何もしない", () => {
+    returnApi = null;
+    render(<HomeFacility />);
+    fireEvent.click(screen.getByRole("button", { name: "前の画像" }));
+    fireEvent.click(screen.getByRole("button", { name: "次の画像" }));
+    expect(mockScrollPrev).not.toHaveBeenCalled();
+    expect(mockScrollNext).not.toHaveBeenCalled();
   });
 
   it("emblaApiがnullの時にイベント登録しない", () => {
