@@ -101,6 +101,16 @@ export default function HomeFacility() {
     [emblaApi]
   );
 
+  const scrollPrev = useCallback(() => {
+    if (!emblaApi) return;
+    emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (!emblaApi) return;
+    emblaApi.scrollNext();
+  }, [emblaApi]);
+
   return (
     <section id="facility" className="bg-deep-black py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
@@ -161,7 +171,7 @@ export default function HomeFacility() {
           viewport={{ once: true, margin: "-150px" }}
           transition={{ duration: 1.2, ease: EASE }}
         >
-          <div className="overflow-hidden rounded-sm" ref={emblaRef}>
+          <div className="overflow-hidden rounded-sm select-none" ref={emblaRef}>
             <div className="flex">
               {FACILITY_IMAGES.map((image) => (
                 <div
@@ -179,6 +189,28 @@ export default function HomeFacility() {
               ))}
             </div>
           </div>
+
+          {/* Arrow Buttons */}
+          <button
+            type="button"
+            onClick={scrollPrev}
+            aria-label="前の画像"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-text-light hover:bg-black/60 transition-colors"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={scrollNext}
+            aria-label="次の画像"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-text-light hover:bg-black/60 transition-colors"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
 
           {/* Dot Indicators */}
           <div className="flex justify-center gap-3 mt-6">
