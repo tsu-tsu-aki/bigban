@@ -32,8 +32,8 @@ const KEY_NUMBERS: KeyNumber[] = [
 const PRIMARY_SPECS: PrimarySpec[] = [
   {
     labelEn: "SURFACE",
-    labelJa: "ハードコートデコターフ",
-    description: "世界トップレベルの大会で採用されてきた高性能サーフェス",
+    labelJa: "ハードコート DecoTurf（デコターフ）",
+    description: "世界最大級の大会やオリンピックでも採用されてきた高性能サーフェス",
   },
   {
     labelEn: "TYPE",
@@ -44,9 +44,10 @@ const PRIMARY_SPECS: PrimarySpec[] = [
 
 const FACILITY_FEATURES: FacilityFeature[] = [
   { label: "トレーニングエリア", note: "準備中" },
-  { label: "ラウンジスペース" },
+  { label: "ラウンジスペース", note: "準備中" },
   { label: "男女別更衣室" },
   { label: "空調完備" },
+  { label: "自動販売機" },
   { label: "レンタル用具あり" },
   { label: "無人チェックイン対応予定" },
   { label: "ショーコート1面に変更可能" },
@@ -226,27 +227,6 @@ export default function HomeFacility() {
           ))}
         </div>
 
-        {/* DecoTurf Description - Lead Copy + Horizontal Line */}
-        <motion.div
-          className="max-w-3xl mb-16 lg:mb-20"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-150px" }}
-          transition={{ duration: 1.1, ease: EASE }}
-        >
-          <p className="text-text-light text-xl lg:text-2xl leading-relaxed font-semibold tracking-wide mb-6">
-            デコターフは世界トップレベルの大会で採用されてきた高性能ハードコートサーフェスです。
-          </p>
-          <div className="w-10 h-[2px] bg-accent mb-6" />
-          <p className="text-text-gray text-sm lg:text-base leading-loose mb-3">
-            THE PICKLE BANG
-            THEORYでは、プレイヤーが「本気で上達できる環境」を追求し、デコターフを採用しています。
-          </p>
-          <p className="text-text-gray text-sm lg:text-base leading-loose">
-            単なるレンタルコートではなく、技術向上・競技力向上にフォーカスした本格的なプレー環境を提供します。
-          </p>
-        </motion.div>
-
         {/* Secondary Features - Left Bar Lines */}
         <motion.div
           className="columns-1 sm:columns-2 gap-x-10"
@@ -278,6 +258,23 @@ export default function HomeFacility() {
               )}
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* DecoTurf Description */}
+        <motion.div
+          className="mt-16 lg:mt-20"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.1, ease: EASE }}
+        >
+          <p className="text-text-light text-xl lg:text-2xl leading-relaxed font-semibold tracking-wide mb-6">
+            DecoTurf（デコターフ）は、世界最大級のピックルボール大会やテニスのグランドスラム、オリンピックでも採用されてきたハードコートサーフェス。安定したバウンドと高い耐久性により、世界基準のプレー環境を提供します。
+          </p>
+          <div className="w-10 h-[2px] bg-accent mb-6" />
+          <p className="text-text-gray text-sm lg:text-base leading-loose">
+            THE PICKLE BANG THEORYでは、プレイヤーが「本気で上達できる環境」を追求し、このDecoTurf（デコターフ）を採用。技術向上・競技力向上にフォーカスした本格的なプレー環境を提供します。
+          </p>
         </motion.div>
       </div>
     </section>
