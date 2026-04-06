@@ -50,15 +50,15 @@ describe("HomeFacility", () => {
   it("Primary Specsを表示する", () => {
     render(<HomeFacility />);
     expect(screen.getByText("SURFACE")).toBeInTheDocument();
-    expect(screen.getByText("ハードコートデコターフ")).toBeInTheDocument();
+    expect(screen.getByText("ハードコート DecoTurf（デコターフ）")).toBeInTheDocument();
     expect(screen.getByText("TYPE")).toBeInTheDocument();
     expect(screen.getByText("全天候型インドア")).toBeInTheDocument();
   });
 
-  it("デコターフ説明文を表示する", () => {
+  it("DecoTurf説明文を表示する", () => {
     render(<HomeFacility />);
     expect(
-      screen.getByText(/デコターフは世界トップレベルの大会で採用されてきた/)
+      screen.getByText(/DecoTurf（デコターフ）は、世界最大級のピックルボール大会/)
     ).toBeInTheDocument();
   });
 
@@ -68,14 +68,16 @@ describe("HomeFacility", () => {
     expect(screen.getByText("ラウンジスペース")).toBeInTheDocument();
     expect(screen.getByText("男女別更衣室")).toBeInTheDocument();
     expect(screen.getByText("空調完備")).toBeInTheDocument();
+    expect(screen.getByText("自動販売機")).toBeInTheDocument();
     expect(screen.getByText("レンタル用具あり")).toBeInTheDocument();
     expect(screen.getByText("無人チェックイン対応予定")).toBeInTheDocument();
     expect(screen.getByText("ショーコート1面に変更可能")).toBeInTheDocument();
   });
 
-  it("トレーニングエリアに準備中の注記を表示する", () => {
+  it("トレーニングエリアとラウンジスペースに準備中の注記を表示する", () => {
     render(<HomeFacility />);
-    expect(screen.getByText("準備中")).toBeInTheDocument();
+    const notes = screen.getAllByText("準備中");
+    expect(notes).toHaveLength(2);
   });
 
   it("FACILITY タイトルを表示する", () => {
