@@ -38,14 +38,14 @@ export default function HomeConcept() {
               fill
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-black/60" />
+            <div className="absolute inset-0 bg-black/70" />
 
             {/* Text overlay */}
             <div className="absolute inset-0 flex items-center">
-              <div className="px-6 sm:px-8 md:px-12 lg:px-16 max-w-3xl">
+              <div className="px-6 sm:px-8 md:px-12 lg:px-16 max-w-3xl drop-shadow-lg">
                 {/* Lead paragraph */}
                 <motion.p
-                  className="text-white text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed mb-4 sm:mb-6"
+                  className="text-white text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed font-medium mb-4 sm:mb-6"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-150px" }}
@@ -62,10 +62,10 @@ export default function HomeConcept() {
                   viewport={{ once: true, margin: "-150px" }}
                   transition={{ duration: 1.1, delay: 0.2, ease: EASE }}
                 >
-                  <p className="text-white text-sm sm:text-base md:text-lg font-semibold leading-loose">
+                  <p className="text-white text-base sm:text-lg md:text-xl font-bold leading-loose">
                     1つの小さなプレー。
                   </p>
-                  <p className="text-white text-sm sm:text-base md:text-lg font-semibold leading-loose">
+                  <p className="text-white text-base sm:text-lg md:text-xl font-bold leading-loose">
                     1つの小さなディンク。
                   </p>
                 </motion.div>
@@ -78,12 +78,12 @@ export default function HomeConcept() {
                   viewport={{ once: true, margin: "-150px" }}
                   transition={{ duration: 1.1, delay: 0.3, ease: EASE }}
                 >
-                  <p className="text-white/70 text-xs sm:text-sm md:text-base leading-loose mb-2">
+                  <p className="text-white/80 text-sm sm:text-base md:text-lg leading-loose mb-2">
                     その積み重ねが、やがて大きなエネルギーとなり、
                     <br className="hidden sm:inline" />
                     新しいスポーツ文化を生み出していく。
                   </p>
-                  <p className="text-white/70 text-xs sm:text-sm md:text-base leading-loose">
+                  <p className="text-white/80 text-sm sm:text-base md:text-lg leading-loose">
                     THE PICKLE BANG THEORYは、
                     <br className="hidden sm:inline" />
                     &ldquo;ピックルボールのビッグバン&rdquo;が生まれる場所を目指しています。
@@ -98,7 +98,7 @@ export default function HomeConcept() {
                   transition={{ duration: 1.1, delay: 0.4, ease: EASE }}
                 >
                   <div className="w-10 h-[2px] bg-accent mb-4" />
-                  <p className="text-accent text-base sm:text-lg lg:text-xl font-bold tracking-wide">
+                  <p className="text-accent text-lg sm:text-xl lg:text-2xl font-black tracking-wide">
                     小さなディンクから、大きなムーブメントへ。
                   </p>
                 </motion.div>
