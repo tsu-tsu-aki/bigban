@@ -23,60 +23,89 @@ export default function HomeConcept() {
           <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
         </motion.div>
 
-        <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-20">
-          {/* Text content */}
-          <div className="flex-1">
-            <motion.p
-              className="text-lg md:text-xl lg:text-2xl leading-relaxed mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-150px" }}
-              transition={{ duration: 1.1, ease: EASE }}
-            >
-              宇宙がビッグバンによって誕生したように、この場所から新しいピックルボール文化が広がり、大きなムーブメントへと発展していくことを願い名付けました。
-            </motion.p>
-
-            <motion.p
-              className="text-sm md:text-base leading-loose text-text-gray mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-150px" }}
-              transition={{ duration: 1.1, delay: 0.15, ease: EASE }}
-            >
-              一つの小さなプレー。一つの小さなディンク。その積み重ねがやがて大きなエネルギーとなり、新しいスポーツ文化を生み出していく。THE
-              PICKLE BANG
-              THEORYは、そんな&ldquo;ピックルボールのビッグバン&rdquo;が生まれる場所を目指しています。
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-150px" }}
-              transition={{ duration: 1.1, delay: 0.3, ease: EASE }}
-            >
-              <div className="w-10 h-[2px] bg-accent mb-6" />
-              <p className="text-accent text-lg lg:text-xl font-bold tracking-wide">
-                小さなディンクから、大きなムーブメントへ
-              </p>
-            </motion.div>
-          </div>
-
-          {/* Photo */}
-          <motion.div
-            className="relative w-full lg:w-[45%] shrink-0 aspect-[4/3] overflow-hidden rounded-sm"
-            initial={{ opacity: 0, y: 32 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-150px" }}
-            transition={{ duration: 1.2, ease: EASE }}
-          >
+        {/* Photo overlay with text */}
+        <motion.div
+          className="relative w-full overflow-hidden rounded-sm"
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-150px" }}
+          transition={{ duration: 1.2, ease: EASE }}
+        >
+          <div className="relative aspect-[3/4] sm:aspect-[4/3] lg:aspect-[16/9]">
             <Image
-              src="/images/jon-matthews-ajk3K-zgiPU-unsplash.jpg"
-              alt="Paddle and ball in atmospheric lighting"
+              src="/images/concept-bigbang.jpg"
+              alt="ビッグバン — 宇宙の誕生"
               fill
               className="object-cover"
             />
-          </motion.div>
-        </div>
+            <div className="absolute inset-0 bg-black/60" />
+
+            {/* Text overlay */}
+            <div className="absolute inset-0 flex items-center">
+              <div className="px-6 sm:px-8 md:px-12 lg:px-16 max-w-3xl">
+                {/* Lead paragraph */}
+                <motion.p
+                  className="text-white text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed mb-4 sm:mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-150px" }}
+                  transition={{ duration: 1.1, delay: 0.1, ease: EASE }}
+                >
+                  宇宙がビッグバンによって誕生したように、この場所から新しいピックルボール文化が広がり、やがて大きなムーブメントへと発展していく。その想いを込めて、この名前を名付けました。
+                </motion.p>
+
+                {/* Poetry lines */}
+                <motion.div
+                  className="mb-4 sm:mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-150px" }}
+                  transition={{ duration: 1.1, delay: 0.2, ease: EASE }}
+                >
+                  <p className="text-white text-sm sm:text-base md:text-lg font-semibold leading-loose">
+                    1つの小さなプレー。
+                  </p>
+                  <p className="text-white text-sm sm:text-base md:text-lg font-semibold leading-loose">
+                    1つの小さなディンク。
+                  </p>
+                </motion.div>
+
+                {/* Description */}
+                <motion.div
+                  className="mb-4 sm:mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-150px" }}
+                  transition={{ duration: 1.1, delay: 0.3, ease: EASE }}
+                >
+                  <p className="text-white/70 text-xs sm:text-sm md:text-base leading-loose mb-2">
+                    その積み重ねが、やがて大きなエネルギーとなり、
+                    <br className="hidden sm:inline" />
+                    新しいスポーツ文化を生み出していく。
+                  </p>
+                  <p className="text-white/70 text-xs sm:text-sm md:text-base leading-loose">
+                    THE PICKLE BANG THEORYは、
+                    <br className="hidden sm:inline" />
+                    &ldquo;ピックルボールのビッグバン&rdquo;が生まれる場所を目指しています。
+                  </p>
+                </motion.div>
+
+                {/* Catchcopy */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-150px" }}
+                  transition={{ duration: 1.1, delay: 0.4, ease: EASE }}
+                >
+                  <div className="w-10 h-[2px] bg-accent mb-4" />
+                  <p className="text-accent text-base sm:text-lg lg:text-xl font-bold tracking-wide">
+                    小さなディンクから、大きなムーブメントへ。
+                  </p>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
