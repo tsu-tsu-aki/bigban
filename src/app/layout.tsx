@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, Inter, Noto_Sans_JP } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const dmSerif = DM_Serif_Display({
@@ -35,7 +36,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" className={`${dmSerif.variable} ${inter.variable} ${notoSansJP.variable}`}>
-      <body className="grain-overlay">{children}</body>
+      <body className="grain-overlay">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
