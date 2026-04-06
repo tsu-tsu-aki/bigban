@@ -171,7 +171,7 @@ export default function HomeFacility() {
           viewport={{ once: true, margin: "-150px" }}
           transition={{ duration: 1.2, ease: EASE }}
         >
-          <div className="overflow-hidden rounded-sm" ref={emblaRef}>
+          <div className="overflow-hidden rounded-sm select-none" ref={emblaRef}>
             <div className="flex">
               {FACILITY_IMAGES.map((image) => (
                 <div
