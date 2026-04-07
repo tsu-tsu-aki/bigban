@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
+import { LanguageProvider } from "@/hooks/useLanguage";
+import HomeNavigation from "@/components/home/HomeNavigation";
+import HomeFooter from "@/components/home/HomeFooter";
 
 import type { FormEvent } from "react";
 
@@ -110,29 +112,12 @@ export default function AboutPage() {
     "w-full border-b border-text-gray/40 bg-transparent py-3 text-text-light placeholder:text-text-gray/60 focus:border-accent focus:outline-none transition-colors";
 
   return (
+    <LanguageProvider>
     <main className="bg-deep-black min-h-screen">
-      {/* Navigation */}
-      <div className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-deep-black/80">
-        <div className="mx-auto flex items-center justify-between px-6 py-4 max-w-7xl">
-          <Link href="/" className="hover:opacity-80 transition-opacity">
-            <Image
-              src="/logos/yoko-neon.png"
-              alt="THE PICKLE BANG THEORY"
-              width={180}
-              height={40}
-            />
-          </Link>
-          <Link
-            href="/"
-            className="text-xs tracking-[0.2em] text-text-gray hover:text-accent transition-colors"
-          >
-            ← HOME
-          </Link>
-        </div>
-      </div>
+      <HomeNavigation />
 
       {/* Hero */}
-      <section className="pt-32 pb-20 lg:pt-40 lg:pb-28">
+      <section className="pt-28 pb-12 lg:pt-32 lg:pb-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <motion.div
             className="text-center"
@@ -149,7 +134,7 @@ export default function AboutPage() {
       </section>
 
       {/* 01 — COMPANY */}
-      <section className="py-20 lg:py-28">
+      <section className="py-12 lg:py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="01" labelEn="COMPANY" id="company" />
 
@@ -195,11 +180,11 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <dt className="text-text-gray">所在地</dt>
-                    <dd className="text-text-light mt-1">千葉県市川市八幡2-16-6 6階</dd>
+                    <dd className="text-text-light mt-1">東京都品川区</dd>
                   </div>
                   <div>
                     <dt className="text-text-gray">事業内容</dt>
-                    <dd className="text-text-light mt-1">スポーツ施設運営 / 選手マネジメント / 大会運営</dd>
+                    <dd className="text-text-light mt-1">スポーツ施設運営 / スポーツイベント / 大会運営 / 商品開発</dd>
                   </div>
                 </dl>
               </div>
@@ -209,7 +194,7 @@ export default function AboutPage() {
       </section>
 
       {/* 02 — FOUNDER */}
-      <section className="py-20 lg:py-28 border-t border-text-gray/10">
+      <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="02" labelEn="FOUNDER" id="founder" />
 
@@ -271,7 +256,7 @@ export default function AboutPage() {
       </section>
 
       {/* 03 — PLAYERS */}
-      <section className="py-20 lg:py-28 border-t border-text-gray/10">
+      <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="03" labelEn="PLAYERS" id="players" />
 
@@ -311,7 +296,7 @@ export default function AboutPage() {
       </section>
 
       {/* 04 — STAFF */}
-      <section className="py-20 lg:py-28 border-t border-text-gray/10">
+      <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="04" labelEn="STAFF" id="staff" />
 
@@ -351,7 +336,7 @@ export default function AboutPage() {
       </section>
 
       {/* 05 — PRESS */}
-      <section className="py-20 lg:py-28 border-t border-text-gray/10">
+      <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="05" labelEn="PRESS" id="press" />
 
@@ -383,7 +368,7 @@ export default function AboutPage() {
       </section>
 
       {/* 06 — CONTACT */}
-      <section className="py-20 lg:py-28 border-t border-text-gray/10">
+      <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="06" labelEn="CONTACT" id="contact" />
 
@@ -406,7 +391,7 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <p className="text-sm text-text-gray mb-1">Address</p>
-                  <p className="text-lg text-text-light">千葉県市川市八幡2-16-6 6階</p>
+                  <p className="text-lg text-text-light">東京都品川区</p>
                 </div>
                 <div>
                   <p className="text-sm text-text-gray mb-1">Hours</p>
@@ -455,15 +440,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-text-gray/10 py-12">
-        <div className="mx-auto max-w-7xl px-6 lg:px-12 text-center">
-          <Link href="/" className="text-text-gray text-xs tracking-[0.2em] hover:text-accent transition-colors">
-            ← HOME に戻る
-          </Link>
-          <p className="text-text-gray/50 text-xs mt-6">© 2026 THE PICKLE BANG THEORY. All rights reserved.</p>
-        </div>
-      </footer>
+      <HomeFooter />
     </main>
+    </LanguageProvider>
   );
 }
