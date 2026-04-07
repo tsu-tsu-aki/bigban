@@ -34,12 +34,12 @@ function renderWithProvider(ui: ReactElement) {
 }
 
 const NAV_ITEMS = [
-  { label: "CONCEPT", href: "#concept" },
-  { label: "FACILITY", href: "#facility" },
-  { label: "SERVICES", href: "#services" },
-  { label: "PRICING", href: "#pricing" },
-  { label: "ABOUT", href: "#about" },
-  { label: "ACCESS", href: "#access" },
+  { label: "CONCEPT", href: "/#concept" },
+  { label: "FACILITY", href: "/#facility" },
+  { label: "SERVICES", href: "/#services" },
+  { label: "PRICING", href: "/#pricing" },
+  { label: "ABOUT", href: "/#about" },
+  { label: "ACCESS", href: "/#access" },
 ];
 
 describe("HomeNavigation", () => {

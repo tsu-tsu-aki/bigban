@@ -33,12 +33,12 @@ describe("HomeFooter", () => {
   it("6つのナビリンクを表示する", () => {
     render(<HomeFooter />);
     const links = [
-      { name: "CONCEPT", href: "#concept" },
-      { name: "FACILITY", href: "#facility" },
-      { name: "SERVICES", href: "#services" },
-      { name: "PRICING", href: "#pricing" },
-      { name: "ACCESS", href: "#access" },
-      { name: "CONTACT", href: "#contact" },
+      { name: "CONCEPT", href: "/#concept" },
+      { name: "FACILITY", href: "/#facility" },
+      { name: "SERVICES", href: "/#services" },
+      { name: "PRICING", href: "/#pricing" },
+      { name: "ACCESS", href: "/#access" },
+      { name: "CONTACT", href: "/#contact" },
     ];
 
     for (const link of links) {

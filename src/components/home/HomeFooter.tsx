@@ -1,12 +1,12 @@
 import Image from "next/image";
 
 const NAV_LINKS = [
-  { label: "CONCEPT", href: "#concept" },
-  { label: "FACILITY", href: "#facility" },
-  { label: "SERVICES", href: "#services" },
-  { label: "PRICING", href: "#pricing" },
-  { label: "ACCESS", href: "#access" },
-  { label: "CONTACT", href: "#contact" },
+  { label: "CONCEPT", href: "/#concept" },
+  { label: "FACILITY", href: "/#facility" },
+  { label: "SERVICES", href: "/#services" },
+  { label: "PRICING", href: "/#pricing" },
+  { label: "ACCESS", href: "/#access" },
+  { label: "CONTACT", href: "/#contact" },
 ] as const;
 
 export default function HomeFooter() {
