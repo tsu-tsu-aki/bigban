@@ -11,31 +11,10 @@ import type { FormEvent } from "react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
-interface TimelineEntry {
-  text: string;
-  highlightYear?: string;
-}
-
 interface ContactCategory {
   value: string;
   label: string;
 }
-
-const TIMELINE: TimelineEntry[] = [
-  { text: "北海道出身。8歳でバドミントンを始める" },
-  { text: "青森山田高校・中央大学で競技経験を積む" },
-  { text: "インターハイ・全国高校選抜 シングルスベスト8" },
-  { text: "全日本総合バドミントン選手権 4度出場" },
-  { text: "クロスミントン転向", highlightYear: "2015年" },
-  {
-    text: "世界選手権ミックスダブルス4連覇、シングルス2連覇（計6度優勝）",
-  },
-  {
-    text: "ピックルボール転向、選手兼大会ディレクター",
-    highlightYear: "2023年",
-  },
-  { text: "RST Agency株式会社 代表取締役" },
-];
 
 const CATEGORIES: ContactCategory[] = [
   { value: "", label: "選択してください" },
@@ -150,13 +129,10 @@ export default function AboutPage() {
                 RST Agency株式会社
               </h2>
               <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4">
-                RST Agencyは、ラケットスポーツの可能性を追求するスポーツエージェンシーです。
-              </p>
-              <p className="text-text-gray text-sm lg:text-base leading-relaxed mb-4">
-                選手マネジメント、大会運営、施設プロデュースを軸に、ピックルボールをはじめとするラケットスポーツの普及と競技力向上に取り組んでいます。
+                RST Agencyは、THE PICKLE BANG THEORYのプロデュース及び運営を行っているスポーツエージェンシーです。ラケットスポーツの可能性を追求し、その選手や競技の価値向上を目指します。
               </p>
               <p className="text-text-gray text-sm lg:text-base leading-relaxed">
-                THE PICKLE BANG THEORYは、RST Agencyが手がける都市型ピックルボール施設プロジェクトです。
+                他にもピックルボールを中心としたイベントの企画・実行や公式大会の企画・運営、選手マネジメントなど行っています。また、代表含め、メンバーたちも競技と向き合うプレーヤーであります。
               </p>
             </motion.div>
 
@@ -198,23 +174,36 @@ export default function AboutPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="02" labelEn="FOUNDER" id="founder" />
 
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
+          {/* Name - full width top */}
+          <motion.div
+            className="mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: EASE }}
+          >
+            <div className="flex items-baseline gap-4 flex-wrap">
+              <h2 className="font-serif text-5xl lg:text-6xl text-text-light">
+                西村昭彦
+              </h2>
+              <p className="text-sm tracking-[0.15em] text-text-gray">
+                AKIHIKO NISHIMURA
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Photo left + Text right */}
+          <div className="flex flex-col sm:flex-row gap-8 lg:gap-12">
             <motion.div
-              className="lg:w-[40%] shrink-0"
+              className="sm:w-[25%] shrink-0"
               initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: EASE }}
             >
-              <h2 className="font-serif text-5xl lg:text-6xl text-text-light mb-3">
-                西村昭彦
-              </h2>
-              <p className="text-sm tracking-[0.15em] text-text-gray mb-8">
-                AKIHIKO NISHIMURA
-              </p>
-              <div className="relative aspect-[3/4] w-full max-w-sm overflow-hidden rounded-sm">
+              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm">
                 <Image
-                  src="/images/jon-matthews-ViVHl-M_ezI-unsplash.jpg"
+                  src="/images/founder-nishimura.png"
                   alt="西村昭彦"
                   fill
                   className="object-cover"
@@ -223,34 +212,26 @@ export default function AboutPage() {
               </div>
             </motion.div>
 
-            <div className="flex-1">
-              <ul className="space-y-4">
-                {TIMELINE.map((entry, i) => (
-                  <motion.li
-                    key={entry.text}
-                    className="flex items-start gap-4 text-text-light/90 text-base lg:text-lg leading-relaxed"
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{
-                      duration: 0.6,
-                      delay: i * 0.08,
-                      ease: EASE,
-                    }}
-                  >
-                    <span className="mt-2 block h-[2px] w-4 shrink-0 bg-accent/40" />
-                    <span>
-                      {entry.highlightYear && (
-                        <span className="text-accent font-bold">
-                          {entry.highlightYear}{" "}
-                        </span>
-                      )}
-                      {entry.text}
-                    </span>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
+            <motion.div
+              className="flex-1"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+            >
+              <p className="text-text-light/90 text-base lg:text-lg leading-loose mb-4">
+                北海道出身。8歳でバドミントンを始め、青森山田高校、中央大学と日本有数のバドミントン強豪校で競技経験を積む。
+              </p>
+              <p className="text-text-light/90 text-base lg:text-lg leading-loose mb-4">
+                青森山田高校時代にはインターハイおよび全国高校選抜大会でシングルスベスト8を記録。社会人では国内最高峰大会である全日本総合バドミントン選手権に4度出場し、日本トップ選手らと対戦した。
+              </p>
+              <p className="text-text-gray text-base lg:text-lg leading-loose mb-4">
+                2015年にクロスミントンへ転向し、世界選手権ミックスダブルス4連覇、シングルス2連覇を含む6度の優勝という世界トップレベルの実績を誇る。
+              </p>
+              <p className="text-text-gray text-base lg:text-lg leading-loose">
+                2023年にピックルボールと出会い、現在は選手活動に加え大会ディレクターとしても活動。ラケットスポーツコミュニティ「Racket Sports Tokyo」を法人化し、RST Agency株式会社代表取締役を務める。
+              </p>
+            </motion.div>
           </div>
         </div>
       </section>
