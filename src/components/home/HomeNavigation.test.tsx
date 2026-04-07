@@ -50,11 +50,10 @@ describe("HomeNavigation", () => {
     expect(logo).toHaveAttribute("src", "/logos/yoko-neon.png");
   });
 
-  it("モバイル用マーク画像を表示する", () => {
+  it("ロゴが1つだけ表示される", () => {
     renderWithProvider(<HomeNavigation />);
-    const mark = screen.getByAltText("THE PICKLE BANG THEORY mark");
-    expect(mark).toBeInTheDocument();
-    expect(mark).toHaveAttribute("src", "/logos/mark-neon.png");
+    const logos = screen.getAllByAltText("THE PICKLE BANG THEORY");
+    expect(logos).toHaveLength(1);
   });
 
   it("6つのデスクトップナビリンクと正しいhrefを表示する", () => {

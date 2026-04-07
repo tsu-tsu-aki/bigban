@@ -68,6 +68,7 @@ export default function HomeNavigation() {
   const isJa = language === "ja";
 
   return (
+    <>
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
         isNavVisible ? "translate-y-0" : "-translate-y-full"
@@ -75,23 +76,14 @@ export default function HomeNavigation() {
     >
       <div className="backdrop-blur-md bg-deep-black/80">
         <div className="mx-auto flex items-center justify-between px-6 py-4 max-w-7xl">
-          {/* Desktop: Logo */}
-          <Link href="/" className="hidden md:block" onClick={handleLogoClick}>
+          {/* Logo */}
+          <Link href="/" onClick={handleLogoClick}>
             <Image
               src="/logos/yoko-neon.png"
               alt="THE PICKLE BANG THEORY"
               width={180}
               height={40}
-            />
-          </Link>
-
-          {/* Mobile: Mark */}
-          <Link href="/" className="block md:hidden" onClick={handleLogoClick}>
-            <Image
-              src="/logos/mark-neon.png"
-              alt="THE PICKLE BANG THEORY mark"
-              width={40}
-              height={40}
+              className="h-6 w-auto sm:h-8 md:h-10"
             />
           </Link>
 
@@ -148,52 +140,54 @@ export default function HomeNavigation() {
         </div>
       </div>
 
-      {/* Mobile menu overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            role="dialog"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-deep-black flex flex-col items-center justify-center"
-          >
-            <button
-              aria-label="メニューを閉じる"
-              onClick={handleCloseMenu}
-              className="absolute top-6 right-6 text-text-light"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-
-            <nav className="flex flex-col items-center gap-8">
-              {NAV_ITEMS.map((item) => (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  onClick={handleMobileLinkClick}
-                  className={`text-2xl uppercase tracking-widest transition-colors ${
-                    activeSection === item.id ? "text-accent" : "text-text-light"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-
-            <a
-              href="#"
-              className="mt-12 bg-accent text-deep-black px-8 py-3 text-sm font-bold uppercase tracking-widest"
-            >
-              RESERVE
-            </a>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
+
+    {/* Mobile menu overlay - outside header to avoid stacking context issues */}
+    <AnimatePresence>
+      {isMobileMenuOpen && (
+        <motion.div
+          role="dialog"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[60] bg-black flex flex-col items-center justify-center"
+        >
+          <button
+            aria-label="メニューを閉じる"
+            onClick={handleCloseMenu}
+            className="absolute top-6 right-6 text-text-light"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+
+          <nav className="flex flex-col items-center gap-8">
+            {NAV_ITEMS.map((item) => (
+              <a
+                key={item.id}
+                href={item.href}
+                onClick={handleMobileLinkClick}
+                className={`text-2xl uppercase tracking-widest transition-colors ${
+                  activeSection === item.id ? "text-accent" : "text-text-light"
+                }`}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+
+          <a
+            href="#"
+            className="mt-12 bg-accent text-deep-black px-8 py-3 text-sm font-bold uppercase tracking-widest"
+          >
+            RESERVE
+          </a>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   );
 }
 

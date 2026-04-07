@@ -195,7 +195,7 @@ export default function AboutPage() {
           {/* Photo left + Text right */}
           <div className="flex flex-col sm:flex-row gap-8 lg:gap-12">
             <motion.div
-              className="sm:w-[25%] shrink-0"
+              className="w-[40%] sm:w-[25%] shrink-0"
               initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -254,7 +254,7 @@ export default function AboutPage() {
               THE PICKLE BANG THEORYは、国内外で活躍するピックルボール選手と契約し、施設でのトレーニングや練習など選手をサポートいたします。また、協働によるイベント出演やソーシャルメディアでの発信を通して、ピックルボールを盛り上げます。
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div className="grid grid-cols-2 gap-4 sm:gap-8">
               {[
                 { name: "山田 太郎", ig: "@taro_yamada_pb", bio: "元テニスプレーヤー。2024年よりピックルボールに転向し、国内大会で多数入賞。攻撃的なプレースタイルが持ち味。", hasContent: true },
                 { name: "Coming Soon", ig: "", bio: "", hasContent: false },
