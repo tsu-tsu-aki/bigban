@@ -38,7 +38,7 @@ describe("HomeFooter", () => {
       { name: "SERVICES", href: "/#services" },
       { name: "PRICING", href: "/#pricing" },
       { name: "ACCESS", href: "/#access" },
-      { name: "CONTACT", href: "/#contact" },
+      { name: "ABOUT", href: "/#about" },
     ];
 
     for (const link of links) {

@@ -6,7 +6,7 @@ const NAV_LINKS = [
   { label: "SERVICES", href: "/#services" },
   { label: "PRICING", href: "/#pricing" },
   { label: "ACCESS", href: "/#access" },
-  { label: "CONTACT", href: "/#contact" },
+  { label: "ABOUT", href: "/#about" },
 ] as const;
 
 export default function HomeFooter() {

@@ -31,7 +31,7 @@ export default function HomeConcept() {
           viewport={{ once: true, margin: "-150px" }}
           transition={{ duration: 1.2, ease: EASE }}
         >
-          <div className="relative aspect-[3/4] sm:aspect-[4/3] lg:aspect-[16/9]">
+          <div className="relative min-h-[500px] sm:aspect-[4/3] lg:aspect-[16/9]">
             <Image
               src="/images/concept-bigbang.jpg"
               alt="ビッグバン — 宇宙の誕生"
