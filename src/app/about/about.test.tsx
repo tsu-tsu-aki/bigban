@@ -28,9 +28,9 @@ describe("AboutPage", () => {
     render(<AboutPage />);
     expect(screen.getByText("COMPANY")).toBeInTheDocument();
     expect(screen.getByText("FOUNDER")).toBeInTheDocument();
-    expect(screen.getByText("PLAYERS")).toBeInTheDocument();
-    expect(screen.getByText("STAFF")).toBeInTheDocument();
-    expect(screen.getByText("PRESS")).toBeInTheDocument();
+    expect(screen.getByText("OUR PLAYERS")).toBeInTheDocument();
+    expect(screen.getByText("OUR CREW")).toBeInTheDocument();
+    expect(screen.getByText("NEWS")).toBeInTheDocument();
     const contactElements = screen.getAllByText("CONTACT");
     expect(contactElements.length).toBeGreaterThanOrEqual(1);
   });
@@ -53,19 +53,29 @@ describe("AboutPage", () => {
     expect(screen.getByText("PBT契約選手")).toBeInTheDocument();
   });
 
-  it("スタッフセクションを表示する", () => {
+  it("PBTクルーセクションを表示する", () => {
     render(<AboutPage />);
-    expect(screen.getByText("スタッフ")).toBeInTheDocument();
+    expect(screen.getByText("PBTクルー")).toBeInTheDocument();
   });
 
-  it("プレスリリースリンクを表示する", () => {
+  it("ニュースセクションを表示する", () => {
     render(<AboutPage />);
+    expect(screen.getByText("ニュース")).toBeInTheDocument();
     expect(screen.getByText("PR TIMES")).toBeInTheDocument();
   });
 
   it("コンタクトフォームを表示する", () => {
     render(<AboutPage />);
-    expect(screen.getByText("SEND MESSAGE →")).toBeInTheDocument();
+    expect(screen.getByText("SEND MESSAGE")).toBeInTheDocument();
+  });
+
+  it("Instagramリンクが設定されている", () => {
+    render(<AboutPage />);
+    const igLink = screen.getByText("@thepicklebangtheory");
+    expect(igLink.closest("a")).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/thepicklebangtheory"
+    );
   });
 
   it("メールアドレスを表示しない", () => {
@@ -110,7 +120,7 @@ describe("AboutPage", () => {
     fireEvent.change(screen.getByPlaceholderText("お問い合わせ内容 *"), {
       target: { value: "テストメッセージ" },
     });
-    fireEvent.click(screen.getByText("SEND MESSAGE →"));
+    fireEvent.click(screen.getByText("SEND MESSAGE"));
 
     await waitFor(() => {
       expect(
@@ -135,7 +145,7 @@ describe("AboutPage", () => {
     fireEvent.change(screen.getByPlaceholderText("お問い合わせ内容 *"), {
       target: { value: "テストメッセージ" },
     });
-    fireEvent.click(screen.getByText("SEND MESSAGE →"));
+    fireEvent.click(screen.getByText("SEND MESSAGE"));
 
     await waitFor(() => {
       expect(
@@ -160,7 +170,7 @@ describe("AboutPage", () => {
     fireEvent.change(screen.getByPlaceholderText("お問い合わせ内容 *"), {
       target: { value: "テストメッセージ" },
     });
-    fireEvent.click(screen.getByText("SEND MESSAGE →"));
+    fireEvent.click(screen.getByText("SEND MESSAGE"));
 
     await waitFor(() => {
       expect(
