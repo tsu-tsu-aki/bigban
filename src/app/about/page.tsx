@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { LanguageProvider } from "@/hooks/useLanguage";
 import HomeNavigation from "@/components/home/HomeNavigation";
