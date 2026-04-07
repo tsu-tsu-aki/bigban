@@ -236,10 +236,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 03 — PLAYERS */}
+      {/* 03 — OUR PLAYERS */}
       <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
-          <SectionHeader number="03" labelEn="PLAYERS" id="players" />
+          <SectionHeader number="03" labelEn="OUR PLAYERS" id="players" />
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -251,24 +251,34 @@ export default function AboutPage() {
               PBT契約選手
             </h2>
             <p className="text-text-gray text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
-              THE PICKLE BANG THEORYでは、国内外で活躍するピックルボール選手と契約し、施設でのトレーニングやイベント出演を通じて競技の魅力を発信しています。
+              THE PICKLE BANG THEORYは、国内外で活躍するピックルボール選手と契約し、施設でのトレーニングや練習など選手をサポートいたします。また、協働によるイベント出演やソーシャルメディアでの発信を通して、ピックルボールを盛り上げます。
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
-              {[1, 2, 3].map((n) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {[
+                { name: "山田 太郎", ig: "@taro_yamada_pb", bio: "元テニスプレーヤー。2024年よりピックルボールに転向し、国内大会で多数入賞。攻撃的なプレースタイルが持ち味。", hasContent: true },
+                { name: "Coming Soon", ig: "", bio: "", hasContent: false },
+              ].map((player, n) => (
                 <motion.div
                   key={n}
-                  className="bg-gradient-to-b from-accent/[0.04] to-transparent border border-text-gray/10 rounded-sm p-6 text-center"
+                  className="bg-gradient-to-b from-accent/[0.04] to-transparent border border-text-gray/10 rounded-sm overflow-hidden"
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: n * 0.1, ease: EASE }}
+                  transition={{ duration: 0.5, delay: n * 0.15, ease: EASE }}
                 >
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-text-gray/10 flex items-center justify-center">
-                    <span className="text-text-gray text-xs">Photo</span>
+                  <div className="aspect-[4/3] bg-text-gray/5 flex items-center justify-center">
+                    <span className="text-text-gray text-sm">Photo</span>
                   </div>
-                  <p className="text-text-light text-sm font-semibold">選手名 {n}</p>
-                  <p className="text-text-gray text-xs mt-1">Coming Soon</p>
+                  <div className="p-6 text-center">
+                    <p className="text-text-light text-lg lg:text-xl font-semibold mb-1">{player.name}</p>
+                    {player.ig && (
+                      <p className="text-text-gray text-sm lg:text-base mb-3">{player.ig}</p>
+                    )}
+                    {player.bio && (
+                      <p className="text-text-gray text-sm lg:text-base leading-relaxed">{player.bio}</p>
+                    )}
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -276,10 +286,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 04 — STAFF */}
+      {/* 04 — OUR CREW */}
       <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
-          <SectionHeader number="04" labelEn="STAFF" id="staff" />
+          <SectionHeader number="04" labelEn="OUR CREW" id="crew" />
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -288,10 +298,10 @@ export default function AboutPage() {
             transition={{ duration: 0.7, ease: EASE }}
           >
             <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-6">
-              スタッフ
+              PBTクルー
             </h2>
             <p className="text-text-gray text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
-              プレイヤーの成長をサポートする、経験豊富なスタッフ陣をご紹介します。
+              THE PICKLE BANG THEORYを支え、操縦しているクルーたちを紹介ｼﾏｽ
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
@@ -307,8 +317,7 @@ export default function AboutPage() {
                   <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-text-gray/10 flex items-center justify-center">
                     <span className="text-text-gray text-xs">Photo</span>
                   </div>
-                  <p className="text-text-light text-sm font-semibold">スタッフ名 {n}</p>
-                  <p className="text-text-gray text-xs mt-1">Coming Soon</p>
+                  <p className="text-text-light text-sm font-semibold">Coming Soon</p>
                 </motion.div>
               ))}
             </div>
@@ -316,10 +325,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 05 — PRESS */}
+      {/* 05 — NEWS */}
       <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
-          <SectionHeader number="05" labelEn="PRESS" id="press" />
+          <SectionHeader number="05" labelEn="NEWS" id="news" />
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -328,7 +337,7 @@ export default function AboutPage() {
             transition={{ duration: 0.7, ease: EASE }}
           >
             <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-8">
-              プレスリリース
+              ニュース
             </h2>
 
             <div className="border-l-2 border-accent/20 pl-6 lg:pl-8">
@@ -368,7 +377,14 @@ export default function AboutPage() {
               <div className="space-y-6">
                 <div>
                   <p className="text-sm text-text-gray mb-1">Instagram</p>
-                  <p className="text-lg text-text-light">@thepicklebangtheory</p>
+                  <a
+                    href="https://www.instagram.com/thepicklebangtheory"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-lg text-text-light hover:text-accent transition-colors"
+                  >
+                    @thepicklebangtheory
+                  </a>
                 </div>
                 <div>
                   <p className="text-sm text-text-gray mb-1">Address</p>
@@ -411,7 +427,7 @@ export default function AboutPage() {
                   <textarea id="about-contact-message" name="message" required placeholder="お問い合わせ内容 *" rows={5} className={`${inputClass} resize-none`} />
                 </div>
                 <button type="submit" disabled={status === "sending"} className="bg-accent text-deep-black px-8 py-3 text-sm font-semibold tracking-[0.15em] uppercase hover:bg-accent/90 transition-colors disabled:opacity-50">
-                  SEND MESSAGE →
+                  SEND MESSAGE
                 </button>
                 {status === "success" && <p className="text-accent mt-4">送信しました。ありがとうございます。</p>}
                 {status === "error" && <p className="text-red-400 mt-4">送信に失敗しました。もう一度お試しください。</p>}
