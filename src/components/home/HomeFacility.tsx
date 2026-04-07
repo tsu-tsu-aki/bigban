@@ -261,7 +261,7 @@ export default function HomeFacility() {
 
         {/* Secondary Features - Left Bar Lines */}
         <motion.div
-          className="columns-1 sm:columns-2 gap-x-10"
+          className="columns-2 gap-x-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-150px" }}
@@ -300,7 +300,7 @@ export default function HomeFacility() {
           viewport={{ once: true, margin: "-150px" }}
           transition={{ duration: 1.1, ease: EASE }}
         >
-          <p className="text-text-light text-xl lg:text-2xl leading-relaxed font-semibold tracking-wide mb-6">
+          <p className="text-text-light text-base sm:text-xl lg:text-2xl leading-relaxed font-semibold tracking-wide mb-6">
             DecoTurf（デコターフ）は、世界最大級のピックルボール大会やテニスのグランドスラム、オリンピックでも採用されてきたハードコートサーフェス。安定したバウンドと高い耐久性により、世界基準のプレー環境を提供します。
           </p>
           <div className="w-10 h-[2px] bg-accent mb-6" />

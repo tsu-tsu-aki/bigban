@@ -107,7 +107,7 @@ export default function HomeServices() {
           }
         >
           <div
-            className={`mx-auto max-w-7xl px-6 lg:px-12 py-20 lg:py-28 flex flex-col ${
+            className={`mx-auto max-w-7xl px-6 lg:px-12 py-12 lg:py-28 flex flex-col ${
               service.isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
             } gap-8 lg:gap-16 items-center`}
           >
