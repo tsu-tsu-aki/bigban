@@ -41,11 +41,11 @@ describe("AboutPage", () => {
     expect(rstElements.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("西村昭彦のタイムラインを表示する", () => {
+  it("西村昭彦の経歴を表示する", () => {
     render(<AboutPage />);
     const nameElements = screen.getAllByText("西村昭彦");
     expect(nameElements.length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/クロスミントン転向/)).toBeInTheDocument();
+    expect(screen.getByText(/クロスミントンへ転向/)).toBeInTheDocument();
   });
 
   it("PBT契約選手セクションを表示する", () => {
