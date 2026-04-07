@@ -160,7 +160,7 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <dt className="text-text-gray">事業内容</dt>
-                    <dd className="text-text-light mt-1">スポーツ施設運営 / スポーツイベント / 大会運営 / 商品開発</dd>
+                    <dd className="text-text-light mt-1">スポーツ施設運営 / スポーツイベント / 大会運営 / スポーツ用品の企画・販売</dd>
                   </div>
                 </dl>
               </div>
