@@ -22,13 +22,13 @@ function createStars(count: number, width: number, height: number): Particle[] {
   return Array.from({ length: count }, () => ({
     x: Math.random() * width,
     y: Math.random() * height,
-    vx: 0,
-    vy: 0,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.3,
     life: Math.random() * 1000,
     maxLife: 1000,
-    size: Math.random() * 2 + 0.5,
-    color: "#ffffff",
-    alpha: Math.random() * 0.6 + 0.1,
+    size: Math.random() * 3 + 0.5,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    alpha: Math.random() * 0.7 + 0.1,
   }));
 }
 
@@ -126,17 +126,28 @@ export function BigBangCanvas({ onPhaseChange }: BigBangEngineProps) {
 
     const animate = (now: number) => {
       const elapsed = now - startTimeRef.current;
+      const isConverging = elapsed >= dark && elapsed < dark + converge;
 
       ctx.globalCompositeOperation = "source-over";
-      ctx.clearRect(0, 0, w, h);
 
-      ctx.fillStyle = "#000000";
-      ctx.fillRect(0, 0, w, h);
+      if (isConverging) {
+        const convergeProgress = (elapsed - dark) / converge;
+        const trailAlpha = 0.15 - convergeProgress * 0.1;
+        ctx.fillStyle = `rgba(0, 0, 0, ${Math.max(0.05, trailAlpha)})`;
+        ctx.fillRect(0, 0, w, h);
+      } else {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, w, h);
+      }
 
       if (elapsed < dark) {
         setPhase("dark");
+        ctx.globalCompositeOperation = "lighter";
         for (const star of starsRef.current) {
           star.life += 16;
+          star.x += star.vx;
+          star.y += star.vy;
           const twinkle = Math.sin(star.life * 0.003) * 0.5 + 0.5;
           ctx.globalAlpha = star.alpha * twinkle;
           ctx.fillStyle = star.color;
@@ -144,33 +155,83 @@ export function BigBangCanvas({ onPhaseChange }: BigBangEngineProps) {
           ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
           ctx.fill();
         }
+        ctx.globalCompositeOperation = "source-over";
       } else if (elapsed < dark + converge) {
         setPhase("converge");
         const progress = (elapsed - dark) / converge;
-        const eased = progress * progress;
+        const eased = progress * progress * progress;
+
+        ctx.globalCompositeOperation = "lighter";
 
         for (const star of starsRef.current) {
           const dx = cx - star.x;
           const dy = cy - star.y;
-          const drawX = star.x + dx * eased;
-          const drawY = star.y + dy * eased;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const speed = 0.3 + (star.size / 3) * 0.7;
+          const particleEased = Math.min(1, eased * speed * 1.5);
 
-          ctx.globalAlpha = star.alpha * (1 + progress);
-          ctx.fillStyle = star.color;
+          const drawX = star.x + dx * particleEased;
+          const drawY = star.y + dy * particleEased;
+
+          star.life += 16;
+
+          // #7: Color temperature shift — blue → white → yellow
+          let coreColor: string;
+          let glowColor: string;
+          if (progress < 0.4) {
+            coreColor = star.color;
+            glowColor = `rgba(160, 184, 224, ${star.alpha * 0.5})`;
+          } else if (progress < 0.7) {
+            const t = (progress - 0.4) / 0.3;
+            const r = Math.round(200 + t * 55);
+            const g = Math.round(220 + t * 35);
+            coreColor = `rgb(${r}, ${g}, 255)`;
+            glowColor = `rgba(${r}, ${g}, 255, ${star.alpha * 0.6})`;
+          } else {
+            const t = (progress - 0.7) / 0.3;
+            const r = 255;
+            const g = Math.round(255 - t * 10);
+            const b = Math.round(255 - t * 170);
+            coreColor = `rgb(${r}, ${g}, ${b})`;
+            glowColor = `rgba(${r}, ${g}, ${b}, ${star.alpha * 0.7})`;
+          }
+
+          const glowRadius = star.size * (1.5 + progress * 2.5);
+          const alpha = star.alpha * (0.8 + progress * 1.5);
+
+          const grad = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, glowRadius);
+          grad.addColorStop(0, coreColor);
+          grad.addColorStop(0.4, glowColor);
+          grad.addColorStop(1, "transparent");
+
+          ctx.globalAlpha = Math.min(1, alpha);
+          ctx.fillStyle = grad;
           ctx.beginPath();
-          ctx.arc(drawX, drawY, star.size * (1 - eased * 0.5), 0, Math.PI * 2);
+          ctx.arc(drawX, drawY, glowRadius, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.globalAlpha = Math.min(1, alpha * 1.5);
+          ctx.fillStyle = coreColor;
+          ctx.beginPath();
+          ctx.arc(drawX, drawY, star.size * 0.5, 0, Math.PI * 2);
           ctx.fill();
         }
 
-        const glowSize = 20 + progress * 40;
+        ctx.globalCompositeOperation = "source-over";
+        const glowSize = 20 + progress * 80;
         const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowSize);
-        gradient.addColorStop(0, `rgba(48, 110, 195, ${0.3 + progress * 0.5})`);
+        const centerR = Math.round(48 + progress * 207);
+        const centerG = Math.round(110 + progress * 145);
+        const centerB = Math.round(195 + progress * 60);
+        gradient.addColorStop(0, `rgba(${centerR}, ${centerG}, ${centerB}, ${0.3 + progress * 0.7})`);
+        gradient.addColorStop(0.4, `rgba(255, 255, 200, ${progress * 0.4})`);
         gradient.addColorStop(1, "transparent");
         ctx.globalAlpha = 1;
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(cx, cy, glowSize, 0, Math.PI * 2);
         ctx.fill();
+
       } else if (elapsed < dark + converge + explode) {
         setPhase("explode");
         const progress = (elapsed - dark - converge) / explode;
@@ -189,14 +250,23 @@ export function BigBangCanvas({ onPhaseChange }: BigBangEngineProps) {
           ctx.globalCompositeOperation = "source-over";
         }
 
-        const shockwaveRadius = progress * Math.max(w, h) * 0.6;
-        ctx.globalAlpha = 1 - progress;
-        ctx.strokeStyle = COLORS[0];
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(cx, cy, shockwaveRadius, 0, Math.PI * 2);
-        ctx.stroke();
+        // #4: Multiple shockwave rings
+        const maxRadius = Math.max(w, h) * 0.6;
+        for (let ring = 0; ring < 3; ring++) {
+          const ringDelay = ring * 0.15;
+          const ringProgress = Math.max(0, progress - ringDelay) / (1 - ringDelay);
+          if (ringProgress <= 0 || ringProgress >= 1) continue;
+          const shockwaveRadius = ringProgress * maxRadius;
+          const ringAlpha = (1 - ringProgress) * (1 - ring * 0.3);
+          ctx.globalAlpha = Math.max(0, ringAlpha);
+          ctx.strokeStyle = ring === 0 ? "#ffffff" : COLORS[1];
+          ctx.lineWidth = 3 - ring;
+          ctx.beginPath();
+          ctx.arc(cx, cy, shockwaveRadius, 0, Math.PI * 2);
+          ctx.stroke();
+        }
 
+        ctx.globalCompositeOperation = "lighter";
         for (const p of explosionParticlesRef.current) {
           p.x += p.vx;
           p.y += p.vy;
@@ -206,13 +276,35 @@ export function BigBangCanvas({ onPhaseChange }: BigBangEngineProps) {
           p.life -= 0.012;
 
           if (p.life > 0) {
-            ctx.globalAlpha = p.life * p.alpha;
-            ctx.fillStyle = p.color;
+            const glowRadius = p.size * p.life * 2.5;
+            const alpha = p.life * p.alpha;
+
+            // Color shift: white → blue as particles cool
+            const coolT = 1 - p.life;
+            const r = Math.round(255 - coolT * 95);
+            const g = Math.round(255 - coolT * 35);
+            const b = 255;
+            const coreColor = `rgb(${r}, ${g}, ${b})`;
+
+            const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowRadius);
+            grad.addColorStop(0, coreColor);
+            grad.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${alpha * 0.6})`);
+            grad.addColorStop(1, "transparent");
+
+            ctx.globalAlpha = Math.min(1, alpha);
+            ctx.fillStyle = grad;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, glowRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.globalAlpha = Math.min(1, alpha * 1.5);
+            ctx.fillStyle = coreColor;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * p.life * 0.5, 0, Math.PI * 2);
             ctx.fill();
           }
         }
+        ctx.globalCompositeOperation = "source-over";
       } else {
         setPhase("content");
         return;
