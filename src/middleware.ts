@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE === "true";
+const LAUNCH_DATE = new Date("2026-04-17T18:00:00+09:00");
+
+function isBeforeLaunch(): boolean {
+  if (process.env.NEXT_PUBLIC_MAINTENANCE === "true") return true;
+  return new Date() < LAUNCH_DATE;
+}
 
 export function middleware(request: NextRequest) {
-  if (!isMaintenance) return NextResponse.next();
+  if (!isBeforeLaunch()) return NextResponse.next();
 
   const { pathname } = request.nextUrl;
 
