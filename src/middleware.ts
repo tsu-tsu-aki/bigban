@@ -15,7 +15,7 @@ export function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/teaser" || pathname.startsWith("/_next") || pathname.startsWith("/logos")) {
+  if (pathname === "/teaser" || pathname.startsWith("/_next") || pathname === "/logos" || pathname.startsWith("/logos/")) {
     return NextResponse.next();
   }
 

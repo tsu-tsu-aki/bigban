@@ -69,4 +69,12 @@ describe("middleware", () => {
     const response = middleware(createRequest("/logos/logo.svg"));
     expect(response.status).toBe(200);
   });
+
+  it("ローンチ時刻ちょうどは通過する（< の境界値）", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-17T18:00:00+09:00"));
+
+    const response = middleware(createRequest("/"));
+    expect(response.status).toBe(200);
+  });
 });
