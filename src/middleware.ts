@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+// 施設オープン: 2026-04-18
+// サイト公開は前日18時（プレオープン告知のため）
 const LAUNCH_DATE = new Date("2026-04-17T18:00:00+09:00");
 
 function isBeforeLaunch(): boolean {
