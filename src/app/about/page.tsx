@@ -129,7 +129,7 @@ export default function AboutPage() {
                 RST Agency株式会社
               </h2>
               <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4">
-                RST Agencyは、THE PICKLE BANG THEORYのプロデュース及び運営を行っているスポーツエージェンシーです。ラケットスポーツの可能性を追求し、その選手や競技の価値向上を目指します。
+                RST Agencyは、ラケットスポーツを通じて人が集い、挑戦し、成長するコミュニティを創造するスポーツカンパニーです。スポーツを追求するその先にある「人の成長」を生み出し、日本のスポーツ文化の発展に貢献していきます。
               </p>
               <p className="text-text-gray text-sm lg:text-base leading-relaxed">
                 他にもピックルボールを中心としたイベントの企画・実行や公式大会の企画・運営、選手マネジメントなど行っています。また、代表含め、メンバーたちも競技と向き合うプレーヤーであります。
