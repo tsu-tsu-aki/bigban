@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const NAV_LINKS = [
   { label: "CONCEPT", href: "/#concept" },
@@ -46,9 +47,17 @@ export default function HomeFooter() {
       {/* Bottom bar */}
       <div className="border-t border-text-gray/20">
         <div className="mx-auto max-w-7xl px-6 lg:px-12 py-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-text-gray">
-            &copy; 2026 RST Agency Inc.
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-text-gray">
+              &copy; 2026 RST Agency Inc.
+            </p>
+            <Link
+              href="/tokushoho"
+              className="text-xs text-text-gray hover:text-text-light transition-colors"
+            >
+              特定商取引法に基づく表記
+            </Link>
+          </div>
           <p className="text-xs text-text-gray">
             〒272-0021 千葉県市川市八幡2-16-6 6階
           </p>
