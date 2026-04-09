@@ -44,17 +44,24 @@ describe("TokushohoPage", () => {
     expect(screen.getByText("西村昭彦")).toBeInTheDocument();
   });
 
-  it("連絡先情報を表示する", () => {
+  it("電話番号がtel:リンクとして表示される", () => {
     render(<TokushohoPage />);
-    expect(screen.getByText("090 5523 3879")).toBeInTheDocument();
-    expect(screen.getByText("hello@rstagency.com")).toBeInTheDocument();
+    const link = screen.getByRole("link", { name: "090 5523 3879" });
+    expect(link).toHaveAttribute("href", "tel:09055233879");
   });
 
-  it("ホームページURLをリンクとして表示する", () => {
+  it("メールアドレスがmailto:リンクとして表示される", () => {
+    render(<TokushohoPage />);
+    const link = screen.getByRole("link", { name: "hello@rstagency.com" });
+    expect(link).toHaveAttribute("href", "mailto:hello@rstagency.com");
+  });
+
+  it("ホームページURLを外部リンクとして表示する", () => {
     render(<TokushohoPage />);
     const link = screen.getByRole("link", { name: "https://rstagency.com" });
     expect(link).toHaveAttribute("href", "https://rstagency.com");
     expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
 
   it("返品・交換情報を表示する", () => {

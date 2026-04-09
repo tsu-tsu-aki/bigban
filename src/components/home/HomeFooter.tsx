@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const NAV_LINKS = [
   { label: "CONCEPT", href: "/#concept" },
@@ -50,12 +51,12 @@ export default function HomeFooter() {
             <p className="text-xs text-text-gray">
               &copy; 2026 RST Agency Inc.
             </p>
-            <a
+            <Link
               href="/tokushoho"
               className="text-xs text-text-gray hover:text-text-light transition-colors"
             >
               特定商取引法に基づく表記
-            </a>
+            </Link>
           </div>
           <p className="text-xs text-text-gray">
             〒272-0021 千葉県市川市八幡2-16-6 6階

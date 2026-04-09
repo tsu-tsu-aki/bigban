@@ -8,14 +8,20 @@ export const metadata: Metadata = {
   description: "THE PICKLE BANG THEORYの特定商取引法に基づく表記ページです。",
 };
 
-const ITEMS = [
+interface TokushohoItem {
+  readonly label: string;
+  readonly value: string;
+  readonly href?: string;
+}
+
+const ITEMS: readonly TokushohoItem[] = [
   { label: "販売者", value: "RST Agency株式会社" },
   { label: "販売責任者", value: "西村昭彦" },
   { label: "所在地", value: "東京都品川区二葉1-4-2" },
-  { label: "電話番号", value: "090 5523 3879" },
+  { label: "電話番号", value: "090 5523 3879", href: "tel:09055233879" },
   { label: "受付時間", value: "9:00〜17:00" },
-  { label: "メールアドレス", value: "hello@rstagency.com" },
-  { label: "ホームページURL", value: "https://rstagency.com", isLink: true },
+  { label: "メールアドレス", value: "hello@rstagency.com", href: "mailto:hello@rstagency.com" },
+  { label: "ホームページURL", value: "https://rstagency.com", href: "https://rstagency.com" },
   { label: "販売価格", value: "商品/イベントページをご参照ください" },
   { label: "商品代金以外の必要料金", value: "商品/イベントページをご参照ください" },
   { label: "引き渡し時期", value: "即日受け渡し" },
@@ -25,13 +31,7 @@ const ITEMS = [
   { label: "返品・交換・キャンセル", value: "不良品以外不可" },
   { label: "対応期限", value: "商品購入より2週間以内" },
   { label: "返品送料", value: "お客様にご負担いただきます" },
-] as const;
-
-interface TokushohoItem {
-  readonly label: string;
-  readonly value: string;
-  readonly isLink?: boolean;
-}
+];
 
 export default function TokushohoPage() {
   return (
@@ -44,7 +44,7 @@ export default function TokushohoPage() {
           </h1>
 
           <dl className="divide-y divide-text-gray/10">
-            {ITEMS.map((item: TokushohoItem) => (
+            {ITEMS.map((item) => (
               <div
                 key={item.label}
                 className="py-5 sm:grid sm:grid-cols-3 sm:gap-4"
@@ -53,11 +53,10 @@ export default function TokushohoPage() {
                   {item.label}
                 </dt>
                 <dd className="mt-1 text-sm text-text-light sm:col-span-2 sm:mt-0">
-                  {item.isLink ? (
+                  {item.href ? (
                     <a
-                      href={item.value}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={item.href}
+                      {...(item.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       className="text-accent hover:underline"
                     >
                       {item.value}
