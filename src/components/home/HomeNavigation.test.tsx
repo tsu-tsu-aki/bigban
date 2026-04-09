@@ -147,7 +147,7 @@ describe("HomeNavigation", () => {
     expect(header.className).toContain("fixed");
   });
 
-  it("スクロールダウンでナビが非表示になる", () => {
+  it("スクロールダウンでナビが非表示になる（デスクトップのみ）", () => {
     renderWithProvider(<HomeNavigation />);
     const header = screen.getByRole("banner");
 
@@ -157,7 +157,10 @@ describe("HomeNavigation", () => {
     // 200pxスクロールダウン
     Object.defineProperty(window, "scrollY", { value: 200, writable: true });
     fireEvent.scroll(window);
-    expect(header.className).toContain("-translate-y-full");
+    // デスクトップ (md:) でのみ非表示クラスを付与（iOS Safari対応）
+    expect(header.className).toContain("md:-translate-y-full");
+    // モバイルでは平坦な -translate-y-full を付与しない
+    expect(header.className).not.toMatch(/(^| )-translate-y-full( |$)/);
   });
 
   it("スクロールアップでナビが再表示される", () => {
@@ -167,12 +170,13 @@ describe("HomeNavigation", () => {
     // まず下にスクロール
     Object.defineProperty(window, "scrollY", { value: 200, writable: true });
     fireEvent.scroll(window);
-    expect(header.className).toContain("-translate-y-full");
+    expect(header.className).toContain("md:-translate-y-full");
 
     // 上にスクロール
     Object.defineProperty(window, "scrollY", { value: 100, writable: true });
     fireEvent.scroll(window);
     expect(header.className).toContain("translate-y-0");
+    expect(header.className).not.toContain("md:-translate-y-full");
   });
 
   it("スクロール位置が100px未満ではナビが表示される", () => {
