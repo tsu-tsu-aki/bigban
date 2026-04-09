@@ -212,6 +212,7 @@ function LanguageToggle({ isJa, onSwitch }: LanguageToggleProps) {
     <div className="flex items-center gap-1 text-xs">
       <button
         onClick={() => onSwitch("ja")}
+        aria-pressed={isJa}
         className={isJa ? "text-text-light" : "text-text-gray"}
       >
         JP
@@ -219,6 +220,7 @@ function LanguageToggle({ isJa, onSwitch }: LanguageToggleProps) {
       <span className="text-text-gray">/</span>
       <button
         onClick={() => onSwitch("en")}
+        aria-pressed={!isJa}
         className={isJa ? "text-text-gray" : "text-text-light"}
       >
         EN

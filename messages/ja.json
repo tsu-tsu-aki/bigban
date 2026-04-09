@@ -21,8 +21,7 @@
       "description": "コートレンタル、レッスンプログラム、イベント開催、法人プラン。あらゆるニーズに対応するサービス一覧。"
     },
     "og": {
-      "siteName": "THE PICKLE BANG THEORY",
-      "image": "/og-image.png"
+      "siteName": "THE PICKLE BANG THEORY"
     }
   },
   "Navigation": {

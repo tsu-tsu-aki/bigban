@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { SITE_URL } from "@/constants/site";
 import TokushohoContent from "./TokushohoContent";
 
 import type { Metadata } from "next";
@@ -12,8 +13,6 @@ export async function generateMetadata({
 }: TokushohoPageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   return {
     title: t("tokushoho.title"),
@@ -25,9 +24,9 @@ export async function generateMetadata({
     },
     alternates: {
       languages: {
-        ja: `${siteUrl}/tokushoho`,
-        en: `${siteUrl}/en/tokushoho`,
-        "x-default": `${siteUrl}/tokushoho`,
+        ja: `${SITE_URL}/tokushoho`,
+        en: `${SITE_URL}/en/tokushoho`,
+        "x-default": `${SITE_URL}/tokushoho`,
       },
     },
   };

@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { SITE_URL, OG_IMAGE } from "@/constants/site";
 import Navigation from "@/components/Navigation";
 import FacilityHero from "@/components/facility/FacilityHero";
 import FacilityStory from "@/components/facility/FacilityStory";
@@ -19,8 +20,6 @@ export async function generateMetadata({
 }: FacilityPageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   return {
     title: t("facility.title"),
@@ -28,14 +27,14 @@ export async function generateMetadata({
     openGraph: {
       title: t("facility.title"),
       description: t("facility.description"),
-      images: [t("og.image")],
+      images: [OG_IMAGE],
       locale: locale === "ja" ? "ja_JP" : "en_US",
     },
     alternates: {
       languages: {
-        ja: `${siteUrl}/facility`,
-        en: `${siteUrl}/en/facility`,
-        "x-default": `${siteUrl}/facility`,
+        ja: `${SITE_URL}/facility`,
+        en: `${SITE_URL}/en/facility`,
+        "x-default": `${SITE_URL}/facility`,
       },
     },
   };

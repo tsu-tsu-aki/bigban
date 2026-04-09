@@ -1,9 +1,9 @@
+import { SITE_URL } from "@/constants/site";
+
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-  ),
+  metadataBase: new URL(SITE_URL),
 };
 
 export default function RootLayout({

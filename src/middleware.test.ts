@@ -18,7 +18,7 @@ describe("middleware", () => {
   beforeEach(() => {
     vi.resetModules();
     mockIntlMiddleware.mockReset();
-    process.env.NEXT_PUBLIC_MAINTENANCE = undefined;
+    delete process.env.NEXT_PUBLIC_MAINTENANCE;
   });
 
   afterAll(() => {
