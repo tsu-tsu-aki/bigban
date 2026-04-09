@@ -8,6 +8,10 @@
       "title": "ABOUT US · PICKLE BANG THEORY",
       "description": "About RST Agency Inc., the team behind THE PICKLE BANG THEORY. Company overview, founder message, players and crew."
     },
+    "tokushoho": {
+      "title": "Specified Commercial Transactions Act · PICKLE BANG THEORY",
+      "description": "Disclosure under the Specified Commercial Transactions Act for THE PICKLE BANG THEORY."
+    },
     "facility": {
       "title": "FACILITY · PICKLE BANG THEORY",
       "description": "State-of-the-art indoor pickleball courts with LED lighting, pro-grade surfaces, and a comfortable lounge area."
@@ -362,6 +366,41 @@
     "services": "Services",
     "pricing": "Pricing",
     "access": "Access"
+  },
+  "Tokushoho": {
+    "heading": "Specified Commercial Transactions Act",
+    "seller": "Seller",
+    "sellerValue": "RST Agency Inc.",
+    "manager": "Sales Manager",
+    "managerValue": "Akihiko Nishimura",
+    "address": "Address",
+    "addressValue": "1-4-2 Futaba, Shinagawa-ku, Tokyo",
+    "phone": "Phone",
+    "phoneValue": "090 5523 3879",
+    "hours": "Business Hours",
+    "hoursValue": "9:00–17:00",
+    "email": "Email",
+    "emailValue": "hello@rstagency.com",
+    "website": "Website",
+    "websiteValue": "https://rstagency.com",
+    "price": "Price",
+    "priceValue": "Please refer to the product/event page",
+    "additionalFees": "Additional Fees",
+    "additionalFeesValue": "Please refer to the product/event page",
+    "delivery": "Delivery",
+    "deliveryValue": "Same-day delivery",
+    "paymentMethod": "Payment Method",
+    "paymentMethodValue": "Bank transfer or credit card",
+    "paymentTiming": "Payment Timing",
+    "paymentTimingValue": "Immediate",
+    "cardPayment": "Card Payment",
+    "cardPaymentValue": "First payment at signup; monthly payments on the 20th thereafter",
+    "returns": "Returns / Exchanges / Cancellations",
+    "returnsValue": "Not accepted except for defective products",
+    "deadline": "Claim Deadline",
+    "deadlineValue": "Within 2 weeks of purchase",
+    "shippingCost": "Return Shipping",
+    "shippingCostValue": "Borne by the customer"
   },
   "Common": {
     "logoAlt": "THE PICKLE BANG THEORY"

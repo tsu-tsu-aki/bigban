@@ -5,6 +5,12 @@ import jaMessages from "../../../messages/ja.json";
 
 import HomeFooter from "./HomeFooter";
 
+vi.mock("@/i18n/navigation", () => ({
+  Link: ({ href, children, ...props }: Record<string, unknown>) => (
+    <a href={href as string} {...props}>{children as React.ReactNode}</a>
+  ),
+}));
+
 vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => {
     const { fill, priority, ...rest } = props;

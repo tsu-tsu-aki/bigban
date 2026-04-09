@@ -8,6 +8,10 @@
       "title": "ABOUT US|THE PICKLE BANG THEORY",
       "description": "THE PICKLE BANG THEORYを運営するRST Agency株式会社の会社概要、代表挨拶、選手・スタッフ紹介。"
     },
+    "tokushoho": {
+      "title": "特定商取引法に基づく表記|THE PICKLE BANG THEORY",
+      "description": "THE PICKLE BANG THEORYの特定商取引法に基づく表記ページです。"
+    },
     "facility": {
       "title": "FACILITY|THE PICKLE BANG THEORY",
       "description": "最新設備を完備したインドアピックルボールコート。LED照明、プロ仕様サーフェス、快適なラウンジスペース。"
@@ -362,6 +366,41 @@
     "services": "Services",
     "pricing": "Pricing",
     "access": "Access"
+  },
+  "Tokushoho": {
+    "heading": "特定商取引法に基づく表記",
+    "seller": "販売者",
+    "sellerValue": "RST Agency株式会社",
+    "manager": "販売責任者",
+    "managerValue": "西村昭彦",
+    "address": "所在地",
+    "addressValue": "東京都品川区二葉1-4-2",
+    "phone": "電話番号",
+    "phoneValue": "090 5523 3879",
+    "hours": "受付時間",
+    "hoursValue": "9:00〜17:00",
+    "email": "メールアドレス",
+    "emailValue": "hello@rstagency.com",
+    "website": "ホームページURL",
+    "websiteValue": "https://rstagency.com",
+    "price": "販売価格",
+    "priceValue": "商品/イベントページをご参照ください",
+    "additionalFees": "商品代金以外の必要料金",
+    "additionalFeesValue": "商品/イベントページをご参照ください",
+    "delivery": "引き渡し時期",
+    "deliveryValue": "即日受け渡し",
+    "paymentMethod": "支払い方法",
+    "paymentMethodValue": "銀行振込またはクレジットカード",
+    "paymentTiming": "支払い時期",
+    "paymentTimingValue": "即日",
+    "cardPayment": "カード決済",
+    "cardPaymentValue": "初回は申し込み時に決済、翌月以降は毎月20日に決済",
+    "returns": "返品・交換・キャンセル",
+    "returnsValue": "不良品以外不可",
+    "deadline": "対応期限",
+    "deadlineValue": "商品購入より2週間以内",
+    "shippingCost": "返品送料",
+    "shippingCostValue": "お客様にご負担いただきます"
   },
   "Common": {
     "logoAlt": "THE PICKLE BANG THEORY"
