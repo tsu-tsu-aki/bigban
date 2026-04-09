@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import { LanguageProvider } from "@/hooks/useLanguage";
-import HomeNavigation from "@/components/home/HomeNavigation";
-import HomeFooter from "@/components/home/HomeFooter";
 
 export const metadata: Metadata = {
   title: "特定商取引法に基づく表記 | THE PICKLE BANG THEORY",
@@ -35,8 +32,6 @@ const ITEMS: readonly TokushohoItem[] = [
 
 export default function TokushohoPage() {
   return (
-    <LanguageProvider>
-      <HomeNavigation />
       <main className="min-h-screen bg-deep-black text-text-light pt-24 lg:pt-28">
         <div className="mx-auto max-w-3xl px-6 lg:px-12 py-16 lg:py-20">
           <h1 className="text-2xl lg:text-3xl font-bold tracking-wide mb-12">
@@ -70,7 +65,5 @@ export default function TokushohoPage() {
           </dl>
         </div>
       </main>
-      <HomeFooter />
-    </LanguageProvider>
   );
 }
