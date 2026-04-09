@@ -70,9 +70,7 @@ export default function HomeNavigation() {
   return (
     <>
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
-        isNavVisible ? "translate-y-0" : "-translate-y-full"
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 translate-y-0${!isNavVisible ? " md:-translate-y-full" : ""}`}
     >
       <div className="backdrop-blur-md bg-deep-black/80">
         <div className="mx-auto flex items-center justify-between px-6 py-4 max-w-7xl">
