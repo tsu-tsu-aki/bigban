@@ -83,7 +83,11 @@ describe("HomeFooter", () => {
   });
 
   it("特定商取引法リンクを表示する", () => {
-    render(<HomeFooter />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFooter />
+      </NextIntlClientProvider>
+    );
     const link = screen.getByRole("link", { name: "特定商取引法に基づく表記" });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/tokushoho");

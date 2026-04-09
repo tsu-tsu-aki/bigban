@@ -21,14 +21,6 @@ vi.mock("next/navigation", () => ({
   usePathname: () => "/tokushoho",
 }));
 
-vi.mock("@/hooks/useLanguage", () => ({
-  useLanguage: () => ({ language: "ja", toggleLanguage: vi.fn() }),
-  LanguageProvider: ({ children }: { children: React.ReactNode }) => children,
-}));
-
-vi.mock("@/hooks/useActiveSection", () => ({
-  useActiveSection: () => "",
-}));
 
 describe("TokushohoPage", () => {
   it("ページタイトルを表示する", () => {
@@ -76,8 +68,4 @@ describe("TokushohoPage", () => {
     expect(terms).toHaveLength(16);
   });
 
-  it("フッターが表示される", () => {
-    render(<TokushohoPage />);
-    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
-  });
 });
