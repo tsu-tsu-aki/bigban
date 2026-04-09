@@ -6,8 +6,10 @@ import enMessages from "../../../../messages/en.json";
 
 import type { ReactElement } from "react";
 
+const mockGetTranslations = vi.fn();
+
 vi.mock("next-intl/server", () => ({
-  getTranslations: vi.fn(),
+  getTranslations: (...args: unknown[]) => mockGetTranslations(...args),
   setRequestLocale: vi.fn(),
 }));
 
@@ -28,7 +30,7 @@ vi.mock("@/components/Footer", () => ({
   default: () => <footer data-testid="footer" />,
 }));
 
-const { default: ServicesPage } = await import("./page");
+const { default: ServicesPage, generateMetadata } = await import("./page");
 
 function renderWithIntl(ui: ReactElement, locale = "ja") {
   const messages = locale === "ja" ? jaMessages : enMessages;
@@ -56,5 +58,31 @@ describe("ServicesPage", () => {
     renderWithIntl(Page);
 
     expect(screen.getByRole("main")).toBeInTheDocument();
+  });
+});
+
+describe("generateMetadata", () => {
+  it("日本語メタデータを返す", async () => {
+    const mockT = (key: string) => `translated:${key}`;
+    mockGetTranslations.mockResolvedValue(mockT);
+
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+
+    expect(metadata.title).toBe("translated:services.title");
+    expect(metadata.description).toBe("translated:services.description");
+    expect(metadata.openGraph?.locale).toBe("ja_JP");
+  });
+
+  it("英語メタデータを返す", async () => {
+    const mockT = (key: string) => `translated:${key}`;
+    mockGetTranslations.mockResolvedValue(mockT);
+
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ locale: "en" }),
+    });
+
+    expect(metadata.openGraph?.locale).toBe("en_US");
   });
 });
