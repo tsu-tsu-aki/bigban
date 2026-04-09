@@ -2,10 +2,12 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function BottomCTA() {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const t = useTranslations("ServicesPage");
 
   return (
     <section ref={ref} className="relative bg-accent overflow-hidden">
@@ -20,7 +22,7 @@ export default function BottomCTA() {
           transition={{ duration: 0.8 }}
           className="font-[var(--font-dm-serif)] text-[clamp(1.8rem,3.5vw,3rem)] text-deep-black leading-tight max-w-lg"
         >
-          まずはコートを予約してみませんか？
+          {t("cta.heading")}
         </motion.h2>
 
         {/* CTA Button */}
@@ -32,7 +34,7 @@ export default function BottomCTA() {
           className="group inline-flex items-center gap-3 bg-deep-black text-off-white px-12 py-5 text-[12px] tracking-[0.25em] uppercase font-[var(--font-inter)] font-semibold hover:bg-[#1a1a1a] transition-colors duration-300"
           style={{ borderRadius: "2px" }}
         >
-          RESERVE
+          {t("cta.button")}
           <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
             &rarr;
           </span>

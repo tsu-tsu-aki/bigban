@@ -2,80 +2,32 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
-interface KeyNumber {
-  value: string;
-  labelEn: string;
-  labelJa: string;
-}
-
-interface PrimarySpec {
-  labelEn: string;
-  labelJa: string;
-  description: string;
-}
-
-interface FacilityFeature {
-  label: string;
-  note?: string;
-}
-
-const KEY_NUMBERS: KeyNumber[] = [
-  { value: "3", labelEn: "COURTS", labelJa: "プロ仕様コート" },
-  { value: "6:00–23:00", labelEn: "HOURS", labelJa: "営業時間" },
-  { value: "1 min", labelEn: "FROM STATION", labelJa: "駅徒歩1分" },
+const FACILITY_IMAGES = [
+  { src: "/images/sarasota-guide-uHdY8VYTfbI-unsplash.jpg", altKey: "court" as const },
+  { src: "/images/facility-interior-01.png", altKey: "training" as const },
+  { src: "/images/facility-interior-02.png", altKey: "lounge" as const },
 ];
 
-const PRIMARY_SPECS: PrimarySpec[] = [
-  {
-    labelEn: "SURFACE",
-    labelJa: "ハードコート DecoTurf（デコターフ）",
-    description: "世界最大級の大会やオリンピックでも採用されてきた高性能サーフェス",
-  },
-  {
-    labelEn: "TYPE",
-    labelJa: "全天候型インドア",
-    description: "空調完備で年間を通じて快適なプレー環境",
-  },
-];
-
-const FACILITY_FEATURES: FacilityFeature[] = [
-  { label: "トレーニングエリア", note: "準備中" },
-  { label: "ラウンジスペース", note: "準備中" },
-  { label: "男女別更衣室" },
-  { label: "空調完備" },
-  { label: "自動販売機" },
-  { label: "レンタル用具あり" },
-  { label: "無人チェックイン対応予定" },
-  { label: "ショーコート1面に変更可能" },
-];
-
-interface FacilityImage {
-  src: string;
-  alt: string;
-}
-
-const FACILITY_IMAGES: FacilityImage[] = [
-  {
-    src: "/images/sarasota-guide-uHdY8VYTfbI-unsplash.jpg",
-    alt: "プロ仕様ピクルボールコートの俯瞰",
-  },
-  {
-    src: "/images/facility-interior-01.png",
-    alt: "トレーニングエリア",
-  },
-  {
-    src: "/images/facility-interior-02.png",
-    alt: "ラウンジスペース",
-  },
+const FEATURE_KEYS = [
+  { key: "trainingArea" as const, hasNote: true },
+  { key: "lounge" as const, hasNote: true },
+  { key: "changingRooms" as const, hasNote: false },
+  { key: "airConditioning" as const, hasNote: false },
+  { key: "vendingMachine" as const, hasNote: false },
+  { key: "rentalEquipment" as const, hasNote: false },
+  { key: "unmannedCheckin" as const, hasNote: false },
+  { key: "showCourt" as const, hasNote: false },
 ];
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
 export default function HomeFacility() {
+  const t = useTranslations("HomeFacility");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({ delay: 5000, stopOnInteraction: true, stopOnMouseEnter: true }),
@@ -111,6 +63,17 @@ export default function HomeFacility() {
     emblaApi.scrollNext();
   }, [emblaApi]);
 
+  const keyNumbers = [
+    { value: t("keyNumbers.courts.value"), labelEn: t("keyNumbers.courts.labelEn"), labelJa: t("keyNumbers.courts.labelJa") },
+    { value: t("keyNumbers.hours.value"), labelEn: t("keyNumbers.hours.labelEn"), labelJa: t("keyNumbers.hours.labelJa") },
+    { value: t("keyNumbers.station.value"), labelEn: t("keyNumbers.station.labelEn"), labelJa: t("keyNumbers.station.labelJa") },
+  ];
+
+  const primarySpecs = [
+    { labelEn: t("specs.surface.labelEn"), labelJa: t("specs.surface.labelJa"), description: t("specs.surface.description") },
+    { labelEn: t("specs.type.labelEn"), labelJa: t("specs.type.labelJa"), description: t("specs.type.description") },
+  ];
+
   return (
     <section id="facility" className="bg-deep-black py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
@@ -123,18 +86,18 @@ export default function HomeFacility() {
           transition={{ duration: 1.1, ease: EASE }}
         >
           <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em] text-text-light">
-            FACILITY
+            {t("title")}
           </h2>
           <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
         </motion.div>
 
         {/* Key Numbers */}
         <div className="grid grid-cols-1 sm:grid-cols-3 mb-12 lg:mb-16">
-          {KEY_NUMBERS.map((item, i) => (
+          {keyNumbers.map((item, i) => (
             <motion.div
               key={item.labelEn}
               className={`flex flex-col items-center text-center py-6 sm:py-8${
-                i < KEY_NUMBERS.length - 1
+                i < keyNumbers.length - 1
                   ? " sm:border-r sm:border-accent/20"
                   : ""
               }${i > 0 ? " border-t sm:border-t-0 border-text-gray/10" : ""}`}
@@ -180,7 +143,7 @@ export default function HomeFacility() {
                 >
                   <Image
                     src={image.src}
-                    alt={image.alt}
+                    alt={t(`images.${image.altKey}`)}
                     fill
                     className="object-cover"
                   />
@@ -194,7 +157,7 @@ export default function HomeFacility() {
           <button
             type="button"
             onClick={scrollPrev}
-            aria-label="前の画像"
+            aria-label={t("carousel.prev")}
             className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-text-light hover:bg-black/60 transition-colors"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -204,7 +167,7 @@ export default function HomeFacility() {
           <button
             type="button"
             onClick={scrollNext}
-            aria-label="次の画像"
+            aria-label={t("carousel.next")}
             className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-text-light hover:bg-black/60 transition-colors"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -219,7 +182,7 @@ export default function HomeFacility() {
                 key={image.src}
                 type="button"
                 onClick={() => scrollTo(i)}
-                aria-label={`画像${i + 1}を表示: ${image.alt}`}
+                aria-label={t("carousel.showImage", { index: i + 1, alt: t(`images.${image.altKey}`) })}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   i === selectedIndex
                     ? "bg-accent scale-125"
@@ -232,7 +195,7 @@ export default function HomeFacility() {
 
         {/* Primary Specs - Glow Header */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
-          {PRIMARY_SPECS.map((spec, i) => (
+          {primarySpecs.map((spec, i) => (
             <motion.div
               key={spec.labelEn}
               className="relative bg-gradient-to-b from-accent/[0.07] to-transparent px-8 py-10"
@@ -267,9 +230,9 @@ export default function HomeFacility() {
           viewport={{ once: true, margin: "-150px" }}
           transition={{ duration: 1.0, delay: 0.2, ease: EASE }}
         >
-          {FACILITY_FEATURES.map((feature, i) => (
+          {FEATURE_KEYS.map((feature, i) => (
             <motion.div
-              key={feature.label}
+              key={feature.key}
               className="break-inside-avoid border-l-2 border-accent/15 pl-4 py-3 mb-1 transition-colors duration-300 hover:border-accent/50"
               initial={{ opacity: 0, x: -12 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -281,11 +244,11 @@ export default function HomeFacility() {
               }}
             >
               <span className="text-text-light text-sm lg:text-base">
-                {feature.label}
+                {t(`features.${feature.key}`)}
               </span>
-              {feature.note && (
+              {feature.hasNote && (
                 <span className="text-accent/60 text-xs ml-2 tracking-wider">
-                  {feature.note}
+                  {t("features.preparing")}
                 </span>
               )}
             </motion.div>
@@ -301,11 +264,11 @@ export default function HomeFacility() {
           transition={{ duration: 1.1, ease: EASE }}
         >
           <p className="text-text-light text-base sm:text-xl lg:text-2xl leading-relaxed font-semibold tracking-wide mb-6">
-            DecoTurf（デコターフ）は、世界最大級のピックルボール大会やテニスのグランドスラム、オリンピックでも採用されてきたハードコートサーフェス。安定したバウンドと高い耐久性により、世界基準のプレー環境を提供します。
+            {t("decoturf.title")}
           </p>
           <div className="w-10 h-[2px] bg-accent mb-6" />
           <p className="text-text-gray text-sm lg:text-base leading-loose">
-            THE PICKLE BANG THEORYでは、プレイヤーが「本気で上達できる環境」を追求し、このDecoTurf（デコターフ）を採用。技術向上・競技力向上にフォーカスした本格的なプレー環境を提供します。
+            {t("decoturf.description")}
           </p>
         </motion.div>
       </div>

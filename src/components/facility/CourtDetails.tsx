@@ -1,16 +1,19 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 
-const specs = [
-  { label: "SURFACE", value: "PickleRoll Pro", sub: "PPA Asia公式採用" },
-  { label: "COURTS", value: "3面", sub: "ハードコート" },
-  { label: "LAYOUT", value: "ショーコート対応", sub: "観戦可能な1面に変更可能" },
-  { label: "TYPE", value: "全天候型インドア", sub: "空調完備" },
-];
+const specKeys = ["surface", "courts", "layout", "type"] as const;
 
 export default function CourtDetails() {
+  const t = useTranslations("Facility.court");
+
+  const specs = specKeys.map((key) => ({
+    label: t(`${key}Label`),
+    value: t(`${key}Value`),
+    sub: t(`${key}Sub`),
+  }));
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const { scrollYProgress } = useScroll({

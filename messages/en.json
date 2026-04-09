@@ -1,0 +1,369 @@
+{
+  "Metadata": {
+    "home": {
+      "title": "PICKLE BANG THEORY · 1 Min · 24/7",
+      "description": "Premium indoor pickleball facility by a crossminton world champion. 1 min from Motoyawata Station, open 24/7. A premium space for all skill levels."
+    },
+    "about": {
+      "title": "ABOUT US · PICKLE BANG THEORY",
+      "description": "About RST Agency Inc., the team behind THE PICKLE BANG THEORY. Company overview, founder message, players and crew."
+    },
+    "facility": {
+      "title": "FACILITY · PICKLE BANG THEORY",
+      "description": "State-of-the-art indoor pickleball courts with LED lighting, pro-grade surfaces, and a comfortable lounge area."
+    },
+    "services": {
+      "title": "SERVICES · PICKLE BANG THEORY",
+      "description": "Court rentals, lesson programs, event hosting, and corporate plans. Full range of services for every need."
+    },
+    "og": {
+      "siteName": "THE PICKLE BANG THEORY",
+      "image": "/og-image.png"
+    }
+  },
+  "Navigation": {
+    "concept": "CONCEPT",
+    "facility": "FACILITY",
+    "services": "SERVICES",
+    "pricing": "PRICING",
+    "about": "ABOUT",
+    "access": "ACCESS",
+    "reserve": "RESERVE",
+    "contact": "CONTACT",
+    "mainNav": "Main Navigation",
+    "openMenu": "Open Menu",
+    "closeMenu": "Close Menu"
+  },
+  "HomeHero": {
+    "headline1": "The Big Bang",
+    "headline2": "of Pickleball",
+    "headline3": "Starts Here.",
+    "tagline": "FROM A SMALL DINK TO A BIG MOVEMENT",
+    "cta": "RESERVE A COURT",
+    "scroll": "SCROLL",
+    "heroImageAlt": "Player mid-swing"
+  },
+  "HomeConcept": {
+    "title": "CONCEPT",
+    "imageAlt": "Big Bang — Birth of the Universe",
+    "lead": "Just as the universe was born from the Big Bang, a new pickleball culture will spread from this place and grow into a great movement. We named this place with that vision in mind.",
+    "poetry1": "One small play.",
+    "poetry2": "One small dink.",
+    "description1": "These small moments accumulate into great energy, creating a new sports culture.",
+    "description2": "THE PICKLE BANG THEORY aims to be the place where the \"Big Bang of Pickleball\" is born.",
+    "catchcopy": "From a small dink to a big movement."
+  },
+  "HomeFacility": {
+    "title": "FACILITY",
+    "keyNumbers": {
+      "courts": { "value": "3", "labelEn": "COURTS", "labelJa": "Pro-spec Courts" },
+      "hours": { "value": "6:00–23:00", "labelEn": "HOURS", "labelJa": "Operating Hours" },
+      "station": { "value": "1 min", "labelEn": "FROM STATION", "labelJa": "1 Min Walk" }
+    },
+    "specs": {
+      "surface": {
+        "labelEn": "SURFACE",
+        "labelJa": "Hard Court DecoTurf",
+        "description": "High-performance surface used at the world's largest tournaments and the Olympics"
+      },
+      "type": {
+        "labelEn": "TYPE",
+        "labelJa": "All-Weather Indoor",
+        "description": "Climate-controlled for comfortable play year-round"
+      }
+    },
+    "features": {
+      "trainingArea": "Training Area",
+      "lounge": "Lounge Space",
+      "changingRooms": "Separate Changing Rooms",
+      "airConditioning": "Full Air Conditioning",
+      "vendingMachine": "Vending Machines",
+      "rentalEquipment": "Equipment Rental Available",
+      "unmannedCheckin": "Unmanned Check-in (Planned)",
+      "showCourt": "Convertible to 1 Show Court",
+      "preparing": "Coming Soon"
+    },
+    "images": {
+      "court": "Overhead view of pro-spec pickleball court",
+      "training": "Training Area",
+      "lounge": "Lounge Space"
+    },
+    "carousel": {
+      "prev": "Previous image",
+      "next": "Next image",
+      "showImage": "Show image {index}: {alt}"
+    },
+    "decoturf": {
+      "title": "DecoTurf is a hard court surface used at the world's largest pickleball tournaments, tennis Grand Slams, and the Olympics. It delivers consistent bounce and outstanding durability for a world-class playing environment.",
+      "description": "At THE PICKLE BANG THEORY, we adopted DecoTurf in pursuit of an environment where players can seriously improve. We provide an authentic playing environment focused on skill development and competitive advancement."
+    }
+  },
+  "HomeServices": {
+    "title": "SERVICES",
+    "service01": {
+      "titleJa": "Court Rental",
+      "titleEn": "COURT RENTAL",
+      "description": "Hourly court rentals with unmanned check-in for easy booking. Available from 6:00 AM to 11:00 PM.",
+      "cta": "RESERVE"
+    },
+    "service02": {
+      "titleJa": "Lessons & Clinics",
+      "titleEn": "LESSONS & CLINICS",
+      "description": "Direct coaching from top players. Level-based programs for beginners to advanced players. Special clinics with international top players coming soon."
+    },
+    "service03": {
+      "titleJa": "Training Program",
+      "titleEn": "TRAINING",
+      "description": "Pickleball enhancement programs incorporating physical training. Conditioning at the on-site training area. Improve your game from the ground up."
+    },
+    "service04": {
+      "titleJa": "Tournaments & Leagues",
+      "titleEn": "TOURNAMENTS & LEAGUES",
+      "description": "Regular original tournaments and leagues. From prize-money tournaments to league matches for all skill levels."
+    },
+    "service05": {
+      "titleJa": "Events",
+      "titleEn": "EVENTS",
+      "description": "Convert to a single show court for professional spectating events. Also available as a venue for cross-industry collaborations and promotional events."
+    }
+  },
+  "HomePricing": {
+    "title": "PRICING",
+    "courtRental": "COURT RENTAL",
+    "perHour": "Price per hour",
+    "promoText": "OPEN celebration pricing until May 31 🏷️☝️👽",
+    "timeSlot": "Time Slot",
+    "weekday": "Weekday",
+    "weekend": "Weekend / Holiday",
+    "trainingArea": "TRAINING AREA",
+    "trainingAreaJa": "Training Area",
+    "preparing": "Coming Soon",
+    "membership": "MEMBERSHIP",
+    "membershipJa": "Membership",
+    "comingSoon": "Coming Soon",
+    "rentalPaddleNote": "Rental paddles available for events and private bookings only",
+    "privateFacilityNote": "For full facility private bookings including training area and lounge, or corporate use, please",
+    "contactUs": "contact us",
+    "pleaseContact": "."
+  },
+  "HomeAbout": {
+    "title": "ABOUT US",
+    "founderLabel": "FOUNDER & CEO",
+    "founderName": "Akihiko Nishimura",
+    "founderNameEn": "AKIHIKO NISHIMURA",
+    "founderBio1": "Six-time Crossminton World Championship winner. Drawing on his competitive experience with four appearances at the All Japan Badminton Championships, he founded RST Agency Inc.",
+    "founderBio2": "Envisioned an urban pickleball facility for players seeking a serious playing environment.",
+    "readMore": "Learn More",
+    "founderImageAlt": "Akihiko Nishimura"
+  },
+  "HomeAccess": {
+    "mapTitle": "THE PICKLE BANG THEORY Location",
+    "companyName": "THE PICKLE BANG THEORY",
+    "postalCode": "〒272-0021",
+    "address": "2-16-6 6F, Yawata, Ichikawa City, Chiba",
+    "hours": "Hours: 6:00 AM – 11:00 PM (Irregular holidays)",
+    "routes": {
+      "jr": { "line": "JR Sobu Line", "station": "Motoyawata Station (North Exit)", "walkTime": "1 min walk" },
+      "toei": { "line": "Toei Shinjuku Line", "station": "Motoyawata Station", "walkTime": "3 min walk" },
+      "keisei": { "line": "Keisei Main Line", "station": "Keisei Yawata Station", "walkTime": "5 min walk" }
+    },
+    "parkingNote": "For those arriving by car, please use nearby coin parking."
+  },
+  "HomeFooter": {
+    "copyright": "© 2026 RST Agency Inc.",
+    "tokushoho": "Specified Commercial Transactions Act",
+    "address": "2-16-6 6F, Yawata, Ichikawa City, Chiba 272-0021"
+  },
+  "About": {
+    "hero": {
+      "title": "ABOUT US"
+    },
+    "company": {
+      "name": "RST Agency Inc.",
+      "description1": "RST Agency is a sports company that creates communities where people gather, challenge themselves, and grow through racket sports. We generate 'personal growth' beyond the pursuit of sports and contribute to the development of Japan's sports culture.",
+      "description2": "We also plan and execute pickleball-focused events, organize official tournaments, and manage athletes. Our members, including the CEO, are competitive players themselves.",
+      "labelCompanyName": "Company Name",
+      "labelCeo": "CEO",
+      "labelAddress": "Address",
+      "labelBusiness": "Business",
+      "valueCeo": "Akihiko Nishimura",
+      "valueAddress": "Shinagawa-ku, Tokyo",
+      "valueBusiness": "Sports Facility Operations / Sports Events / Tournament Management / Sports Equipment Planning & Sales"
+    },
+    "founder": {
+      "name": "Akihiko Nishimura",
+      "nameEn": "AKIHIKO NISHIMURA",
+      "imageAlt": "Akihiko Nishimura",
+      "bio1": "Born in Hokkaido. Started badminton at age 8, honing his competitive skills at Aomori Yamada High School and Chuo University, two of Japan's top badminton powerhouses.",
+      "bio2": "During his time at Aomori Yamada High School, he reached the singles quarterfinals at both the Inter-High and the National High School Select Tournament. As a professional, he competed four times in the All Japan Badminton Championships, facing Japan's top players.",
+      "bio3": "In 2015, he transitioned to crossminton, achieving world-class results including four consecutive mixed doubles titles and two consecutive singles titles at the World Championships — six titles in total.",
+      "bio4": "He discovered pickleball in 2023 and now works as both a player and tournament director. He incorporated the racket sports community \"Racket Sports Tokyo\" and serves as CEO of RST Agency Inc."
+    },
+    "players": {
+      "title": "PBT Contract Players",
+      "description": "THE PICKLE BANG THEORY contracts with pickleball players active both domestically and internationally, supporting them with training and practice at our facility. Through collaborative event appearances and social media outreach, we promote the growth of pickleball.",
+      "playerName": "Taro Yamada",
+      "playerBio": "Former tennis player. Transitioned to pickleball in 2024, with multiple top finishes in domestic tournaments. Known for his aggressive playing style.",
+      "comingSoon": "Coming Soon"
+    },
+    "crew": {
+      "title": "PBT Crew",
+      "description": "Meet the crew members who support and steer THE PICKLE BANG THEORY.",
+      "comingSoon": "Coming Soon"
+    },
+    "news": {
+      "title": "News",
+      "body": "Crossminton World Champion Akihiko Nishimura to open urban pickleball facility 'THE PICKLE BANG THEORY' 1 min from Motoyawata Station in spring 2026",
+      "prTimes": "PR TIMES"
+    },
+    "contact": {
+      "getInTouch": "GET IN TOUCH",
+      "labelName": "Name",
+      "labelEmail": "Email",
+      "labelCategory": "Inquiry Type",
+      "labelMessage": "Message",
+      "placeholderName": "Name *",
+      "placeholderEmail": "Email *",
+      "placeholderMessage": "Message *",
+      "categoryDefault": "Please select",
+      "categoryCourt": "Court Reservation",
+      "categoryLesson": "About Lessons",
+      "categoryPress": "Press Inquiry",
+      "categoryOther": "Other",
+      "sendMessage": "SEND MESSAGE",
+      "successMessage": "Message sent successfully. Thank you.",
+      "errorMessage": "Failed to send. Please try again.",
+      "instagram": "Instagram",
+      "address": "Address",
+      "hours": "Hours",
+      "addressValue": "Shinagawa-ku, Tokyo",
+      "hoursValue": "6:00 – 23:00"
+    }
+  },
+  "Facility": {
+    "hero": {
+      "title": "FACILITY",
+      "subtitle": "Facility Overview"
+    },
+    "story": {
+      "heading1": "\u201cThe place where the",
+      "headingAccent": "Big Bang",
+      "heading2": "of pickleball is born\u201d",
+      "paragraph1initial": "J",
+      "paragraph1": "ust as the Big Bang gave birth to the universe, this place aims to spread a new pickleball culture. Not just court rentals\u2014we designed an environment from scratch for players serious about growth.",
+      "paragraph2": "Regardless of age or level, this is a place where those serious about improvement can focus on practice and keep pushing forward. Our founder, with world-class competitive experience, stands on the court and supports every player\u2019s growth. This is where it all begins."
+    },
+    "court": {
+      "surfaceLabel": "SURFACE",
+      "surfaceValue": "PickleRoll Pro",
+      "surfaceSub": "Official PPA Asia Surface",
+      "courtsLabel": "COURTS",
+      "courtsValue": "3 Courts",
+      "courtsSub": "Hard Court",
+      "layoutLabel": "LAYOUT",
+      "layoutValue": "Show Court Ready",
+      "layoutSub": "Convertible to 1 spectator court",
+      "typeLabel": "TYPE",
+      "typeValue": "All-Weather Indoor",
+      "typeSub": "Full Climate Control"
+    },
+    "amenities": {
+      "sectionLabel": "Amenities",
+      "airConditioning": "Climate Control",
+      "airConditioningDesc": "Optimal temperature maintained year-round. Comfortable play even in midsummer.",
+      "changingRoom": "Changing Rooms",
+      "changingRoomDesc": "Clean, separate changing areas for men and women. Showers available.",
+      "trainingArea": "Training Area",
+      "trainingAreaDesc": "Dedicated space for off-court physical conditioning.",
+      "lounge": "Lounge Space",
+      "loungeDesc": "A relaxing area for watching matches and meetings.",
+      "rental": "Rental Equipment",
+      "rentalDesc": "Paddle and ball rentals available. Come empty-handed.",
+      "unmanned": "Unmanned Check-in",
+      "unmannedDesc": "Smart lock & QR authentication for smooth 24-hour entry and exit."
+    },
+    "founder": {
+      "label": "Founder",
+      "nameEn": "AKIHIKO NISHIMURA",
+      "nameJa": "Akihiko Nishimura",
+      "timeline1": "Born in Hokkaido. Started badminton at age 8",
+      "timeline2": "Honed skills at Aomori Yamada HS & Chuo University",
+      "timeline3": "Inter-High & National HS Select: Singles Quarterfinals",
+      "timeline4": "All Japan Badminton Championships: 4 appearances",
+      "timeline5year": "2015",
+      "timeline5": "Transitioned to crossminton",
+      "timeline6": "World Championships: 4 consecutive mixed doubles titles, 2 consecutive singles titles (6 total)",
+      "timeline7year": "2023",
+      "timeline7": "Transitioned to pickleball; player & tournament director",
+      "timeline8": "CEO, RST Agency Inc."
+    },
+    "company": {
+      "sectionLabel": "Company",
+      "nameLabel": "Company Name",
+      "nameValue": "RST Agency Inc.",
+      "foundedLabel": "Founded",
+      "foundedValue": "May 2025",
+      "addressLabel": "Address",
+      "addressValue": "Shinagawa-ku, Tokyo",
+      "businessLabel": "Business",
+      "businessValue": "Sports Event Planning & Management / Facility Production / Sports Equipment Planning & Sales"
+    }
+  },
+  "ServicesPage": {
+    "hero": {
+      "title": "SERVICES",
+      "subtitle": "Services"
+    },
+    "service01": {
+      "titleJa": "Court Rental",
+      "titleEn": "COURT RENTAL",
+      "body1": "Hourly court rentals with unmanned check-in for easy booking.",
+      "body2": "Available from 6:00 AM to 11:00 PM. Fit it to your schedule."
+    },
+    "service02": {
+      "titleJa": "Lessons & Clinics",
+      "titleEn": "LESSONS & CLINICS",
+      "body1": "Direct coaching from professional players. Level-based programs for beginners to advanced.",
+      "body2": "Special clinics with international top players held regularly."
+    },
+    "service03": {
+      "titleJa": "Training Program",
+      "titleEn": "TRAINING",
+      "body1": "Pickleball enhancement programs incorporating physical training.",
+      "body2": "Conditioning at the on-site training area. Improve your game from the ground up."
+    },
+    "service04": {
+      "titleJa": "Tournaments & Leagues",
+      "titleEn": "TOURNAMENTS & LEAGUES",
+      "body1": "Regular original tournaments and leagues. From prize-money tournaments to league matches for all skill levels."
+    },
+    "service05": {
+      "titleJa": "Events",
+      "titleEn": "EVENTS",
+      "body1": "Convert to a single show court for professional spectating events.",
+      "body2": "Also available as a venue for cross-industry collaborations and promotional events."
+    },
+    "cta": {
+      "heading": "Ready to reserve a court?",
+      "button": "RESERVE"
+    }
+  },
+  "Footer": {
+    "brandName": "THE PICKLE BANG THEORY",
+    "tagline": "Premium Indoor Pickleball Facility",
+    "navigationLabel": "Navigation",
+    "contactLabel": "Contact",
+    "socialLabel": "Social",
+    "address": "2-16-6 6F, Yawata, Ichikawa City, Chiba",
+    "instagram": "Instagram",
+    "copyright": "\u00a9 2026 RST Agency Inc.",
+    "allRights": "All rights reserved.",
+    "facility": "Facility",
+    "services": "Services",
+    "pricing": "Pricing",
+    "access": "Access"
+  },
+  "Common": {
+    "logoAlt": "THE PICKLE BANG THEORY"
+  }
+}

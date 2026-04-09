@@ -1,21 +1,35 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
+import jaMessages from "../../../messages/ja.json";
 import HomeServices from "./HomeServices";
 
 describe("HomeServices", () => {
   it('セクションID "services" を持つ', () => {
-    render(<HomeServices />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
     const section = document.getElementById("services");
     expect(section).toBeInTheDocument();
   });
 
   it("SERVICESタイトルを表示する", () => {
-    render(<HomeServices />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByText("SERVICES")).toBeInTheDocument();
   });
 
   it("5つのサービス番号（01〜05）を表示する", () => {
-    render(<HomeServices />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByText("01")).toBeInTheDocument();
     expect(screen.getByText("02")).toBeInTheDocument();
     expect(screen.getByText("03")).toBeInTheDocument();
@@ -24,7 +38,11 @@ describe("HomeServices", () => {
   });
 
   it("日本語タイトルを全て表示する", () => {
-    render(<HomeServices />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByText("コートレンタル")).toBeInTheDocument();
     expect(screen.getByText("レッスン & クリニック")).toBeInTheDocument();
     expect(screen.getByText("トレーニングプログラム")).toBeInTheDocument();
@@ -33,7 +51,11 @@ describe("HomeServices", () => {
   });
 
   it("英語タイトルを全て表示する", () => {
-    render(<HomeServices />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByText("COURT RENTAL")).toBeInTheDocument();
     expect(screen.getByText("LESSONS & CLINICS")).toBeInTheDocument();
     expect(screen.getByText("TRAINING")).toBeInTheDocument();
@@ -42,7 +64,11 @@ describe("HomeServices", () => {
   });
 
   it("説明文のキーワードを全て含む", () => {
-    render(<HomeServices />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByText(/無人チェックイン/)).toBeInTheDocument();
     expect(screen.getByText(/レベル別プログラム/)).toBeInTheDocument();
     expect(screen.getByText(/コンディショニング/)).toBeInTheDocument();
@@ -51,20 +77,32 @@ describe("HomeServices", () => {
   });
 
   it("コートレンタルにRESERVEボタンを表示する", () => {
-    render(<HomeServices />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
     const reserveButton = screen.getByText("RESERVE");
     expect(reserveButton).toBeInTheDocument();
     expect(reserveButton.closest("a")).toHaveAttribute("href", "#");
   });
 
   it("他のサービスにはRESERVEボタンを表示しない", () => {
-    render(<HomeServices />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
     const reserveButtons = screen.getAllByText("RESERVE");
     expect(reserveButtons).toHaveLength(1);
   });
 
   it("data-service-row属性で背景色が交互になる（奇数:bg-deep-black, 偶数:bg-off-white）", () => {
-    render(<HomeServices />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
     const rows = document.querySelectorAll("[data-service-row]");
     expect(rows).toHaveLength(5);
 

@@ -2,26 +2,28 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLanguage } from "@/hooks/useLanguage";
 import { useActiveSection } from "@/hooks/useActiveSection";
 
 const SECTION_IDS = ["concept", "facility", "services", "pricing", "about", "access"];
 
 const NAV_ITEMS = [
-  { label: "CONCEPT", href: "/#concept", id: "concept" },
-  { label: "FACILITY", href: "/#facility", id: "facility" },
-  { label: "SERVICES", href: "/#services", id: "services" },
-  { label: "PRICING", href: "/#pricing", id: "pricing" },
-  { label: "ABOUT", href: "/#about", id: "about" },
-  { label: "ACCESS", href: "/#access", id: "access" },
-];
+  { id: "concept", href: "/#concept" },
+  { id: "facility", href: "/#facility" },
+  { id: "services", href: "/#services" },
+  { id: "pricing", href: "/#pricing" },
+  { id: "about", href: "/#about" },
+  { id: "access", href: "/#access" },
+] as const;
 
 export default function HomeNavigation() {
-  const { language, toggleLanguage } = useLanguage();
+  const locale = useLocale();
+  const t = useTranslations("Navigation");
+  const tCommon = useTranslations("Common");
   const pathname = usePathname();
+  const router = useRouter();
   const activeSection = useActiveSection(SECTION_IDS);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -65,7 +67,16 @@ export default function HomeNavigation() {
     setIsMobileMenuOpen(false);
   }, []);
 
-  const isJa = language === "ja";
+  const handleSwitchLocale = useCallback(
+    (targetLocale: "ja" | "en") => {
+      if (targetLocale !== locale) {
+        router.push(pathname, { locale: targetLocale });
+      }
+    },
+    [locale, pathname, router]
+  );
+
+  const isJa = locale === "ja";
 
   return (
     <>
@@ -80,7 +91,7 @@ export default function HomeNavigation() {
           <Link href="/" onClick={handleLogoClick}>
             <Image
               src="/logos/yoko-neon.png"
-              alt="THE PICKLE BANG THEORY"
+              alt={tCommon("logoAlt")}
               width={180}
               height={40}
               className="h-6 w-auto sm:h-8 md:h-10"
@@ -89,7 +100,7 @@ export default function HomeNavigation() {
 
           {/* Desktop: Nav links */}
           <nav
-            aria-label="メインナビゲーション"
+            aria-label={t("mainNav")}
             className="hidden md:flex items-center gap-8"
           >
             {NAV_ITEMS.map((item) => (
@@ -100,7 +111,7 @@ export default function HomeNavigation() {
                   activeSection === item.id ? "text-accent" : "text-text-gray"
                 }`}
               >
-                {item.label}
+                {t(item.id)}
               </a>
             ))}
           </nav>
@@ -109,13 +120,13 @@ export default function HomeNavigation() {
           <div className="hidden md:flex items-center gap-4">
             <LanguageToggle
               isJa={isJa}
-              onToggle={toggleLanguage}
+              onSwitch={handleSwitchLocale}
             />
             <a
               href="#"
               className="bg-accent text-deep-black px-5 py-2 text-xs font-bold uppercase tracking-widest"
             >
-              RESERVE
+              {t("reserve")}
             </a>
           </div>
 
@@ -123,10 +134,10 @@ export default function HomeNavigation() {
           <div className="flex md:hidden items-center gap-4">
             <LanguageToggle
               isJa={isJa}
-              onToggle={toggleLanguage}
+              onSwitch={handleSwitchLocale}
             />
             <button
-              aria-label="メニューを開く"
+              aria-label={t("openMenu")}
               onClick={handleOpenMenu}
               className="text-text-light"
             >
@@ -153,7 +164,7 @@ export default function HomeNavigation() {
           className="fixed inset-0 z-[60] bg-black flex flex-col items-center justify-center"
         >
           <button
-            aria-label="メニューを閉じる"
+            aria-label={t("closeMenu")}
             onClick={handleCloseMenu}
             className="absolute top-6 right-6 text-text-light"
           >
@@ -173,7 +184,7 @@ export default function HomeNavigation() {
                   activeSection === item.id ? "text-accent" : "text-text-light"
                 }`}
               >
-                {item.label}
+                {t(item.id)}
               </a>
             ))}
           </nav>
@@ -182,7 +193,7 @@ export default function HomeNavigation() {
             href="#"
             className="mt-12 bg-accent text-deep-black px-8 py-3 text-sm font-bold uppercase tracking-widest"
           >
-            RESERVE
+            {t("reserve")}
           </a>
         </motion.div>
       )}
@@ -193,21 +204,21 @@ export default function HomeNavigation() {
 
 interface LanguageToggleProps {
   isJa: boolean;
-  onToggle: () => void;
+  onSwitch: (locale: "ja" | "en") => void;
 }
 
-function LanguageToggle({ isJa, onToggle }: LanguageToggleProps) {
+function LanguageToggle({ isJa, onSwitch }: LanguageToggleProps) {
   return (
     <div className="flex items-center gap-1 text-xs">
       <button
-        onClick={isJa ? undefined : onToggle}
+        onClick={() => onSwitch("ja")}
         className={isJa ? "text-text-light" : "text-text-gray"}
       >
         JP
       </button>
       <span className="text-text-gray">/</span>
       <button
-        onClick={isJa ? onToggle : undefined}
+        onClick={() => onSwitch("en")}
         className={isJa ? "text-text-gray" : "text-text-light"}
       >
         EN

@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 
 interface PriceRow {
@@ -18,6 +19,8 @@ const COURT_PRICES: PriceRow[] = [
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
 export default function HomePricing() {
+  const t = useTranslations("HomePricing");
+
   return (
     <section
       id="pricing"
@@ -33,7 +36,7 @@ export default function HomePricing() {
           transition={{ duration: 1.1, ease: EASE }}
         >
           <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em]">
-            PRICING
+            {t("title")}
           </h2>
           <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
         </motion.div>
@@ -47,10 +50,10 @@ export default function HomePricing() {
           transition={{ duration: 1.0, ease: EASE }}
         >
           <p className="text-text-light text-sm mb-2">
-            1時間あたりの料金
+            {t("perHour")}
           </p>
           <p className="text-accent text-sm sm:text-base font-semibold tracking-wide opacity-85">
-          5月31日までのOPEN記念価格{"\u{1F239}\uFE0F"}☝️👽
+            {t("promoText")}
           </p>
           <div className="mx-auto mt-4 w-10 h-px bg-accent/30" />
         </motion.div>
@@ -64,20 +67,20 @@ export default function HomePricing() {
           transition={{ duration: 1.1, delay: 0.1, ease: EASE }}
         >
           <p className="text-[10px] tracking-[0.25em] text-accent mb-4">
-            COURT RENTAL
+            {t("courtRental")}
           </p>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b-2 border-accent/20">
                   <th className="text-center py-3 px-4 text-text-light text-xs font-semibold tracking-[0.15em] bg-accent/[0.06]">
-                    時間帯
+                    {t("timeSlot")}
                   </th>
                   <th className="text-center py-3 px-4 text-text-light text-xs font-semibold tracking-[0.15em] bg-accent/[0.06]">
-                    平日
+                    {t("weekday")}
                   </th>
                   <th className="text-center py-3 px-4 text-text-light text-xs font-semibold tracking-[0.15em] bg-accent/[0.06]">
-                    週末・祝日
+                    {t("weekend")}
                   </th>
                 </tr>
               </thead>
@@ -120,14 +123,14 @@ export default function HomePricing() {
           >
             <div>
               <span className="text-[10px] tracking-[0.25em] text-accent block mb-1">
-                TRAINING AREA
+                {t("trainingArea")}
               </span>
               <span className="text-text-light text-sm">
-                トレーニングエリア
+                {t("trainingAreaJa")}
               </span>
             </div>
             <span className="text-accent/50 text-xs tracking-wider">
-              準備中
+              {t("preparing")}
             </span>
           </motion.div>
 
@@ -140,12 +143,12 @@ export default function HomePricing() {
           >
             <div>
               <span className="text-[10px] tracking-[0.25em] text-accent block mb-1">
-                MEMBERSHIP
+                {t("membership")}
               </span>
-              <span className="text-text-light text-sm">会員制度</span>
+              <span className="text-text-light text-sm">{t("membershipJa")}</span>
             </div>
             <span className="text-accent/50 text-xs tracking-wider">
-              近日公開
+              {t("comingSoon")}
             </span>
           </motion.div>
         </div>
@@ -161,20 +164,20 @@ export default function HomePricing() {
           <div className="flex items-start gap-3">
             <span className="text-accent text-xs mt-0.5">▸</span>
             <p className="text-text-gray text-sm">
-              イベント利用もしくは貸切のみレンタルパドルあり
+              {t("rentalPaddleNote")}
             </p>
           </div>
           <div className="flex items-start gap-3">
             <span className="text-accent text-xs mt-0.5">▸</span>
             <p className="text-text-gray text-sm">
-              トレーニングエリアやラウンジスペースを含む施設全ての貸切をご希望、法人利用ご希望の場合は
+              {t("privateFacilityNote")}
               <Link
                 href="/about#contact"
                 className="text-accent hover:underline"
               >
-                お問い合わせ
+                {t("contactUs")}
               </Link>
-              ください。
+              {t("pleaseContact")}
             </p>
           </div>
         </motion.div>

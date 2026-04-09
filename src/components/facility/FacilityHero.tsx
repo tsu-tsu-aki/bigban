@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function FacilityHero() {
+  const t = useTranslations("Facility.hero");
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -55,7 +57,7 @@ export default function FacilityHero() {
             transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="font-[var(--font-inter)] text-[clamp(6rem,15vw,14rem)] font-bold tracking-[0.15em] text-off-white/10 leading-none uppercase select-none px-8 md:px-16 lg:px-24"
           >
-            FACILITY
+            {t("title")}
           </motion.h1>
         </div>
 
@@ -66,7 +68,7 @@ export default function FacilityHero() {
           transition={{ duration: 0.8, delay: 1 }}
           className="text-[12px] tracking-[0.4em] text-text-gray uppercase font-[var(--font-inter)] mt-6"
         >
-          施設紹介
+          {t("subtitle")}
         </motion.p>
       </motion.div>
     </section>

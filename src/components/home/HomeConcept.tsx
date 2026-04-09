@@ -1,11 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
 export default function HomeConcept() {
+  const t = useTranslations("HomeConcept");
+
   return (
     <section id="concept" className="bg-off-white text-text-dark py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
@@ -18,7 +21,7 @@ export default function HomeConcept() {
           transition={{ duration: 1.1, ease: EASE }}
         >
           <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em]">
-            CONCEPT
+            {t("title")}
           </h2>
           <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
         </motion.div>
@@ -34,7 +37,7 @@ export default function HomeConcept() {
           <div className="relative min-h-[500px] sm:aspect-[4/3] lg:aspect-[16/9]">
             <Image
               src="/images/concept-bigbang.jpg"
-              alt="ビッグバン — 宇宙の誕生"
+              alt={t("imageAlt")}
               fill
               className="object-cover"
             />
@@ -51,7 +54,7 @@ export default function HomeConcept() {
                   viewport={{ once: true, margin: "-150px" }}
                   transition={{ duration: 1.1, delay: 0.1, ease: EASE }}
                 >
-                  宇宙がビッグバンによって誕生したように、この場所から新しいピックルボール文化が広がり、やがて大きなムーブメントへと発展していく。その想いを込めて、この名前を名付けました。
+                  {t("lead")}
                 </motion.p>
 
                 {/* Poetry lines */}
@@ -63,10 +66,10 @@ export default function HomeConcept() {
                   transition={{ duration: 1.1, delay: 0.2, ease: EASE }}
                 >
                   <p className="text-white text-base sm:text-lg md:text-xl font-bold leading-loose">
-                    1つの小さなプレー。
+                    {t("poetry1")}
                   </p>
                   <p className="text-white text-base sm:text-lg md:text-xl font-bold leading-loose">
-                    1つの小さなディンク。
+                    {t("poetry2")}
                   </p>
                 </motion.div>
 
@@ -79,14 +82,10 @@ export default function HomeConcept() {
                   transition={{ duration: 1.1, delay: 0.3, ease: EASE }}
                 >
                   <p className="text-white/80 text-sm sm:text-base md:text-lg leading-loose mb-2">
-                    その積み重ねが、やがて大きなエネルギーとなり、
-                    <br className="hidden sm:inline" />
-                    新しいスポーツ文化を生み出していく。
+                    {t("description1")}
                   </p>
                   <p className="text-white/80 text-sm sm:text-base md:text-lg leading-loose">
-                    THE PICKLE BANG THEORYは、
-                    <br className="hidden sm:inline" />
-                    &ldquo;ピックルボールのビッグバン&rdquo;が生まれる場所を目指しています。
+                    {t("description2")}
                   </p>
                 </motion.div>
 
@@ -99,7 +98,7 @@ export default function HomeConcept() {
                 >
                   <div className="w-10 h-[2px] bg-accent mb-4" />
                   <p className="text-accent text-lg sm:text-xl lg:text-2xl font-black tracking-wide">
-                    小さなディンクから、大きなムーブメントへ。
+                    {t("catchcopy")}
                   </p>
                 </motion.div>
               </div>

@@ -1,16 +1,13 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { motion, useInView } from "framer-motion";
 
-const companyData = [
-  { label: "社名", value: "RST Agency株式会社" },
-  { label: "設立", value: "2025年5月" },
-  { label: "所在地", value: "東京都品川区" },
-  { label: "事業内容", value: "スポーツイベント企画・運営 / 施設プロデュース / スポーツ用品企画・販売" },
-];
+const companyKeys = ["name", "founded", "address", "business"] as const;
 
 export default function CompanyInfo() {
+  const t = useTranslations("Facility.company");
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -27,14 +24,14 @@ export default function CompanyInfo() {
           transition={{ duration: 0.6 }}
           className="text-[10px] tracking-[0.4em] text-text-gray uppercase font-[var(--font-inter)] mb-12"
         >
-          Company
+          {t("sectionLabel")}
         </motion.p>
 
         {/* Text-only data */}
         <div className="max-w-2xl space-y-6">
-          {companyData.map((item, i) => (
+          {companyKeys.map((key, i) => (
             <motion.div
-              key={i}
+              key={key}
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{
@@ -45,10 +42,10 @@ export default function CompanyInfo() {
               className="flex flex-col md:flex-row md:items-baseline gap-1 md:gap-8"
             >
               <span className="text-[11px] tracking-[0.2em] text-text-gray uppercase font-[var(--font-inter)] min-w-[100px]">
-                {item.label}
+                {t(`${key}Label`)}
               </span>
               <span className="font-[var(--font-inter)] text-off-white/80 text-[15px] leading-relaxed">
-                {item.value}
+                {t(`${key}Value`)}
               </span>
             </motion.div>
           ))}

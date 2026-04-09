@@ -1,14 +1,21 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { LanguageProvider } from "@/hooks/useLanguage";
+import { NextIntlClientProvider } from "next-intl";
 import HomeNavigation from "./HomeNavigation";
+import jaMessages from "../../../messages/ja.json";
+import enMessages from "../../../messages/en.json";
 
 import type { ReactElement } from "react";
 
 let mockPathname = "/";
+const mockPush = vi.fn();
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/i18n/navigation", () => ({
+  Link: ({ children, href, onClick, ...props }: Record<string, unknown>) => (
+    <a href={href as string} onClick={onClick as React.MouseEventHandler} {...props}>{children as React.ReactNode}</a>
+  ),
   usePathname: () => mockPathname,
+  useRouter: () => ({ push: mockPush }),
 }));
 
 vi.mock("@/hooks/useActiveSection", () => ({
@@ -29,8 +36,13 @@ vi.mock("next/image", () => ({
   },
 }));
 
-function renderWithProvider(ui: ReactElement) {
-  return render(<LanguageProvider>{ui}</LanguageProvider>);
+function renderWithIntl(ui: ReactElement, locale: "ja" | "en" = "ja") {
+  const messages = locale === "ja" ? jaMessages : enMessages;
+  return render(
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      {ui}
+    </NextIntlClientProvider>
+  );
 }
 
 const NAV_ITEMS = [
@@ -44,20 +56,20 @@ const NAV_ITEMS = [
 
 describe("HomeNavigation", () => {
   it("ロゴ画像を表示する", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const logo = screen.getByAltText("THE PICKLE BANG THEORY");
     expect(logo).toBeInTheDocument();
     expect(logo).toHaveAttribute("src", "/logos/yoko-neon.png");
   });
 
   it("ロゴが1つだけ表示される", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const logos = screen.getAllByAltText("THE PICKLE BANG THEORY");
     expect(logos).toHaveLength(1);
   });
 
   it("6つのデスクトップナビリンクと正しいhrefを表示する", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const nav = screen.getByRole("navigation", { name: "メインナビゲーション" });
     for (const item of NAV_ITEMS) {
       const link = screen.getByRole("link", { name: item.label });
@@ -68,7 +80,7 @@ describe("HomeNavigation", () => {
   });
 
   it("アクティブセクション(concept)をハイライトする", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const conceptLink = screen.getByRole("link", { name: "CONCEPT" });
     expect(conceptLink.className).toContain("text-accent");
 
@@ -76,110 +88,99 @@ describe("HomeNavigation", () => {
     expect(facilityLink.className).not.toContain("text-accent");
   });
 
-  it("JP/ENトグルが切り替わる", () => {
-    renderWithProvider(<HomeNavigation />);
-    const jpButtons = screen.getAllByRole("button", { name: "JP" });
+  it("ENクリックでrouter.pushが呼ばれる", () => {
+    mockPush.mockClear();
+    renderWithIntl(<HomeNavigation />);
     const enButtons = screen.getAllByRole("button", { name: "EN" });
 
-    // デフォルトは日本語: JPが選択状態
-    expect(jpButtons[0].className).toContain("text-text-light");
-    expect(enButtons[0].className).toContain("text-text-gray");
-
-    // ENをクリック
     fireEvent.click(enButtons[0]);
 
-    // 全てのJP/ENボタンを再取得（状態変更後）
-    const jpButtonsAfter = screen.getAllByRole("button", { name: "JP" });
-    const enButtonsAfter = screen.getAllByRole("button", { name: "EN" });
-    expect(jpButtonsAfter[0].className).toContain("text-text-gray");
-    expect(enButtonsAfter[0].className).toContain("text-text-light");
+    expect(mockPush).toHaveBeenCalledWith("/", { locale: "en" });
+  });
+
+  it("JPクリック（既にja）ではrouter.pushは呼ばれない", () => {
+    mockPush.mockClear();
+    renderWithIntl(<HomeNavigation />);
+    const jpButtons = screen.getAllByRole("button", { name: "JP" });
+
+    fireEvent.click(jpButtons[0]);
+
+    expect(mockPush).not.toHaveBeenCalled();
   });
 
   it("RESERVEボタンを表示する", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const reserveLinks = screen.getAllByRole("link", { name: "RESERVE" });
     expect(reserveLinks.length).toBeGreaterThanOrEqual(1);
     expect(reserveLinks[0]).toHaveAttribute("href", "#");
   });
 
   it("ハンバーガーメニューの開閉", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
 
-    // メニューを開く
     const openButton = screen.getByLabelText("メニューを開く");
     expect(openButton).toBeInTheDocument();
     fireEvent.click(openButton);
 
-    // ダイアログが表示される
     const dialog = screen.getByRole("dialog");
     expect(dialog).toBeInTheDocument();
 
-    // 閉じるボタン
     const closeButton = screen.getByLabelText("メニューを閉じる");
     expect(closeButton).toBeInTheDocument();
     fireEvent.click(closeButton);
 
-    // ダイアログが消える
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("モバイルメニューのナビリンククリックで自動クローズ", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
 
-    // メニューを開く
     fireEvent.click(screen.getByLabelText("メニューを開く"));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
 
-    // モバイルメニュー内のリンクをクリック
     const dialog = screen.getByRole("dialog");
     const mobileLinks = dialog.querySelectorAll("a");
     expect(mobileLinks.length).toBeGreaterThanOrEqual(1);
     fireEvent.click(mobileLinks[0]);
 
-    // メニューが閉じる
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("固定配置である", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const header = screen.getByRole("banner");
     expect(header).toBeInTheDocument();
     expect(header.className).toContain("fixed");
   });
 
   it("スクロールダウンでナビが非表示になる", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const header = screen.getByRole("banner");
 
-    // 初期状態: 表示
     expect(header.className).toContain("translate-y-0");
 
-    // 200pxスクロールダウン
     Object.defineProperty(window, "scrollY", { value: 200, writable: true });
     fireEvent.scroll(window);
     expect(header.className).toContain("-translate-y-full");
   });
 
   it("スクロールアップでナビが再表示される", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const header = screen.getByRole("banner");
 
-    // まず下にスクロール
     Object.defineProperty(window, "scrollY", { value: 200, writable: true });
     fireEvent.scroll(window);
     expect(header.className).toContain("-translate-y-full");
 
-    // 上にスクロール
     Object.defineProperty(window, "scrollY", { value: 100, writable: true });
     fireEvent.scroll(window);
     expect(header.className).toContain("translate-y-0");
   });
 
   it("スクロール位置が100px未満ではナビが表示される", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const header = screen.getByRole("banner");
 
-    // 50pxの位置
     Object.defineProperty(window, "scrollY", { value: 50, writable: true });
     fireEvent.scroll(window);
     expect(header.className).toContain("translate-y-0");
@@ -188,7 +189,7 @@ describe("HomeNavigation", () => {
   it("ホームでロゴクリックするとページ最上部にスクロールする", () => {
     mockPathname = "/";
     const scrollSpy = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const logo = screen.getByAltText("THE PICKLE BANG THEORY");
     fireEvent.click(logo);
     expect(scrollSpy).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
@@ -198,7 +199,7 @@ describe("HomeNavigation", () => {
   it("他ページでロゴクリックしてもscrollToは呼ばれない", () => {
     mockPathname = "/about";
     const scrollSpy = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     const logo = screen.getByAltText("THE PICKLE BANG THEORY");
     fireEvent.click(logo);
     expect(scrollSpy).not.toHaveBeenCalled();
@@ -207,11 +208,17 @@ describe("HomeNavigation", () => {
   });
 
   it("モバイルメニュー内にRESERVEボタンがある", () => {
-    renderWithProvider(<HomeNavigation />);
+    renderWithIntl(<HomeNavigation />);
     fireEvent.click(screen.getByLabelText("メニューを開く"));
     const dialog = screen.getByRole("dialog");
     const reserveInDialog = dialog.querySelector("a[href='#']");
     expect(reserveInDialog).toBeInTheDocument();
     expect(reserveInDialog?.textContent).toBe("RESERVE");
+  });
+
+  it("英語ロケールでaria-labelが英語になる", () => {
+    renderWithIntl(<HomeNavigation />, "en");
+    const nav = screen.getByRole("navigation", { name: "Main Navigation" });
+    expect(nav).toBeInTheDocument();
   });
 });

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { LanguageProvider } from "@/hooks/useLanguage";
+import { useTranslations } from "next-intl";
 import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeFooter from "@/components/home/HomeFooter";
 
@@ -16,13 +16,16 @@ interface ContactCategory {
   label: string;
 }
 
-const CATEGORIES: ContactCategory[] = [
-  { value: "", label: "選択してください" },
-  { value: "court", label: "コート予約" },
-  { value: "lesson", label: "レッスンについて" },
-  { value: "press", label: "取材依頼" },
-  { value: "other", label: "その他" },
-];
+function useCategories(): ContactCategory[] {
+  const t = useTranslations("About");
+  return [
+    { value: "", label: t("contact.categoryDefault") },
+    { value: "court", label: t("contact.categoryCourt") },
+    { value: "lesson", label: t("contact.categoryLesson") },
+    { value: "press", label: t("contact.categoryPress") },
+    { value: "other", label: t("contact.categoryOther") },
+  ];
+}
 
 interface SectionHeaderProps {
   number: string;
@@ -51,7 +54,10 @@ function SectionHeader({ number, labelEn, id }: SectionHeaderProps) {
   );
 }
 
-export default function AboutPage() {
+export default function AboutContent() {
+  const t = useTranslations("About");
+  const categories = useCategories();
+
   useEffect(() => {
     if (!window.location.hash) {
       window.scrollTo({ top: 0, behavior: "instant" });
@@ -91,7 +97,6 @@ export default function AboutPage() {
     "w-full border-b border-text-gray/40 bg-transparent py-3 text-text-light placeholder:text-text-gray/60 focus:border-accent focus:outline-none transition-colors";
 
   return (
-    <LanguageProvider>
     <main className="bg-deep-black min-h-screen">
       <HomeNavigation />
 
@@ -105,14 +110,14 @@ export default function AboutPage() {
             transition={{ duration: 0.7, ease: EASE }}
           >
             <h1 className="font-serif text-6xl sm:text-7xl lg:text-8xl font-black tracking-[0.15em] text-text-light">
-              ABOUT US
+              {t("hero.title")}
             </h1>
             <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
           </motion.div>
         </div>
       </section>
 
-      {/* 01 — COMPANY */}
+      {/* 01 -- COMPANY */}
       <section className="py-12 lg:py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="01" labelEn="COMPANY" id="company" />
@@ -126,13 +131,13 @@ export default function AboutPage() {
               transition={{ duration: 0.7, ease: EASE }}
             >
               <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-6">
-                RST Agency株式会社
+                {t("company.name")}
               </h2>
               <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4">
-                RST Agencyは、ラケットスポーツを通じて人が集い、挑戦し、成長するコミュニティを創造するスポーツカンパニーです。スポーツを追求するその先にある「人の成長」を生み出し、日本のスポーツ文化の発展に貢献していきます。
+                {t("company.description1")}
               </p>
               <p className="text-text-gray text-sm lg:text-base leading-relaxed">
-                他にもピックルボールを中心としたイベントの企画・実行や公式大会の企画・運営、選手マネジメントなど行っています。また、代表含め、メンバーたちも競技と向き合うプレーヤーであります。
+                {t("company.description2")}
               </p>
             </motion.div>
 
@@ -147,20 +152,20 @@ export default function AboutPage() {
                 <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent" />
                 <dl className="space-y-4 text-sm">
                   <div>
-                    <dt className="text-text-gray">会社名</dt>
-                    <dd className="text-text-light mt-1">RST Agency株式会社</dd>
+                    <dt className="text-text-gray">{t("company.labelCompanyName")}</dt>
+                    <dd className="text-text-light mt-1">{t("company.name")}</dd>
                   </div>
                   <div>
-                    <dt className="text-text-gray">代表取締役</dt>
-                    <dd className="text-text-light mt-1">西村昭彦</dd>
+                    <dt className="text-text-gray">{t("company.labelCeo")}</dt>
+                    <dd className="text-text-light mt-1">{t("company.valueCeo")}</dd>
                   </div>
                   <div>
-                    <dt className="text-text-gray">所在地</dt>
-                    <dd className="text-text-light mt-1">東京都品川区</dd>
+                    <dt className="text-text-gray">{t("company.labelAddress")}</dt>
+                    <dd className="text-text-light mt-1">{t("company.valueAddress")}</dd>
                   </div>
                   <div>
-                    <dt className="text-text-gray">事業内容</dt>
-                    <dd className="text-text-light mt-1">スポーツ施設運営 / スポーツイベント / 大会運営 / スポーツ用品の企画・販売</dd>
+                    <dt className="text-text-gray">{t("company.labelBusiness")}</dt>
+                    <dd className="text-text-light mt-1">{t("company.valueBusiness")}</dd>
                   </div>
                 </dl>
               </div>
@@ -169,7 +174,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 02 — FOUNDER */}
+      {/* 02 -- FOUNDER */}
       <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="02" labelEn="FOUNDER" id="founder" />
@@ -184,10 +189,10 @@ export default function AboutPage() {
           >
             <div className="flex items-baseline gap-4 flex-wrap">
               <h2 className="font-serif text-5xl lg:text-6xl text-text-light">
-                西村昭彦
+                {t("founder.name")}
               </h2>
               <p className="text-sm tracking-[0.15em] text-text-gray">
-                AKIHIKO NISHIMURA
+                {t("founder.nameEn")}
               </p>
             </div>
           </motion.div>
@@ -204,7 +209,7 @@ export default function AboutPage() {
               <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm">
                 <Image
                   src="/images/founder-nishimura.png"
-                  alt="西村昭彦"
+                  alt={t("founder.imageAlt")}
                   fill
                   className="object-cover"
                 />
@@ -220,23 +225,23 @@ export default function AboutPage() {
               transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
             >
               <p className="text-text-light/90 text-base lg:text-lg leading-loose mb-4">
-                北海道出身。8歳でバドミントンを始め、青森山田高校、中央大学と日本有数のバドミントン強豪校で競技経験を積む。
+                {t("founder.bio1")}
               </p>
               <p className="text-text-light/90 text-base lg:text-lg leading-loose mb-4">
-                青森山田高校時代にはインターハイおよび全国高校選抜大会でシングルスベスト8を記録。社会人では国内最高峰大会である全日本総合バドミントン選手権に4度出場し、日本トップ選手らと対戦した。
+                {t("founder.bio2")}
               </p>
               <p className="text-text-gray text-base lg:text-lg leading-loose mb-4">
-                2015年にクロスミントンへ転向し、世界選手権ミックスダブルス4連覇、シングルス2連覇を含む6度の優勝という世界トップレベルの実績を誇る。
+                {t("founder.bio3")}
               </p>
               <p className="text-text-gray text-base lg:text-lg leading-loose">
-                2023年にピックルボールと出会い、現在は選手活動に加え大会ディレクターとしても活動。ラケットスポーツコミュニティ「Racket Sports Tokyo」を法人化し、RST Agency株式会社代表取締役を務める。
+                {t("founder.bio4")}
               </p>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* 03 — OUR PLAYERS */}
+      {/* 03 -- OUR PLAYERS */}
       <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="03" labelEn="OUR PLAYERS" id="players" />
@@ -248,16 +253,16 @@ export default function AboutPage() {
             transition={{ duration: 0.7, ease: EASE }}
           >
             <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-6">
-              PBT契約選手
+              {t("players.title")}
             </h2>
             <p className="text-text-gray text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
-              THE PICKLE BANG THEORYは、国内外で活躍するピックルボール選手と契約し、施設でのトレーニングや練習など選手をサポートいたします。また、協働によるイベント出演やソーシャルメディアでの発信を通して、ピックルボールを盛り上げます。
+              {t("players.description")}
             </p>
 
             <div className="grid grid-cols-2 gap-4 sm:gap-8">
               {[
-                { name: "山田 太郎", ig: "@taro_yamada_pb", bio: "元テニスプレーヤー。2024年よりピックルボールに転向し、国内大会で多数入賞。攻撃的なプレースタイルが持ち味。", hasContent: true },
-                { name: "Coming Soon", ig: "", bio: "", hasContent: false },
+                { name: t("players.playerName"), ig: "@taro_yamada_pb", bio: t("players.playerBio"), hasContent: true },
+                { name: t("players.comingSoon"), ig: "", bio: "", hasContent: false },
               ].map((player, n) => (
                 <motion.div
                   key={n}
@@ -286,7 +291,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 04 — OUR CREW */}
+      {/* 04 -- OUR CREW */}
       <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="04" labelEn="OUR CREW" id="crew" />
@@ -298,10 +303,10 @@ export default function AboutPage() {
             transition={{ duration: 0.7, ease: EASE }}
           >
             <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-6">
-              PBTクルー
+              {t("crew.title")}
             </h2>
             <p className="text-text-gray text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
-              THE PICKLE BANG THEORYを支え、操縦しているクルーたちを紹介ｼﾏｽ
+              {t("crew.description")}
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
@@ -317,7 +322,7 @@ export default function AboutPage() {
                   <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-text-gray/10 flex items-center justify-center">
                     <span className="text-text-gray text-xs">Photo</span>
                   </div>
-                  <p className="text-text-light text-sm font-semibold">Coming Soon</p>
+                  <p className="text-text-light text-sm font-semibold">{t("crew.comingSoon")}</p>
                 </motion.div>
               ))}
             </div>
@@ -325,7 +330,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 05 — NEWS */}
+      {/* 05 -- NEWS */}
       <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="05" labelEn="NEWS" id="news" />
@@ -337,12 +342,12 @@ export default function AboutPage() {
             transition={{ duration: 0.7, ease: EASE }}
           >
             <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-8">
-              ニュース
+              {t("news.title")}
             </h2>
 
             <div className="border-l-2 border-accent/20 pl-6 lg:pl-8">
               <p className="text-text-light/80 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
-                クロスミントン世界王者・西村昭彦 本八幡駅徒歩1分に都市型ピックルボール施設『THE PICKLE BANG THEORY』2026年春オープン
+                {t("news.body")}
               </p>
               <a
                 href="https://prtimes.jp/main/html/rd/p/000000003.000179043.html"
@@ -350,14 +355,14 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-accent text-sm tracking-wide hover:gap-3 transition-all duration-300"
               >
-                PR TIMES <span className="text-lg">→</span>
+                {t("news.prTimes")} <span className="text-lg">→</span>
               </a>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* 06 — CONTACT */}
+      {/* 06 -- CONTACT */}
       <section className="py-12 lg:py-16 border-t border-text-gray/10">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <SectionHeader number="06" labelEn="CONTACT" id="contact" />
@@ -372,11 +377,11 @@ export default function AboutPage() {
               transition={{ duration: 0.6, ease: EASE }}
             >
               <p className="text-xs tracking-[0.3em] text-text-gray uppercase mb-8">
-                GET IN TOUCH
+                {t("contact.getInTouch")}
               </p>
               <div className="space-y-6">
                 <div>
-                  <p className="text-sm text-text-gray mb-1">Instagram</p>
+                  <p className="text-sm text-text-gray mb-1">{t("contact.instagram")}</p>
                   <a
                     href="https://www.instagram.com/thepicklebangtheory"
                     target="_blank"
@@ -387,12 +392,12 @@ export default function AboutPage() {
                   </a>
                 </div>
                 <div>
-                  <p className="text-sm text-text-gray mb-1">Address</p>
-                  <p className="text-lg text-text-light">東京都品川区</p>
+                  <p className="text-sm text-text-gray mb-1">{t("contact.address")}</p>
+                  <p className="text-lg text-text-light">{t("contact.addressValue")}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-text-gray mb-1">Hours</p>
-                  <p className="text-lg text-text-light">6:00 – 23:00</p>
+                  <p className="text-sm text-text-gray mb-1">{t("contact.hours")}</p>
+                  <p className="text-lg text-text-light">{t("contact.hoursValue")}</p>
                 </div>
               </div>
             </motion.div>
@@ -407,30 +412,30 @@ export default function AboutPage() {
             >
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="about-contact-name" className="sr-only">お名前</label>
-                  <input id="about-contact-name" name="name" type="text" required placeholder="お名前 *" className={inputClass} />
+                  <label htmlFor="about-contact-name" className="sr-only">{t("contact.labelName")}</label>
+                  <input id="about-contact-name" name="name" type="text" required placeholder={t("contact.placeholderName")} className={inputClass} />
                 </div>
                 <div>
-                  <label htmlFor="about-contact-email" className="sr-only">メールアドレス</label>
-                  <input id="about-contact-email" name="email" type="email" required placeholder="メールアドレス *" className={inputClass} />
+                  <label htmlFor="about-contact-email" className="sr-only">{t("contact.labelEmail")}</label>
+                  <input id="about-contact-email" name="email" type="email" required placeholder={t("contact.placeholderEmail")} className={inputClass} />
                 </div>
                 <div>
-                  <label htmlFor="about-contact-category" className="sr-only">お問い合わせ種別</label>
+                  <label htmlFor="about-contact-category" className="sr-only">{t("contact.labelCategory")}</label>
                   <select id="about-contact-category" name="category" required className={`${inputClass} cursor-pointer`} defaultValue="">
-                    {CATEGORIES.map((cat) => (
+                    {categories.map((cat) => (
                       <option key={cat.value} value={cat.value} disabled={cat.value === ""}>{cat.label}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="about-contact-message" className="sr-only">お問い合わせ内容</label>
-                  <textarea id="about-contact-message" name="message" required placeholder="お問い合わせ内容 *" rows={5} className={`${inputClass} resize-none`} />
+                  <label htmlFor="about-contact-message" className="sr-only">{t("contact.labelMessage")}</label>
+                  <textarea id="about-contact-message" name="message" required placeholder={t("contact.placeholderMessage")} rows={5} className={`${inputClass} resize-none`} />
                 </div>
                 <button type="submit" disabled={status === "sending"} className="bg-accent text-deep-black px-8 py-3 text-sm font-semibold tracking-[0.15em] uppercase hover:bg-accent/90 transition-colors disabled:opacity-50">
-                  SEND MESSAGE
+                  {t("contact.sendMessage")}
                 </button>
-                {status === "success" && <p className="text-accent mt-4">送信しました。ありがとうございます。</p>}
-                {status === "error" && <p className="text-red-400 mt-4">送信に失敗しました。もう一度お試しください。</p>}
+                {status === "success" && <p className="text-accent mt-4">{t("contact.successMessage")}</p>}
+                {status === "error" && <p className="text-red-400 mt-4">{t("contact.errorMessage")}</p>}
               </form>
             </motion.div>
           </div>
@@ -439,6 +444,5 @@ export default function AboutPage() {
 
       <HomeFooter />
     </main>
-    </LanguageProvider>
   );
 }
