@@ -60,6 +60,13 @@ describe("HomeFooter", () => {
     expect(screen.getByText(/〒272-0021/)).toBeInTheDocument();
   });
 
+  it("特定商取引法リンクを表示する", () => {
+    render(<HomeFooter />);
+    const link = screen.getByRole("link", { name: "特定商取引法に基づく表記" });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/tokushoho");
+  });
+
   it("アクセントセパレーターを持つ", () => {
     render(<HomeFooter />);
     const footer = screen.getByRole("contentinfo");
