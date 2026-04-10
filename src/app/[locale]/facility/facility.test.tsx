@@ -71,6 +71,13 @@ describe("FacilityPage", () => {
 
     expect(screen.getByRole("main")).toBeInTheDocument();
   });
+
+  it("英語ロケールでもレンダリングできる", async () => {
+    const Page = await FacilityPage({ params: Promise.resolve({ locale: "en" }) });
+    renderWithIntl(Page, "en");
+
+    expect(screen.getByRole("main")).toBeInTheDocument();
+  });
 });
 
 describe("generateMetadata", () => {

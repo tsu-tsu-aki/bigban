@@ -22,7 +22,11 @@ describe("middleware", () => {
   });
 
   afterAll(() => {
-    process.env.NEXT_PUBLIC_MAINTENANCE = originalEnv;
+    if (originalEnv === undefined) {
+      delete process.env.NEXT_PUBLIC_MAINTENANCE;
+    } else {
+      process.env.NEXT_PUBLIC_MAINTENANCE = originalEnv;
+    }
   });
 
   describe("maintenance mode OFF", () => {
