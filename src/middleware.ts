@@ -7,36 +7,12 @@ const handleI18nRouting = createMiddleware(routing);
 
 const MAINTENANCE_BYPASS_PATHS = ["/teaser", "/_next", "/logos", "/images"];
 
-const BOT_USER_AGENTS = [
-  "googlebot", "bingbot", "yandexbot", "duckduckbot",
-  "baiduspider", "slurp", "facebot", "ia_archiver",
-];
-
 function isMaintenanceBypassPath(pathname: string): boolean {
   return MAINTENANCE_BYPASS_PATHS.some((p) => pathname.startsWith(p));
 }
 
-function isBot(request: NextRequest): boolean {
-  const ua = request.headers.get("user-agent")?.toLowerCase() ?? "";
-  return BOT_USER_AGENTS.some((bot) => ua.includes(bot));
-}
-
-function createBotMaintenanceResponse(): NextResponse {
-  const html = `<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Service Temporarily Unavailable</title></head>
-<body><h1>503 Service Temporarily Unavailable</h1><p>This site is under maintenance. Please try again later.</p></body>
-</html>`;
-
-  return new NextResponse(html, {
-    status: 503,
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-      "Retry-After": "86400",
-    },
-  });
-}
-
-function createUserMaintenanceResponse(request: NextRequest): NextResponse {
+function createMaintenanceResponse(request: NextRequest): NextResponse {
+  // teaserは日本語固定のメンテナンスページ。locale検出は不要
   const url = new URL("/ja/teaser", request.url);
   return NextResponse.rewrite(url);
 }
@@ -49,10 +25,7 @@ export function middleware(request: NextRequest) {
     if (isMaintenanceBypassPath(pathname)) {
       return handleI18nRouting(request);
     }
-    if (isBot(request)) {
-      return createBotMaintenanceResponse();
-    }
-    return createUserMaintenanceResponse(request);
+    return createMaintenanceResponse(request);
   }
 
   return handleI18nRouting(request);
