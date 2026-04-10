@@ -12,6 +12,7 @@ function isMaintenanceBypassPath(pathname: string): boolean {
 }
 
 function createMaintenanceResponse(request: NextRequest): NextResponse {
+  // teaserは日本語固定のメンテナンスページ。locale検出は不要
   const url = new URL("/ja/teaser", request.url);
   return NextResponse.rewrite(url);
 }

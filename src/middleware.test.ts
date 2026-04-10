@@ -72,6 +72,26 @@ describe("middleware", () => {
       expect(response.headers.get("x-middleware-rewrite")).toContain("/ja/teaser");
     });
 
+    it("rewrites /en/about to /ja/teaser", async () => {
+      process.env.NEXT_PUBLIC_MAINTENANCE = "true";
+      const { middleware } = await import("./middleware");
+      const request = createRequest("/en/about");
+
+      const response = middleware(request);
+
+      expect(response.headers.get("x-middleware-rewrite")).toContain("/ja/teaser");
+    });
+
+    it("rewrites /ja/teaser to /ja/teaser (no infinite loop)", async () => {
+      process.env.NEXT_PUBLIC_MAINTENANCE = "true";
+      const { middleware } = await import("./middleware");
+      const request = createRequest("/ja/teaser");
+
+      const response = middleware(request);
+
+      expect(response.headers.get("x-middleware-rewrite")).toContain("/ja/teaser");
+    });
+
     it("allows /teaser through via i18n routing", async () => {
       process.env.NEXT_PUBLIC_MAINTENANCE = "true";
       const { middleware } = await import("./middleware");
