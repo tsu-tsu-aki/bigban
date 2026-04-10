@@ -1,7 +1,15 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
+import jaMessages from "../../../messages/ja.json";
 
 import HomeFooter from "./HomeFooter";
+
+vi.mock("@/i18n/navigation", () => ({
+  Link: ({ href, children, ...props }: Record<string, unknown>) => (
+    <a href={href as string} {...props}>{children as React.ReactNode}</a>
+  ),
+}));
 
 vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => {
@@ -19,19 +27,31 @@ vi.mock("next/image", () => ({
 
 describe("HomeFooter", () => {
   it("footer要素が存在する", () => {
-    render(<HomeFooter />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFooter />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
   });
 
   it("ロゴ画像を表示する", () => {
-    render(<HomeFooter />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFooter />
+      </NextIntlClientProvider>
+    );
     expect(
       screen.getByAltText("THE PICKLE BANG THEORY")
     ).toBeInTheDocument();
   });
 
   it("6つのナビリンクを表示する", () => {
-    render(<HomeFooter />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFooter />
+      </NextIntlClientProvider>
+    );
     const links = [
       { name: "CONCEPT", href: "/#concept" },
       { name: "FACILITY", href: "/#facility" },
@@ -49,26 +69,42 @@ describe("HomeFooter", () => {
   });
 
   it("コピーライトを表示する", () => {
-    render(<HomeFooter />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFooter />
+      </NextIntlClientProvider>
+    );
     expect(
       screen.getByText(/© 2026 RST Agency Inc\./)
     ).toBeInTheDocument();
   });
 
   it("住所を表示する", () => {
-    render(<HomeFooter />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFooter />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByText(/〒272-0021/)).toBeInTheDocument();
   });
 
   it("特定商取引法リンクを表示する", () => {
-    render(<HomeFooter />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFooter />
+      </NextIntlClientProvider>
+    );
     const link = screen.getByRole("link", { name: "特定商取引法に基づく表記" });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/tokushoho");
   });
 
   it("アクセントセパレーターを持つ", () => {
-    render(<HomeFooter />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFooter />
+      </NextIntlClientProvider>
+    );
     const footer = screen.getByRole("contentinfo");
     const firstChild = footer.firstElementChild;
     expect(firstChild).not.toBeNull();

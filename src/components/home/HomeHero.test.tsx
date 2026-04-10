@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { LanguageProvider } from "@/hooks/useLanguage";
+import { NextIntlClientProvider } from "next-intl";
+import jaMessages from "../../../messages/ja.json";
 import HomeHero from "./HomeHero";
 
 import type { ReactElement } from "react";
@@ -15,7 +16,11 @@ vi.mock("@/hooks/useMagneticButton", () => ({
 }));
 
 function renderWithProvider(ui: ReactElement) {
-  return render(<LanguageProvider>{ui}</LanguageProvider>);
+  return render(
+    <NextIntlClientProvider locale="ja" messages={jaMessages}>
+      {ui}
+    </NextIntlClientProvider>
+  );
 }
 
 describe("HomeHero", () => {

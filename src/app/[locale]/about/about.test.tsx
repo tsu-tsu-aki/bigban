@@ -1,9 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import AboutPage from "./page";
+import { NextIntlClientProvider } from "next-intl";
+import AboutPage from "./AboutContent";
+import jaMessages from "../../../../messages/ja.json";
+
+import type { ReactElement } from "react";
 
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
+
+vi.mock("@/i18n/navigation", () => ({
+  Link: ({ children, href, ...props }: Record<string, unknown>) => (
+    <a href={href as string} {...props}>{children as React.ReactNode}</a>
+  ),
+  usePathname: () => "/about",
+  useRouter: () => ({ push: vi.fn() }),
+}));
 
 // Mock IntersectionObserver for HomeNavigation's useActiveSection
 class MockIntersectionObserver {
@@ -13,19 +25,27 @@ class MockIntersectionObserver {
 }
 global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
 
+function renderWithIntl(ui: ReactElement) {
+  return render(
+    <NextIntlClientProvider locale="ja" messages={jaMessages}>
+      {ui}
+    </NextIntlClientProvider>
+  );
+}
+
 describe("AboutPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("ABOUT USタイトルを表示する", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     const headings = screen.getAllByText("ABOUT US");
     expect(headings.length).toBeGreaterThanOrEqual(1);
   });
 
   it("全6セクションのヘッダーを表示する", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     expect(screen.getByText("COMPANY")).toBeInTheDocument();
     expect(screen.getByText("FOUNDER")).toBeInTheDocument();
     expect(screen.getByText("OUR PLAYERS")).toBeInTheDocument();
@@ -36,41 +56,41 @@ describe("AboutPage", () => {
   });
 
   it("RST Agency情報を表示する", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     const rstElements = screen.getAllByText("RST Agency株式会社");
     expect(rstElements.length).toBeGreaterThanOrEqual(1);
   });
 
   it("西村昭彦の経歴を表示する", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     const nameElements = screen.getAllByText("西村昭彦");
     expect(nameElements.length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText(/クロスミントンへ転向/)).toBeInTheDocument();
   });
 
   it("PBT契約選手セクションを表示する", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     expect(screen.getByText("PBT契約選手")).toBeInTheDocument();
   });
 
   it("PBTクルーセクションを表示する", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     expect(screen.getByText("PBTクルー")).toBeInTheDocument();
   });
 
   it("ニュースセクションを表示する", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     expect(screen.getByText("ニュース")).toBeInTheDocument();
     expect(screen.getByText("PR TIMES")).toBeInTheDocument();
   });
 
   it("コンタクトフォームを表示する", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     expect(screen.getByText("SEND MESSAGE")).toBeInTheDocument();
   });
 
   it("Instagramリンクが設定されている", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     const igLink = screen.getByText("@thepicklebangtheory");
     expect(igLink.closest("a")).toHaveAttribute(
       "href",
@@ -79,7 +99,7 @@ describe("AboutPage", () => {
   });
 
   it("メールアドレスを表示しない", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     const emailElements = screen.queryAllByText(/hello@rstagency/);
     expect(emailElements).toHaveLength(0);
   });
@@ -90,7 +110,7 @@ describe("AboutPage", () => {
       writable: true,
     });
     const scrollSpy = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     expect(scrollSpy).not.toHaveBeenCalled();
     scrollSpy.mockRestore();
     Object.defineProperty(window, "location", {
@@ -100,13 +120,13 @@ describe("AboutPage", () => {
   });
 
   it("HOMEリンクを表示する", () => {
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
     expect(screen.getByText(/© 2026 RST Agency/)).toBeInTheDocument();
   });
 
   it("フォーム送信成功時にメッセージを表示する", async () => {
     mockFetch.mockResolvedValueOnce({ ok: true });
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
 
     fireEvent.change(screen.getByPlaceholderText("お名前 *"), {
       target: { value: "テスト太郎" },
@@ -131,7 +151,7 @@ describe("AboutPage", () => {
 
   it("フォーム送信失敗時にエラーメッセージを表示する", async () => {
     mockFetch.mockResolvedValueOnce({ ok: false });
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
 
     fireEvent.change(screen.getByPlaceholderText("お名前 *"), {
       target: { value: "テスト太郎" },
@@ -156,7 +176,7 @@ describe("AboutPage", () => {
 
   it("ネットワークエラー時にエラーメッセージを表示する", async () => {
     mockFetch.mockRejectedValueOnce(new Error("Network error"));
-    render(<AboutPage />);
+    renderWithIntl(<AboutPage />);
 
     fireEvent.change(screen.getByPlaceholderText("お名前 *"), {
       target: { value: "テスト太郎" },

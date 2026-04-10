@@ -1,84 +1,32 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 
-interface ServiceItem {
+interface ServiceConfig {
   number: string;
-  titleJa: string;
-  titleEn: string;
-  description: string;
+  key: string;
   isReversed: boolean;
   isDark: boolean;
   imageSrc: string;
   imageAlt: string;
-  ctaLabel?: string;
-  ctaHref?: string;
+  hasCta: boolean;
 }
 
-const SERVICES: ServiceItem[] = [
-  {
-    number: "01",
-    titleJa: "コートレンタル",
-    titleEn: "COURT RENTAL",
-    description:
-      "時間貸しのレンタルコート。無人チェックインで手軽に予約・利用可能。早朝6:00から深夜23:00まで。",
-    isReversed: false,
-    isDark: true,
-    imageSrc: "/images/alex-saks-3k-yNMhYl5k-unsplash.jpg",
-    imageAlt: "Empty court with net and balls",
-    ctaLabel: "RESERVE",
-    ctaHref: "#",
-  },
-  {
-    number: "02",
-    titleJa: "レッスン & クリニック",
-    titleEn: "LESSONS & CLINICS",
-    description:
-      "トップ選手による直接指導。レベル別プログラムで初心者から上級者まで対応。海外トッププレーヤーを招聘した特別クリニックも開催予定。",
-    isReversed: true,
-    isDark: false,
-    imageSrc: "/images/jon-matthews-usqfZcs_GfM-unsplash.jpg",
-    imageAlt: "Female player reaching for a shot",
-  },
-  {
-    number: "03",
-    titleJa: "トレーニングプログラム",
-    titleEn: "TRAINING",
-    description:
-      "フィジカルトレーニングを取り入れたピックルボール強化プログラム。併設トレーニングエリアでコンディショニング。プレーの質を根本から高める。",
-    isReversed: false,
-    isDark: true,
-    imageSrc: "/images/jon-matthews-q13YtbIPuv0-unsplash.jpg",
-    imageAlt: "Male player in ready stance",
-  },
-  {
-    number: "04",
-    titleJa: "大会 & リーグ",
-    titleEn: "TOURNAMENTS & LEAGUES",
-    description:
-      "オリジナル大会・リーグを定期開催。賞金付きトーナメントから幅広いレベルに対応したリーグ戦まで。",
-    isReversed: true,
-    isDark: false,
-    imageSrc: "/images/jon-matthews-1gOtJQQyN04-unsplash.jpg",
-    imageAlt: "Two players on the court",
-  },
-  {
-    number: "05",
-    titleJa: "イベント",
-    titleEn: "EVENTS",
-    description:
-      "1面ショーコートへのレイアウト変更で本格的な観戦イベントを実現。異業種コラボレーションやプロモーションイベントの会場としても。",
-    isReversed: false,
-    isDark: true,
-    imageSrc: "/images/luxe-pickleball-VTKZwNXhaSc-unsplash.jpg",
-    imageAlt: "Paddles crossed on court",
-  },
+const SERVICES: ServiceConfig[] = [
+  { number: "01", key: "service01", isReversed: false, isDark: true, imageSrc: "/images/alex-saks-3k-yNMhYl5k-unsplash.jpg", imageAlt: "Empty court with net and balls", hasCta: true },
+  { number: "02", key: "service02", isReversed: true, isDark: false, imageSrc: "/images/jon-matthews-usqfZcs_GfM-unsplash.jpg", imageAlt: "Female player reaching for a shot", hasCta: false },
+  { number: "03", key: "service03", isReversed: false, isDark: true, imageSrc: "/images/jon-matthews-q13YtbIPuv0-unsplash.jpg", imageAlt: "Male player in ready stance", hasCta: false },
+  { number: "04", key: "service04", isReversed: true, isDark: false, imageSrc: "/images/jon-matthews-1gOtJQQyN04-unsplash.jpg", imageAlt: "Two players on the court", hasCta: false },
+  { number: "05", key: "service05", isReversed: false, isDark: true, imageSrc: "/images/luxe-pickleball-VTKZwNXhaSc-unsplash.jpg", imageAlt: "Paddles crossed on court", hasCta: false },
 ];
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
 export default function HomeServices() {
+  const t = useTranslations("HomeServices");
+
   return (
     <section id="services">
       {/* Section Title */}
@@ -91,7 +39,7 @@ export default function HomeServices() {
           transition={{ duration: 1.1, ease: EASE }}
         >
           <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em]">
-            SERVICES
+            {t("title")}
           </h2>
           <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
         </motion.div>
@@ -111,7 +59,7 @@ export default function HomeServices() {
               service.isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
             } gap-8 lg:gap-16 items-center`}
           >
-            {/* Image — 60% */}
+            {/* Image */}
             <motion.div
               className="relative w-full lg:w-[60%] aspect-[16/10] rounded-sm overflow-hidden"
               initial={{ opacity: 0, y: 32 }}
@@ -127,7 +75,7 @@ export default function HomeServices() {
               />
             </motion.div>
 
-            {/* Text content — 40% */}
+            {/* Text content */}
             <motion.div
               className="w-full lg:w-[40%]"
               initial={{ opacity: 0, y: 24 }}
@@ -139,20 +87,20 @@ export default function HomeServices() {
                 {service.number}
               </span>
               <h3 className="font-serif text-2xl lg:text-4xl mb-2">
-                {service.titleJa}
+                {t(`${service.key}.titleJa`)}
               </h3>
               <p className="text-xs tracking-[0.2em] text-text-gray mb-6">
-                {service.titleEn}
+                {t(`${service.key}.titleEn`)}
               </p>
               <p className="text-base leading-relaxed">
-                {service.description}
+                {t(`${service.key}.description`)}
               </p>
-              {service.ctaLabel && service.ctaHref && (
+              {service.hasCta && (
                 <a
-                  href={service.ctaHref}
+                  href="#"
                   className="inline-block mt-6 bg-accent text-deep-black px-8 py-3 text-xs font-bold uppercase tracking-widest hover:bg-accent/90 transition-colors"
                 >
-                  {service.ctaLabel}
+                  {t(`${service.key}.cta`)}
                 </a>
               )}
             </motion.div>

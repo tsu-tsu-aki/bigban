@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { motion, useInView } from "framer-motion";
 
 export default function FacilityStory() {
+  const t = useTranslations("Facility.story");
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -18,9 +20,9 @@ export default function FacilityStory() {
           className="mb-20 md:mb-28"
         >
           <h2 className="font-[var(--font-dm-serif)] text-[clamp(2rem,4.5vw,4rem)] text-text-dark leading-[1.2] max-w-4xl">
-            「ピックルボールの
+            {t("heading1")}
             <br />
-            <span className="text-accent">ビッグバン</span>が生まれる場所」
+            <span className="text-accent">{t("headingAccent")}</span>{t("heading2")}
           </h2>
         </motion.div>
 
@@ -35,10 +37,9 @@ export default function FacilityStory() {
           >
             <p className="font-[var(--font-inter)] text-text-dark text-[clamp(0.95rem,1.3vw,1.1rem)] leading-[2] tracking-wide">
               <span className="font-[var(--font-dm-serif)] text-[3.5rem] leading-[0.85] float-left mr-3 mt-1 text-accent">
-                宇
+                {t("paragraph1initial")}
               </span>
-              宙の始まりとされるビッグバンのように、この場所から新しいピックルボール文化が広がることを目指している。
-              単なるコートレンタルではなく、プレーヤーが本気で成長するための環境をゼロから設計した。
+              {t("paragraph1")}
             </p>
           </motion.div>
 
@@ -50,9 +51,7 @@ export default function FacilityStory() {
             className="md:w-1/2"
           >
             <p className="font-[var(--font-inter)] text-text-dark text-[clamp(0.95rem,1.3vw,1.1rem)] leading-[2] tracking-wide">
-              年齢やレベルに関係なく、本気で成長したい人が練習に集中し、挑戦し続けられる場所。
-              世界トップレベルの競技経験を持つ代表自らがコートに立ち、プレーヤーの成長に向き合う。
-              ここは、すべての始まりの場所だ。
+              {t("paragraph2")}
             </p>
           </motion.div>
         </div>

@@ -1,20 +1,22 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { useMagneticButton } from "@/hooks/useMagneticButton";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
-const HEADLINE_LINES = [
-  { text: "ピックルボールの", isAccent: false },
-  { text: "ビッグバンが", isAccent: true },
-  { text: "ここから始まる。", isAccent: false },
-];
-
 export default function HomeHero() {
+  const t = useTranslations("HomeHero");
   const { ref, position, handleMouseMove, handleMouseLeave } =
     useMagneticButton();
+
+  const headlineLines = [
+    { text: t("headline1"), isAccent: false },
+    { text: t("headline2"), isAccent: true },
+    { text: t("headline3"), isAccent: false },
+  ];
 
   return (
     <section className="relative bg-deep-black overflow-hidden pt-[60px] md:pt-[100px]">
@@ -22,7 +24,7 @@ export default function HomeHero() {
       <div className="relative aspect-[16/9] min-h-[calc(100vh-100px)] w-full">
         <Image
           src="/images/jon-matthews-YFNDwuYoyCA-unsplash.jpg"
-          alt="Player mid-swing"
+          alt={t("heroImageAlt")}
           fill
           className="object-cover"
           priority
@@ -41,7 +43,7 @@ export default function HomeHero() {
         <div className="absolute inset-0 z-10 flex items-center">
           <div className="px-8 md:px-16 lg:px-24 max-w-7xl">
             <h1 className="font-serif text-[clamp(2rem,5vw,5.5rem)] leading-[1.15]">
-              {HEADLINE_LINES.map((line, i) => (
+              {headlineLines.map((line, i) => (
                 <span key={line.text} className="block overflow-hidden">
                   <motion.span
                     className={`block ${
@@ -70,7 +72,7 @@ export default function HomeHero() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 1.2, ease: EASE }}
             >
-              FROM A SMALL DINK TO A BIG MOVEMENT
+              {t("tagline")}
             </motion.p>
 
             {/* CTA */}
@@ -90,7 +92,7 @@ export default function HomeHero() {
                   transform: `translate(${position.x}px, ${position.y}px)`,
                 }}
               >
-                RESERVE A COURT
+                {t("cta")}
               </a>
             </motion.div>
           </div>
@@ -105,7 +107,7 @@ export default function HomeHero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 2, ease: EASE }}
           >
-            SCROLL
+            {t("scroll")}
           </motion.span>
         </div>
       </div>

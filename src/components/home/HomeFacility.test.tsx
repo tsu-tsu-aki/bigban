@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
+import jaMessages from "../../../messages/ja.json";
 import HomeFacility from "./HomeFacility";
 
 const mockScrollTo = vi.fn();
@@ -36,13 +38,21 @@ describe("HomeFacility", () => {
   });
 
   it('セクションID "facility" を持つ', () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     const section = document.getElementById("facility");
     expect(section).toBeInTheDocument();
   });
 
   it("キーナンバーを表示する", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByText("3")).toBeInTheDocument();
     expect(screen.getByText("COURTS")).toBeInTheDocument();
     expect(screen.getByText("6:00–23:00")).toBeInTheDocument();
@@ -52,7 +62,11 @@ describe("HomeFacility", () => {
   });
 
   it("Primary Specsを表示する", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByText("SURFACE")).toBeInTheDocument();
     expect(screen.getByText("ハードコート DecoTurf（デコターフ）")).toBeInTheDocument();
     expect(screen.getByText("TYPE")).toBeInTheDocument();
@@ -60,14 +74,22 @@ describe("HomeFacility", () => {
   });
 
   it("DecoTurf説明文を表示する", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     expect(
       screen.getByText(/DecoTurf（デコターフ）は、世界最大級のピックルボール大会/)
     ).toBeInTheDocument();
   });
 
   it("全設備項目を表示する", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByText("トレーニングエリア")).toBeInTheDocument();
     expect(screen.getByText("ラウンジスペース")).toBeInTheDocument();
     expect(screen.getByText("男女別更衣室")).toBeInTheDocument();
@@ -79,48 +101,80 @@ describe("HomeFacility", () => {
   });
 
   it("トレーニングエリアとラウンジスペースに準備中の注記を表示する", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     const notes = screen.getAllByText("準備中");
     expect(notes).toHaveLength(2);
   });
 
   it("FACILITY タイトルを表示する", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     expect(screen.getByText("FACILITY")).toBeInTheDocument();
   });
 
   it("bg-deep-black 背景クラスを持つ", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     const section = document.getElementById("facility");
     expect(section?.className).toContain("bg-deep-black");
   });
 
   it("カルーセルのドットインジケーターを表示する", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     const dots = screen.getAllByRole("button", { name: /画像.*を表示/ });
     expect(dots).toHaveLength(3);
   });
 
   it("全施設画像をレンダリングする", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     const images = screen.getAllByRole("img");
     expect(images.length).toBeGreaterThanOrEqual(3);
   });
 
   it("ドットクリックでscrollToが呼ばれる", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     const dots = screen.getAllByRole("button", { name: /画像.*を表示/ });
     fireEvent.click(dots[1]);
     expect(mockScrollTo).toHaveBeenCalledWith(1);
   });
 
   it("emblaApiのselectイベントを登録する", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     expect(mockOn).toHaveBeenCalledWith("select", expect.any(Function));
   });
 
   it("selectコールバックでselectedScrollSnapを呼ぶ", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     const selectCall = mockOn.mock.calls.find(
       (call) => call[0] === "select"
     );
@@ -132,14 +186,22 @@ describe("HomeFacility", () => {
   });
 
   it("前の画像ボタンでscrollPrevが呼ばれる", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     const prevBtn = screen.getByRole("button", { name: "前の画像" });
     fireEvent.click(prevBtn);
     expect(mockScrollPrev).toHaveBeenCalled();
   });
 
   it("次の画像ボタンでscrollNextが呼ばれる", () => {
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     const nextBtn = screen.getByRole("button", { name: "次の画像" });
     fireEvent.click(nextBtn);
     expect(mockScrollNext).toHaveBeenCalled();
@@ -147,7 +209,11 @@ describe("HomeFacility", () => {
 
   it("emblaApiがnullの時にscrollToが何もしない", () => {
     returnApi = null;
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     const dots = screen.getAllByRole("button", { name: /画像.*を表示/ });
     fireEvent.click(dots[1]);
     expect(mockScrollTo).not.toHaveBeenCalled();
@@ -155,7 +221,11 @@ describe("HomeFacility", () => {
 
   it("emblaApiがnullの時に矢印ボタンが何もしない", () => {
     returnApi = null;
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     fireEvent.click(screen.getByRole("button", { name: "前の画像" }));
     fireEvent.click(screen.getByRole("button", { name: "次の画像" }));
     expect(mockScrollPrev).not.toHaveBeenCalled();
@@ -164,7 +234,11 @@ describe("HomeFacility", () => {
 
   it("emblaApiがnullの時にイベント登録しない", () => {
     returnApi = null;
-    render(<HomeFacility />);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
     expect(mockOn).not.toHaveBeenCalled();
   });
 });

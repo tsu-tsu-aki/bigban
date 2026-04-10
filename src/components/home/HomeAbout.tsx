@@ -1,12 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
 export default function HomeAbout() {
+  const t = useTranslations("HomeAbout");
+
   return (
     <section
       id="about"
@@ -40,7 +43,7 @@ export default function HomeAbout() {
           transition={{ duration: 1.1, ease: EASE }}
         >
           <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em] text-text-light">
-            ABOUT US
+            {t("title")}
           </h2>
           <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
         </motion.div>
@@ -58,7 +61,7 @@ export default function HomeAbout() {
             <div className="relative aspect-[4/3] sm:aspect-[3/4] w-full max-w-sm mx-auto lg:mx-0 overflow-hidden rounded-sm">
               <Image
                 src="/images/jon-matthews-ViVHl-M_ezI-unsplash.jpg"
-                alt="西村昭彦"
+                alt={t("founderImageAlt")}
                 fill
                 className="object-cover"
               />
@@ -75,29 +78,28 @@ export default function HomeAbout() {
             transition={{ duration: 1.1, delay: 0.15, ease: EASE }}
           >
             <span className="text-[10px] tracking-[0.25em] text-accent block mb-4">
-              FOUNDER & CEO
+              {t("founderLabel")}
             </span>
             <h3 className="font-serif text-4xl lg:text-5xl text-text-light mb-2">
-              西村昭彦
+              {t("founderName")}
             </h3>
             <p className="text-sm tracking-[0.15em] text-text-gray mb-8">
-              AKIHIKO NISHIMURA
+              {t("founderNameEn")}
             </p>
 
             <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4">
-              クロスミントン世界選手権6度優勝。バドミントンで全日本総合選手権に4度出場した競技経験を活かし、RST
-              Agency株式会社を設立。
+              {t("founderBio1")}
             </p>
             <p className="text-text-gray text-sm lg:text-base leading-relaxed mb-10">
-              本格的なプレー環境を求めるプレイヤーのために、都市型ピックルボール施設を構想。
+              {t("founderBio2")}
             </p>
 
             <Link
               href="/about"
               className="inline-flex items-center gap-2 text-accent text-sm tracking-[0.15em] hover:gap-3 transition-all duration-300"
             >
-              詳しく見る
-              <span className="text-lg">→</span>
+              {t("readMore")}
+              <span className="text-lg">&rarr;</span>
             </Link>
           </motion.div>
         </div>
