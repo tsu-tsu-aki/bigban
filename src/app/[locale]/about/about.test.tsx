@@ -1,0 +1,201 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
+import AboutPage from "./AboutContent";
+import jaMessages from "../../../../messages/ja.json";
+
+import type { ReactElement } from "react";
+
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
+
+vi.mock("@/i18n/navigation", () => ({
+  Link: ({ children, href, ...props }: Record<string, unknown>) => (
+    <a href={href as string} {...props}>{children as React.ReactNode}</a>
+  ),
+  usePathname: () => "/about",
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
+// Mock IntersectionObserver for HomeNavigation's useActiveSection
+class MockIntersectionObserver {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+}
+global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
+
+function renderWithIntl(ui: ReactElement) {
+  return render(
+    <NextIntlClientProvider locale="ja" messages={jaMessages}>
+      {ui}
+    </NextIntlClientProvider>
+  );
+}
+
+describe("AboutPage", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("ABOUT USタイトルを表示する", () => {
+    renderWithIntl(<AboutPage />);
+    const headings = screen.getAllByText("ABOUT US");
+    expect(headings.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("全6セクションのヘッダーを表示する", () => {
+    renderWithIntl(<AboutPage />);
+    expect(screen.getByText("COMPANY")).toBeInTheDocument();
+    expect(screen.getByText("FOUNDER")).toBeInTheDocument();
+    expect(screen.getByText("OUR PLAYERS")).toBeInTheDocument();
+    expect(screen.getByText("OUR CREW")).toBeInTheDocument();
+    expect(screen.getByText("NEWS")).toBeInTheDocument();
+    const contactElements = screen.getAllByText("CONTACT");
+    expect(contactElements.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("RST Agency情報を表示する", () => {
+    renderWithIntl(<AboutPage />);
+    const rstElements = screen.getAllByText("RST Agency株式会社");
+    expect(rstElements.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("西村昭彦の経歴を表示する", () => {
+    renderWithIntl(<AboutPage />);
+    const nameElements = screen.getAllByText("西村昭彦");
+    expect(nameElements.length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/クロスミントンへ転向/)).toBeInTheDocument();
+  });
+
+  it("PBT契約選手セクションを表示する", () => {
+    renderWithIntl(<AboutPage />);
+    expect(screen.getByText("PBT契約選手")).toBeInTheDocument();
+  });
+
+  it("PBTクルーセクションを表示する", () => {
+    renderWithIntl(<AboutPage />);
+    expect(screen.getByText("PBTクルー")).toBeInTheDocument();
+  });
+
+  it("ニュースセクションを表示する", () => {
+    renderWithIntl(<AboutPage />);
+    expect(screen.getByText("ニュース")).toBeInTheDocument();
+    expect(screen.getByText("PR TIMES")).toBeInTheDocument();
+  });
+
+  it("コンタクトフォームを表示する", () => {
+    renderWithIntl(<AboutPage />);
+    expect(screen.getByText("SEND MESSAGE")).toBeInTheDocument();
+  });
+
+  it("Instagramリンクが設定されている", () => {
+    renderWithIntl(<AboutPage />);
+    const igLink = screen.getByText("@thepicklebangtheory");
+    expect(igLink.closest("a")).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/thepicklebangtheory"
+    );
+  });
+
+  it("メールアドレスを表示しない", () => {
+    renderWithIntl(<AboutPage />);
+    const emailElements = screen.queryAllByText(/hello@rstagency/);
+    expect(emailElements).toHaveLength(0);
+  });
+
+  it("ハッシュ付きURLではスクロールリセットしない", () => {
+    Object.defineProperty(window, "location", {
+      value: { ...window.location, hash: "#contact" },
+      writable: true,
+    });
+    const scrollSpy = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+    renderWithIntl(<AboutPage />);
+    expect(scrollSpy).not.toHaveBeenCalled();
+    scrollSpy.mockRestore();
+    Object.defineProperty(window, "location", {
+      value: { ...window.location, hash: "" },
+      writable: true,
+    });
+  });
+
+  it("HOMEリンクを表示する", () => {
+    renderWithIntl(<AboutPage />);
+    expect(screen.getByText(/© 2026 RST Agency/)).toBeInTheDocument();
+  });
+
+  it("フォーム送信成功時にメッセージを表示する", async () => {
+    mockFetch.mockResolvedValueOnce({ ok: true });
+    renderWithIntl(<AboutPage />);
+
+    fireEvent.change(screen.getByPlaceholderText("お名前 *"), {
+      target: { value: "テスト太郎" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("メールアドレス *"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("お問い合わせ種別"), {
+      target: { value: "other" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("お問い合わせ内容 *"), {
+      target: { value: "テストメッセージ" },
+    });
+    fireEvent.click(screen.getByText("SEND MESSAGE"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("送信しました。ありがとうございます。")
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("フォーム送信失敗時にエラーメッセージを表示する", async () => {
+    mockFetch.mockResolvedValueOnce({ ok: false });
+    renderWithIntl(<AboutPage />);
+
+    fireEvent.change(screen.getByPlaceholderText("お名前 *"), {
+      target: { value: "テスト太郎" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("メールアドレス *"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("お問い合わせ種別"), {
+      target: { value: "other" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("お問い合わせ内容 *"), {
+      target: { value: "テストメッセージ" },
+    });
+    fireEvent.click(screen.getByText("SEND MESSAGE"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("送信に失敗しました。もう一度お試しください。")
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("ネットワークエラー時にエラーメッセージを表示する", async () => {
+    mockFetch.mockRejectedValueOnce(new Error("Network error"));
+    renderWithIntl(<AboutPage />);
+
+    fireEvent.change(screen.getByPlaceholderText("お名前 *"), {
+      target: { value: "テスト太郎" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("メールアドレス *"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("お問い合わせ種別"), {
+      target: { value: "other" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("お問い合わせ内容 *"), {
+      target: { value: "テストメッセージ" },
+    });
+    fireEvent.click(screen.getByText("SEND MESSAGE"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("送信に失敗しました。もう一度お試しください。")
+      ).toBeInTheDocument();
+    });
+  });
+});

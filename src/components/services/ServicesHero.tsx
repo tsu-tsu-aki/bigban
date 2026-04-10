@@ -1,8 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function ServicesHero() {
+  const t = useTranslations("ServicesPage");
+
   return (
     <section className="relative h-[60vh] min-h-[450px] bg-deep-black overflow-hidden flex flex-col justify-end">
       {/* Grain texture */}
@@ -20,11 +23,11 @@ export default function ServicesHero() {
           transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="font-[var(--font-inter)] text-[clamp(6rem,16vw,15rem)] font-bold tracking-[0.12em] text-off-white/8 leading-[0.85] uppercase select-none -mx-4"
         >
-          SERVICES
+          {t("hero.title")}
         </motion.h1>
       </div>
 
-      {/* Japanese subtitle */}
+      {/* Subtitle */}
       <div className="max-w-[1440px] mx-auto w-full px-8 md:px-16 lg:px-24 pb-16">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -32,7 +35,7 @@ export default function ServicesHero() {
           transition={{ duration: 0.8, delay: 1 }}
           className="text-[12px] tracking-[0.4em] text-text-gray uppercase font-[var(--font-inter)]"
         >
-          サービス
+          {t("hero.subtitle")}
         </motion.p>
       </div>
     </section>

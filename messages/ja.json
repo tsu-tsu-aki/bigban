@@ -1,0 +1,407 @@
+{
+  "Metadata": {
+    "home": {
+      "title": "駅徒歩1分24時間利用|THE PICKLE BANG THEORY",
+      "description": "クロスミントン世界王者が手がけるプレミアムインドアピックルボール施設。本八幡駅徒歩1分、24時間営業。初心者から上級者まで楽しめるプレミアム空間。"
+    },
+    "about": {
+      "title": "ABOUT US|THE PICKLE BANG THEORY",
+      "description": "THE PICKLE BANG THEORYを運営するRST Agency株式会社の会社概要、代表挨拶、選手・スタッフ紹介。"
+    },
+    "tokushoho": {
+      "title": "特定商取引法に基づく表記|THE PICKLE BANG THEORY",
+      "description": "THE PICKLE BANG THEORYの特定商取引法に基づく表記ページです。"
+    },
+    "facility": {
+      "title": "FACILITY|THE PICKLE BANG THEORY",
+      "description": "最新設備を完備したインドアピックルボールコート。LED照明、プロ仕様サーフェス、快適なラウンジスペース。"
+    },
+    "services": {
+      "title": "SERVICES|THE PICKLE BANG THEORY",
+      "description": "コートレンタル、レッスンプログラム、イベント開催、法人プラン。あらゆるニーズに対応するサービス一覧。"
+    },
+    "og": {
+      "siteName": "THE PICKLE BANG THEORY"
+    }
+  },
+  "Navigation": {
+    "concept": "CONCEPT",
+    "facility": "FACILITY",
+    "services": "SERVICES",
+    "pricing": "PRICING",
+    "about": "ABOUT",
+    "access": "ACCESS",
+    "reserve": "RESERVE",
+    "contact": "CONTACT",
+    "mainNav": "メインナビゲーション",
+    "openMenu": "メニューを開く",
+    "closeMenu": "メニューを閉じる"
+  },
+  "HomeHero": {
+    "headline1": "ピックルボールの",
+    "headline2": "ビッグバンが",
+    "headline3": "ここから始まる。",
+    "tagline": "FROM A SMALL DINK TO A BIG MOVEMENT",
+    "cta": "RESERVE A COURT",
+    "scroll": "SCROLL",
+    "heroImageAlt": "Player mid-swing"
+  },
+  "HomeConcept": {
+    "title": "CONCEPT",
+    "imageAlt": "ビッグバン — 宇宙の誕生",
+    "lead": "宇宙がビッグバンによって誕生したように、この場所から新しいピックルボール文化が広がり、やがて大きなムーブメントへと発展していく。その想いを込めて、この名前を名付けました。",
+    "poetry1": "1つの小さなプレー。",
+    "poetry2": "1つの小さなディンク。",
+    "description1": "その積み重ねが、やがて大きなエネルギーとなり、新しいスポーツ文化を生み出していく。",
+    "description2": "THE PICKLE BANG THEORYは、\u201cピックルボールのビッグバン\u201dが生まれる場所を目指しています。",
+    "catchcopy": "小さなディンクから、大きなムーブメントへ。"
+  },
+  "HomeFacility": {
+    "title": "FACILITY",
+    "keyNumbers": {
+      "courts": { "value": "3", "labelEn": "COURTS", "labelJa": "プロ仕様コート" },
+      "hours": { "value": "6:00–23:00", "labelEn": "HOURS", "labelJa": "営業時間" },
+      "station": { "value": "1 min", "labelEn": "FROM STATION", "labelJa": "駅徒歩1分" }
+    },
+    "specs": {
+      "surface": {
+        "labelEn": "SURFACE",
+        "labelJa": "ハードコート DecoTurf（デコターフ）",
+        "description": "世界最大級の大会やオリンピックでも採用されてきた高性能サーフェス"
+      },
+      "type": {
+        "labelEn": "TYPE",
+        "labelJa": "全天候型インドア",
+        "description": "空調完備で年間を通じて快適なプレー環境"
+      }
+    },
+    "features": {
+      "trainingArea": "トレーニングエリア",
+      "lounge": "ラウンジスペース",
+      "changingRooms": "男女別更衣室",
+      "airConditioning": "空調完備",
+      "vendingMachine": "自動販売機",
+      "rentalEquipment": "レンタル用具あり",
+      "unmannedCheckin": "無人チェックイン対応予定",
+      "showCourt": "ショーコート1面に変更可能",
+      "preparing": "準備中"
+    },
+    "images": {
+      "court": "プロ仕様ピクルボールコートの俯瞰",
+      "training": "トレーニングエリア",
+      "lounge": "ラウンジスペース"
+    },
+    "carousel": {
+      "prev": "前の画像",
+      "next": "次の画像",
+      "showImage": "画像{index}を表示: {alt}"
+    },
+    "decoturf": {
+      "title": "DecoTurf（デコターフ）は、世界最大級のピックルボール大会やテニスのグランドスラム、オリンピックでも採用されてきたハードコートサーフェス。安定したバウンドと高い耐久性により、世界基準のプレー環境を提供します。",
+      "description": "THE PICKLE BANG THEORYでは、プレイヤーが「本気で上達できる環境」を追求し、このDecoTurf（デコターフ）を採用。技術向上・競技力向上にフォーカスした本格的なプレー環境を提供します。"
+    }
+  },
+  "HomeServices": {
+    "title": "SERVICES",
+    "service01": {
+      "titleJa": "コートレンタル",
+      "titleEn": "COURT RENTAL",
+      "description": "時間貸しのレンタルコート。無人チェックインで手軽に予約・利用可能。早朝6:00から深夜23:00まで。",
+      "cta": "RESERVE"
+    },
+    "service02": {
+      "titleJa": "レッスン & クリニック",
+      "titleEn": "LESSONS & CLINICS",
+      "description": "トップ選手による直接指導。レベル別プログラムで初心者から上級者まで対応。海外トッププレーヤーを招聘した特別クリニックも開催予定。"
+    },
+    "service03": {
+      "titleJa": "トレーニングプログラム",
+      "titleEn": "TRAINING",
+      "description": "フィジカルトレーニングを取り入れたピックルボール強化プログラム。併設トレーニングエリアでコンディショニング。プレーの質を根本から高める。"
+    },
+    "service04": {
+      "titleJa": "大会 & リーグ",
+      "titleEn": "TOURNAMENTS & LEAGUES",
+      "description": "オリジナル大会・リーグを定期開催。賞金付きトーナメントから幅広いレベルに対応したリーグ戦まで。"
+    },
+    "service05": {
+      "titleJa": "イベント",
+      "titleEn": "EVENTS",
+      "description": "1面ショーコートへのレイアウト変更で本格的な観戦イベントを実現。異業種コラボレーションやプロモーションイベントの会場としても。"
+    }
+  },
+  "HomePricing": {
+    "title": "PRICING",
+    "courtRental": "COURT RENTAL",
+    "perHour": "1時間あたりの料金",
+    "promoText": "5月31日までのOPEN記念価格🏷️☝️👽",
+    "timeSlot": "時間帯",
+    "weekday": "平日",
+    "weekend": "週末・祝日",
+    "trainingArea": "TRAINING AREA",
+    "trainingAreaJa": "トレーニングエリア",
+    "preparing": "準備中",
+    "membership": "MEMBERSHIP",
+    "membershipJa": "会員制度",
+    "comingSoon": "近日公開",
+    "rentalPaddleNote": "イベント利用もしくは貸切のみレンタルパドルあり",
+    "privateFacilityNote": "トレーニングエリアやラウンジスペースを含む施設全ての貸切をご希望、法人利用ご希望の場合は",
+    "contactUs": "お問い合わせ",
+    "pleaseContact": "ください。"
+  },
+  "HomeAbout": {
+    "title": "ABOUT US",
+    "founderLabel": "FOUNDER & CEO",
+    "founderName": "西村昭彦",
+    "founderNameEn": "AKIHIKO NISHIMURA",
+    "founderBio1": "クロスミントン世界選手権6度優勝。バドミントンで全日本総合選手権に4度出場した競技経験を活かし、RST Agency株式会社を設立。",
+    "founderBio2": "本格的なプレー環境を求めるプレイヤーのために、都市型ピックルボール施設を構想。",
+    "readMore": "詳しく見る",
+    "founderImageAlt": "西村昭彦"
+  },
+  "HomeAccess": {
+    "mapTitle": "THE PICKLE BANG THEORY 所在地",
+    "companyName": "THE PICKLE BANG THEORY",
+    "postalCode": "〒272-0021",
+    "address": "千葉県市川市八幡2-16-6 6階",
+    "hours": "営業時間：6:00 – 23:00（不定休）",
+    "routes": {
+      "jr": { "line": "JR総武線", "station": "「本八幡駅」北口", "walkTime": "徒歩1分" },
+      "toei": { "line": "都営新宿線", "station": "「本八幡駅」", "walkTime": "徒歩3分" },
+      "keisei": { "line": "京成本線", "station": "「京成八幡駅」", "walkTime": "徒歩5分" }
+    },
+    "parkingNote": "お車でお越しの方は近隣のコインパーキングをご利用ください。"
+  },
+  "HomeFooter": {
+    "copyright": "© 2026 RST Agency Inc.",
+    "tokushoho": "特定商取引法に基づく表記",
+    "address": "〒272-0021 千葉県市川市八幡2-16-6 6階"
+  },
+  "About": {
+    "hero": {
+      "title": "ABOUT US"
+    },
+    "company": {
+      "name": "RST Agency株式会社",
+      "description1": "RST Agencyは、ラケットスポーツを通じて人が集い、挑戦し、成長するコミュニティを創造するスポーツカンパニーです。スポーツを追求するその先にある「人の成長」を生み出し、日本のスポーツ文化の発展に貢献していきます。",
+      "description2": "他にもピックルボールを中心としたイベントの企画・実行や公式大会の企画・運営、選手マネジメントなど行っています。また、代表含め、メンバーたちも競技と向き合うプレーヤーであります。",
+      "labelCompanyName": "会社名",
+      "labelCeo": "代表取締役",
+      "labelAddress": "所在地",
+      "labelBusiness": "事業内容",
+      "valueCeo": "西村昭彦",
+      "valueAddress": "東京都品川区",
+      "valueBusiness": "スポーツ施設運営 / スポーツイベント / 大会運営 / スポーツ用品の企画・販売"
+    },
+    "founder": {
+      "name": "西村昭彦",
+      "nameEn": "AKIHIKO NISHIMURA",
+      "imageAlt": "西村昭彦",
+      "bio1": "北海道出身。8歳でバドミントンを始め、青森山田高校、中央大学と日本有数のバドミントン強豪校で競技経験を積む。",
+      "bio2": "青森山田高校時代にはインターハイおよび全国高校選抜大会でシングルスベスト8を記録。社会人では国内最高峰大会である全日本総合バドミントン選手権に4度出場し、日本トップ選手らと対戦した。",
+      "bio3": "2015年にクロスミントンへ転向し、世界選手権ミックスダブルス4連覇、シングルス2連覇を含む6度の優勝という世界トップレベルの実績を誇る。",
+      "bio4": "2023年にピックルボールと出会い、現在は選手活動に加え大会ディレクターとしても活動。ラケットスポーツコミュニティ「Racket Sports Tokyo」を法人化し、RST Agency株式会社代表取締役を務める。"
+    },
+    "players": {
+      "title": "PBT契約選手",
+      "description": "THE PICKLE BANG THEORYは、国内外で活躍するピックルボール選手と契約し、施設でのトレーニングや練習など選手をサポートいたします。また、協働によるイベント出演やソーシャルメディアでの発信を通して、ピックルボールを盛り上げます。",
+      "playerName": "山田 太郎",
+      "playerBio": "元テニスプレーヤー。2024年よりピックルボールに転向し、国内大会で多数入賞。攻撃的なプレースタイルが持ち味。",
+      "comingSoon": "Coming Soon"
+    },
+    "crew": {
+      "title": "PBTクルー",
+      "description": "THE PICKLE BANG THEORYを支え、操縦しているクルーたちを紹介ｼﾏｽ",
+      "comingSoon": "Coming Soon"
+    },
+    "news": {
+      "title": "ニュース",
+      "body": "クロスミントン世界王者・西村昭彦 本八幡駅徒歩1分に都市型ピックルボール施設『THE PICKLE BANG THEORY』2026年春オープン",
+      "prTimes": "PR TIMES"
+    },
+    "contact": {
+      "getInTouch": "GET IN TOUCH",
+      "labelName": "お名前",
+      "labelEmail": "メールアドレス",
+      "labelCategory": "お問い合わせ種別",
+      "labelMessage": "お問い合わせ内容",
+      "placeholderName": "お名前 *",
+      "placeholderEmail": "メールアドレス *",
+      "placeholderMessage": "お問い合わせ内容 *",
+      "categoryDefault": "選択してください",
+      "categoryCourt": "コート予約",
+      "categoryLesson": "レッスンについて",
+      "categoryPress": "取材依頼",
+      "categoryOther": "その他",
+      "sendMessage": "SEND MESSAGE",
+      "successMessage": "送信しました。ありがとうございます。",
+      "errorMessage": "送信に失敗しました。もう一度お試しください。",
+      "instagram": "Instagram",
+      "address": "Address",
+      "hours": "Hours",
+      "addressValue": "東京都品川区",
+      "hoursValue": "6:00 – 23:00"
+    }
+  },
+  "Facility": {
+    "hero": {
+      "title": "FACILITY",
+      "subtitle": "施設紹介"
+    },
+    "story": {
+      "heading1": "\u201cピックルボールの",
+      "headingAccent": "ビッグバン",
+      "heading2": "が生まれる場所\u201d",
+      "paragraph1initial": "宇",
+      "paragraph1": "宙の始まりとされるビッグバンのように、この場所から新しいピックルボール文化が広がることを目指している。単なるコートレンタルではなく、プレーヤーが本気で成長するための環境をゼロから設計した。",
+      "paragraph2": "年齢やレベルに関係なく、本気で成長したい人が練習に集中し、挑戦し続けられる場所。世界トップレベルの競技経験を持つ代表自らがコートに立ち、プレーヤーの成長に向き合う。ここは、すべての始まりの場所だ。"
+    },
+    "court": {
+      "surfaceLabel": "SURFACE",
+      "surfaceValue": "PickleRoll Pro",
+      "surfaceSub": "PPA Asia公式採用",
+      "courtsLabel": "COURTS",
+      "courtsValue": "3面",
+      "courtsSub": "ハードコート",
+      "layoutLabel": "LAYOUT",
+      "layoutValue": "ショーコート対応",
+      "layoutSub": "観戦可能な1面に変更可能",
+      "typeLabel": "TYPE",
+      "typeValue": "全天候型インドア",
+      "typeSub": "空調完備"
+    },
+    "amenities": {
+      "sectionLabel": "Amenities",
+      "airConditioning": "空調完備",
+      "airConditioningDesc": "年間を通じて最適な室温を維持。真夏でも快適にプレー可能。",
+      "changingRoom": "更衣室",
+      "changingRoomDesc": "男女別の清潔な更衣スペース。シャワー完備。",
+      "trainingArea": "トレーニングエリア",
+      "trainingAreaDesc": "コート外でのフィジカル強化に対応した専用スペース。",
+      "lounge": "ラウンジスペース",
+      "loungeDesc": "試合観戦やミーティングに使えるリラックス空間。",
+      "rental": "レンタル用品",
+      "rentalDesc": "パドル・ボールの貸出あり。手ぶらでも参加可能。",
+      "unmanned": "無人チェックイン対応",
+      "unmannedDesc": "スマートロック＆QR認証で24時間スムーズに入退室。"
+    },
+    "founder": {
+      "label": "Founder",
+      "nameEn": "AKIHIKO NISHIMURA",
+      "nameJa": "西村昭彦",
+      "timeline1": "北海道出身。8歳でバドミントンを始める",
+      "timeline2": "青森山田高校・中央大学で競技経験を積む",
+      "timeline3": "インターハイ・全国高校選抜 シングルスベスト8",
+      "timeline4": "全日本総合バドミントン選手権 4度出場",
+      "timeline5year": "2015",
+      "timeline5": "クロスミントン転向",
+      "timeline6": "世界選手権ミックスダブルス4連覇、シングルス2連覇（計6度優勝）",
+      "timeline7year": "2023",
+      "timeline7": "ピックルボール転向、選手兼大会ディレクター",
+      "timeline8": "RST Agency株式会社 代表取締役"
+    },
+    "company": {
+      "sectionLabel": "Company",
+      "nameLabel": "社名",
+      "nameValue": "RST Agency株式会社",
+      "foundedLabel": "設立",
+      "foundedValue": "2025年5月",
+      "addressLabel": "所在地",
+      "addressValue": "東京都品川区",
+      "businessLabel": "事業内容",
+      "businessValue": "スポーツイベント企画・運営 / 施設プロデュース / スポーツ用品企画・販売"
+    }
+  },
+  "ServicesPage": {
+    "hero": {
+      "title": "SERVICES",
+      "subtitle": "サービス"
+    },
+    "service01": {
+      "titleJa": "コートレンタル",
+      "titleEn": "COURT RENTAL",
+      "body1": "時間貸しのレンタルコート。無人チェックインで手軽に予約・利用可能。",
+      "body2": "早朝6:00から深夜23:00まで。あなたのスケジュールに合わせて。"
+    },
+    "service02": {
+      "titleJa": "レッスン & クリニック",
+      "titleEn": "LESSONS & CLINICS",
+      "body1": "プロ選手による直接指導。レベル別プログラムで初心者から上級者まで対応。",
+      "body2": "海外トッププレーヤーを招聘した特別クリニックも定期開催。"
+    },
+    "service03": {
+      "titleJa": "トレーニングプログラム",
+      "titleEn": "TRAINING",
+      "body1": "フィジカルトレーニングを取り入れたピックルボール強化プログラム。",
+      "body2": "併設トレーニングエリアでコンディショニング。プレーの質を根本から高める。"
+    },
+    "service04": {
+      "titleJa": "大会 & リーグ",
+      "titleEn": "TOURNAMENTS & LEAGUES",
+      "body1": "オリジナル大会・リーグを定期開催。賞金付きトーナメントから幅広いレベルに対応したリーグ戦まで、競技の場を提供。"
+    },
+    "service05": {
+      "titleJa": "イベント",
+      "titleEn": "EVENTS",
+      "body1": "1面ショーコートへのレイアウト変更で本格的な観戦イベントを実現。",
+      "body2": "異業種コラボレーションやプロモーションイベントの会場としても。"
+    },
+    "cta": {
+      "heading": "まずはコートを予約してみませんか？",
+      "button": "RESERVE"
+    }
+  },
+  "Footer": {
+    "brandName": "THE PICKLE BANG THEORY",
+    "tagline": "Premium Indoor Pickleball Facility",
+    "navigationLabel": "Navigation",
+    "contactLabel": "Contact",
+    "socialLabel": "Social",
+    "address": "千葉県市川市八幡2-16-6 6階",
+    "instagram": "Instagram",
+    "copyright": "\u00a9 2026 RST Agency Inc.",
+    "allRights": "All rights reserved.",
+    "facility": "Facility",
+    "services": "Services",
+    "pricing": "Pricing",
+    "access": "Access"
+  },
+  "Tokushoho": {
+    "heading": "特定商取引法に基づく表記",
+    "seller": "販売者",
+    "sellerValue": "RST Agency株式会社",
+    "manager": "販売責任者",
+    "managerValue": "西村昭彦",
+    "address": "所在地",
+    "addressValue": "東京都品川区二葉1-4-2",
+    "phone": "電話番号",
+    "phoneValue": "090 5523 3879",
+    "hours": "受付時間",
+    "hoursValue": "9:00〜17:00",
+    "email": "メールアドレス",
+    "emailValue": "hello@rstagency.com",
+    "website": "ホームページURL",
+    "websiteValue": "https://rstagency.com",
+    "price": "販売価格",
+    "priceValue": "商品/イベントページをご参照ください",
+    "additionalFees": "商品代金以外の必要料金",
+    "additionalFeesValue": "商品/イベントページをご参照ください",
+    "delivery": "引き渡し時期",
+    "deliveryValue": "即日受け渡し",
+    "paymentMethod": "支払い方法",
+    "paymentMethodValue": "銀行振込またはクレジットカード",
+    "paymentTiming": "支払い時期",
+    "paymentTimingValue": "即日",
+    "cardPayment": "カード決済",
+    "cardPaymentValue": "初回は申し込み時に決済、翌月以降は毎月20日に決済",
+    "returns": "返品・交換・キャンセル",
+    "returnsValue": "不良品以外不可",
+    "deadline": "対応期限",
+    "deadlineValue": "商品購入より2週間以内",
+    "shippingCost": "返品送料",
+    "shippingCostValue": "お客様にご負担いただきます"
+  },
+  "Common": {
+    "logoAlt": "THE PICKLE BANG THEORY"
+  }
+}

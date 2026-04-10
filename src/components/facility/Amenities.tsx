@@ -1,22 +1,28 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 
-const amenities = [
-  { name: "空調完備", desc: "年間を通じて最適な室温を維持。真夏でも快適にプレー可能。" },
-  { name: "更衣室", desc: "男女別の清潔な更衣スペース。シャワー完備。" },
-  { name: "トレーニングエリア", desc: "コート外でのフィジカル強化に対応した専用スペース。" },
-  { name: "ラウンジスペース", desc: "試合観戦やミーティングに使えるリラックス空間。" },
-  { name: "レンタル用品", desc: "パドル・ボールの貸出あり。手ぶらでも参加可能。" },
-  { name: "無人チェックイン対応", desc: "スマートロック＆QR認証で24時間スムーズに入退室。" },
-];
+const amenityKeys = [
+  "airConditioning",
+  "changingRoom",
+  "trainingArea",
+  "lounge",
+  "rental",
+  "unmanned",
+] as const;
+
+interface AmenityItem {
+  name: string;
+  desc: string;
+}
 
 function AmenityRow({
   item,
   index,
 }: {
-  item: (typeof amenities)[0];
+  item: AmenityItem;
   index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -88,8 +94,14 @@ function AmenityRow({
 }
 
 export default function Amenities() {
+  const t = useTranslations("Facility.amenities");
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
+
+  const amenities: AmenityItem[] = amenityKeys.map((key) => ({
+    name: t(key),
+    desc: t(`${key}Desc`),
+  }));
 
   return (
     <section ref={ref} className="relative bg-deep-black py-24 md:py-32">
@@ -102,7 +114,7 @@ export default function Amenities() {
           className="flex items-center gap-6"
         >
           <span className="text-[10px] tracking-[0.4em] text-text-gray uppercase font-[var(--font-inter)]">
-            Amenities
+            {t("sectionLabel")}
           </span>
           <div className="flex-1 h-[1px] bg-off-white/10" />
         </motion.div>

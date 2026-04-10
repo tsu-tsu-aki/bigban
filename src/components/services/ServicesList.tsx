@@ -2,27 +2,23 @@
 
 import { useRef } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { useTranslations } from "next-intl";
 
-interface ServiceData {
+interface ServiceLayoutData {
   num: string;
-  titleJa: string;
-  titleEn: string;
-  body: string[];
+  key: string;
+  bodyKeys: string[];
   dark: boolean;
   imageFirst: boolean;
   imageDirection: string[];
   imageLights: { position: string; color: string; size: string }[];
 }
 
-const services: ServiceData[] = [
+const serviceLayouts: ServiceLayoutData[] = [
   {
     num: "01",
-    titleJa: "コートレンタル",
-    titleEn: "COURT RENTAL",
-    body: [
-      "時間貸しのレンタルコート。無人チェックインで手軽に予約・利用可能。",
-      "早朝6:00から深夜23:00まで。あなたのスケジュールに合わせて。",
-    ],
+    key: "service01",
+    bodyKeys: ["body1", "body2"],
     dark: true,
     imageFirst: true,
     imageDirection: ["Empty court, clean surface", "dramatic overhead lighting", "pristine professional setup"],
@@ -34,12 +30,8 @@ const services: ServiceData[] = [
   },
   {
     num: "02",
-    titleJa: "レッスン & クリニック",
-    titleEn: "LESSONS & CLINICS",
-    body: [
-      "プロ選手による直接指導。レベル別プログラムで初心者から上級者まで対応。",
-      "海外トッププレーヤーを招聘した特別クリニックも定期開催。",
-    ],
+    key: "service02",
+    bodyKeys: ["body1", "body2"],
     dark: false,
     imageFirst: false,
     imageDirection: ["Coach demonstrating technique", "paddle grip close-up", "focused instruction moment"],
@@ -50,12 +42,8 @@ const services: ServiceData[] = [
   },
   {
     num: "03",
-    titleJa: "トレーニングプログラム",
-    titleEn: "TRAINING",
-    body: [
-      "フィジカルトレーニングを取り入れたピックルボール強化プログラム。",
-      "併設トレーニングエリアでコンディショニング。プレーの質を根本から高める。",
-    ],
+    key: "service03",
+    bodyKeys: ["body1", "body2"],
     dark: true,
     imageFirst: true,
     imageDirection: ["Training area with weights", "stretch mats, court visible behind", "moody industrial feel"],
@@ -66,11 +54,8 @@ const services: ServiceData[] = [
   },
   {
     num: "04",
-    titleJa: "大会 & リーグ",
-    titleEn: "TOURNAMENTS & LEAGUES",
-    body: [
-      "オリジナル大会・リーグを定期開催。賞金付きトーナメントから幅広いレベルに対応したリーグ戦まで、競技の場を提供。",
-    ],
+    key: "service04",
+    bodyKeys: ["body1"],
     dark: false,
     imageFirst: false,
     imageDirection: ["Scoreboard, post-match handshake", "spectators watching intensely", "competitive atmosphere"],
@@ -81,12 +66,8 @@ const services: ServiceData[] = [
   },
   {
     num: "05",
-    titleJa: "イベント",
-    titleEn: "EVENTS",
-    body: [
-      "1面ショーコートへのレイアウト変更で本格的な観戦イベントを実現。",
-      "異業種コラボレーションやプロモーションイベントの会場としても。",
-    ],
+    key: "service05",
+    bodyKeys: ["body1", "body2"],
     dark: true,
     imageFirst: true,
     imageDirection: ["Show court setup", "spectator seating, event lighting", "atmosphere of anticipation"],
@@ -104,7 +85,7 @@ function ImagePlaceholder({
   dark,
 }: {
   direction: string[];
-  lights: ServiceData["imageLights"];
+  lights: ServiceLayoutData["imageLights"];
   dark: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -142,7 +123,7 @@ function ImagePlaceholder({
   );
 }
 
-function ServiceBlock({ service }: { service: ServiceData }) {
+function ServiceBlock({ service, t }: { service: ServiceLayoutData; t: ReturnType<typeof useTranslations> }) {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -198,31 +179,31 @@ function ServiceBlock({ service }: { service: ServiceData }) {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="text-[10px] tracking-[0.4em] text-text-gray uppercase font-[var(--font-inter)] mb-3"
               >
-                {service.titleEn}
+                {t(`${service.key}.titleEn`)}
               </motion.p>
 
-              {/* Japanese title */}
+              {/* Title */}
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.7, delay: 0.4 }}
                 className={`font-[var(--font-dm-serif)] text-[clamp(1.8rem,3.5vw,2.8rem)] ${textColor} leading-tight mb-8`}
               >
-                {service.titleJa}
+                {t(`${service.key}.titleJa`)}
               </motion.h2>
 
               {/* Body */}
-              {service.body.map((p, i) => (
+              {service.bodyKeys.map((bodyKey, i) => (
                 <motion.p
                   key={i}
                   initial={{ opacity: 0, y: 15 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.5 + i * 0.12 }}
                   className={`font-[var(--font-inter)] ${subTextColor} text-[clamp(0.9rem,1.2vw,1.05rem)] leading-[2] tracking-wide ${
-                    i < service.body.length - 1 ? "mb-4" : ""
+                    i < service.bodyKeys.length - 1 ? "mb-4" : ""
                   }`}
                 >
-                  {p}
+                  {t(`${service.key}.${bodyKey}`)}
                 </motion.p>
               ))}
             </div>
@@ -234,10 +215,12 @@ function ServiceBlock({ service }: { service: ServiceData }) {
 }
 
 export default function ServicesList() {
+  const t = useTranslations("ServicesPage");
+
   return (
     <>
-      {services.map((service, i) => (
-        <ServiceBlock key={i} service={service} />
+      {serviceLayouts.map((service, i) => (
+        <ServiceBlock key={i} service={service} t={t} />
       ))}
     </>
   );
