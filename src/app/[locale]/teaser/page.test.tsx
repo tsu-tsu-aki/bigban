@@ -85,6 +85,16 @@ describe("generateMetadata", () => {
       params: Promise.resolve({ locale: "en" }),
     });
 
+    expect(metadata.title).toBe("translated:home.title");
+    expect(metadata.description).toBe("translated:home.description");
     expect(metadata.openGraph?.locale).toBe("en_US");
+  });
+});
+
+describe("Page wrapper", () => {
+  it("TeaserPageを描画する", async () => {
+    const { default: Page } = await import("./page");
+    render(<Page />);
+    expect(screen.getByTestId("teaser-page")).toBeInTheDocument();
   });
 });
