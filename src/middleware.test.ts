@@ -78,7 +78,7 @@ describe("middleware", () => {
       const request = createRequest("/teaser");
       mockIntlMiddleware.mockReturnValue(new Response());
 
-      const response = middleware(request);
+      middleware(request);
 
       expect(mockIntlMiddleware).toHaveBeenCalledWith(request);
     });
@@ -89,7 +89,7 @@ describe("middleware", () => {
       const request = createRequest("/logos/mark-neon.png");
       mockIntlMiddleware.mockReturnValue(new Response());
 
-      const response = middleware(request);
+      middleware(request);
 
       expect(mockIntlMiddleware).toHaveBeenCalledWith(request);
     });
