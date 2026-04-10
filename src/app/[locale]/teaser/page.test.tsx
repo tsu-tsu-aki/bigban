@@ -1,6 +1,6 @@
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import TeaserPage from "./page";
+import TeaserPage from "./TeaserPage";
 
 vi.mock("@/components/teaser/BigBangCanvas", () => ({
   BigBangCanvas: ({ onPhaseChange }: { onPhaseChange: (phase: string) => void }) => {
