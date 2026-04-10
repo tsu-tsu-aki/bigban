@@ -10,8 +10,12 @@ vi.mock("next-intl/middleware", () => ({
 // 環境変数のリセット用
 const originalEnv = process.env.NEXT_PUBLIC_MAINTENANCE;
 
-function createRequest(url: string): NextRequest {
-  return new NextRequest(new URL(url, "http://localhost:3000"));
+function createRequest(url: string, userAgent?: string): NextRequest {
+  const headers: Record<string, string> = {};
+  if (userAgent) {
+    headers["user-agent"] = userAgent;
+  }
+  return new NextRequest(new URL(url, "http://localhost:3000"), { headers });
 }
 
 describe("middleware", () => {
@@ -61,19 +65,19 @@ describe("middleware", () => {
     });
   });
 
-  describe("maintenance mode ON", () => {
-    it("redirects root to /teaser", async () => {
+  describe("maintenance mode ON — general user", () => {
+    it("rewrites root to /teaser (URL preserved)", async () => {
       process.env.NEXT_PUBLIC_MAINTENANCE = "true";
       const { middleware } = await import("./middleware");
       const request = createRequest("/");
 
       const response = middleware(request);
 
-      expect(response.status).toBe(307);
-      expect(new URL(response.headers.get("location")!).pathname).toBe("/teaser");
+      expect(response.headers.get("x-middleware-rewrite")).toContain("/ja/teaser");
+      expect(response.headers.get("Retry-After")).toBe("86400");
     });
 
-    it("allows /teaser through without redirect", async () => {
+    it("allows /teaser through via i18n routing", async () => {
       process.env.NEXT_PUBLIC_MAINTENANCE = "true";
       const { middleware } = await import("./middleware");
       const request = createRequest("/teaser");
@@ -81,7 +85,8 @@ describe("middleware", () => {
 
       const response = middleware(request);
 
-      expect(response.status).not.toBe(307);
+      expect(mockIntlMiddleware).toHaveBeenCalledWith(request);
+      expect(response.status).not.toBe(503);
     });
 
     it("allows static assets through", async () => {
@@ -92,7 +97,43 @@ describe("middleware", () => {
 
       const response = middleware(request);
 
-      expect(response.status).not.toBe(307);
+      expect(response.status).not.toBe(503);
+    });
+  });
+
+  describe("maintenance mode ON — bot", () => {
+    it("returns 503 with Retry-After for Googlebot", async () => {
+      process.env.NEXT_PUBLIC_MAINTENANCE = "true";
+      const { middleware } = await import("./middleware");
+      const request = createRequest("/", "Mozilla/5.0 (compatible; Googlebot/2.1)");
+
+      const response = middleware(request);
+
+      expect(response.status).toBe(503);
+      expect(response.headers.get("Retry-After")).toBe("86400");
+      expect(response.headers.get("Content-Type")).toContain("text/html");
+    });
+
+    it("returns 503 for Bingbot", async () => {
+      process.env.NEXT_PUBLIC_MAINTENANCE = "true";
+      const { middleware } = await import("./middleware");
+      const request = createRequest("/about", "Mozilla/5.0 (compatible; bingbot/2.0)");
+
+      const response = middleware(request);
+
+      expect(response.status).toBe(503);
+    });
+
+    it("allows /teaser through for bots (bypass path)", async () => {
+      process.env.NEXT_PUBLIC_MAINTENANCE = "true";
+      const { middleware } = await import("./middleware");
+      const request = createRequest("/teaser", "Googlebot");
+      mockIntlMiddleware.mockReturnValue(new Response());
+
+      const response = middleware(request);
+
+      expect(mockIntlMiddleware).toHaveBeenCalledWith(request);
+      expect(response.status).not.toBe(503);
     });
   });
 
