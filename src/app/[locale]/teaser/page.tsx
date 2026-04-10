@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
+
 import { SITE_URL, OG_IMAGE } from "@/constants/site";
+
 import TeaserPage from "./TeaserPage";
 
 import type { Metadata } from "next";

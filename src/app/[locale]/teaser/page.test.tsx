@@ -1,5 +1,6 @@
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+
 import TeaserPage from "./TeaserPage";
 
 vi.mock("@/components/teaser/BigBangCanvas", () => ({
@@ -51,5 +52,39 @@ describe("TeaserPage", () => {
 
     const container = screen.getByTestId("teaser-page");
     expect(container).toBeInTheDocument();
+  });
+});
+
+const mockGetTranslations = vi.fn();
+
+vi.mock("next-intl/server", () => ({
+  getTranslations: (...args: unknown[]) => mockGetTranslations(...args),
+}));
+
+describe("generateMetadata", () => {
+  it("日本語メタデータを返す", async () => {
+    const mockT = (key: string) => `translated:${key}`;
+    mockGetTranslations.mockResolvedValue(mockT);
+
+    const { generateMetadata } = await import("./page");
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+
+    expect(metadata.title).toBe("translated:home.title");
+    expect(metadata.description).toBe("translated:home.description");
+    expect(metadata.openGraph?.locale).toBe("ja_JP");
+  });
+
+  it("英語メタデータを返す", async () => {
+    const mockT = (key: string) => `translated:${key}`;
+    mockGetTranslations.mockResolvedValue(mockT);
+
+    const { generateMetadata } = await import("./page");
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ locale: "en" }),
+    });
+
+    expect(metadata.openGraph?.locale).toBe("en_US");
   });
 });

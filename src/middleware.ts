@@ -38,9 +38,7 @@ function createBotMaintenanceResponse(): NextResponse {
 
 function createUserMaintenanceResponse(request: NextRequest): NextResponse {
   const url = new URL("/ja/teaser", request.url);
-  const response = NextResponse.rewrite(url);
-  response.headers.set("Retry-After", "86400");
-  return response;
+  return NextResponse.rewrite(url);
 }
 
 export function middleware(request: NextRequest) {

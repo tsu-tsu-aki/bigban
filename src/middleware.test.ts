@@ -74,7 +74,6 @@ describe("middleware", () => {
       const response = middleware(request);
 
       expect(response.headers.get("x-middleware-rewrite")).toContain("/ja/teaser");
-      expect(response.headers.get("Retry-After")).toBe("86400");
     });
 
     it("allows /teaser through via i18n routing", async () => {
