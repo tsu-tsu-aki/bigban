@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
+import { buildAutoReplyHtml, buildAutoReplyText } from "@/lib/email-templates";
 
 interface ContactRequestBody {
   name?: string;
@@ -16,7 +17,7 @@ const VALID_CATEGORIES = new Set(["court", "lesson", "press", "other"]);
 const CATEGORY_LABELS: Record<string, string> = {
   court: "コート予約",
   lesson: "レッスン",
-  press: "取材・プレス",
+  press: "取材",
   other: "その他",
 };
 
@@ -64,23 +65,58 @@ export async function POST(request: Request) {
     `名前: ${name}`,
     `メール: ${email}`,
     ...(phone ? [`電話: ${phone}`] : []),
-    `カテゴリ: ${category}`,
+    `カテゴリ: ${categoryLabel}`,
     `メッセージ:\n${message}`,
   ];
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const { error } = await resend.emails.send({
-    from: "THE PICKLE BANG THEORY <onboarding@resend.dev>",
-    to: "hello@rstagency.com",
+  const from = process.env.RESEND_FROM;
+  const toEmail = process.env.CONTACT_TO_EMAIL;
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!from || !toEmail || !apiKey) {
+    return NextResponse.json(
+      { success: false, error: "サーバー設定エラー" },
+      { status: 500 },
+    );
+  }
+
+  const resend = new Resend(apiKey);
+
+  const adminEmail = resend.emails.send({
+    from,
+    to: toEmail,
     subject: `【${categoryLabel}】${name}様からのお問い合わせ`,
     text: textLines.join("\n"),
   });
 
-  if (error) {
+  const replyParams = { name, categoryLabel, message };
+  const autoReply = resend.emails.send({
+    from,
+    to: email,
+    subject: "【THE PICKLE BANG THEORY】お問い合わせありがとうございます",
+    html: buildAutoReplyHtml(replyParams),
+    text: buildAutoReplyText(replyParams),
+  });
+
+  const [adminResult, replyResult] = await Promise.allSettled([adminEmail, autoReply]);
+
+  const adminFailed =
+    adminResult.status === "rejected" ||
+    (adminResult.status === "fulfilled" && adminResult.value.error);
+
+  if (adminFailed) {
     return NextResponse.json(
       { success: false, error: "送信に失敗しました" },
       { status: 500 },
     );
+  }
+
+  const replyFailed =
+    replyResult.status === "rejected" ||
+    (replyResult.status === "fulfilled" && replyResult.value.error);
+
+  if (replyFailed) {
+    console.error("自動返信メールの送信に失敗しました:", replyResult);
   }
 
   return NextResponse.json({ success: true }, { status: 201 });
