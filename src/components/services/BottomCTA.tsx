@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
 export default function BottomCTA() {
   const ref = useRef<HTMLElement>(null);
@@ -27,7 +28,8 @@ export default function BottomCTA() {
 
         {/* CTA Button */}
         <motion.a
-          href="#reserve"
+          href={RESERVE_URL}
+          {...EXTERNAL_LINK_PROPS}
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
+import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 import { useMagneticButton } from "@/hooks/useMagneticButton";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
@@ -84,7 +85,8 @@ export default function HomeHero() {
             >
               <a
                 ref={ref as React.RefObject<HTMLAnchorElement>}
-                href="#reserve"
+                href={RESERVE_URL}
+                {...EXTERNAL_LINK_PROPS}
                 className="inline-block bg-accent px-8 py-3 text-sm font-bold tracking-widest text-deep-black transition-transform"
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
