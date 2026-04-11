@@ -59,9 +59,21 @@
   "HomeFacility": {
     "title": "FACILITY",
     "keyNumbers": {
-      "courts": { "value": "3", "labelEn": "COURTS", "labelJa": "Pro-spec Courts" },
-      "hours": { "value": "6:00–23:00", "labelEn": "HOURS", "labelJa": "Operating Hours" },
-      "station": { "value": "1 min", "labelEn": "FROM STATION", "labelJa": "1 Min Walk" }
+      "courts": {
+        "value": "3",
+        "labelEn": "COURTS",
+        "labelJa": "Pro-spec Courts"
+      },
+      "hours": {
+        "value": "6:00–23:00",
+        "labelEn": "HOURS",
+        "labelJa": "Operating Hours"
+      },
+      "station": {
+        "value": "1 min",
+        "labelEn": "FROM STATION",
+        "labelJa": "1 Min Walk"
+      }
     },
     "specs": {
       "surface": {
@@ -166,9 +178,21 @@
     "address": "2-16-6 6F, Yawata, Ichikawa City, Chiba",
     "hours": "Hours: 6:00 AM – 11:00 PM (Irregular holidays)",
     "routes": {
-      "jr": { "line": "JR Sobu Line", "station": "Motoyawata Station (North Exit)", "walkTime": "1 min walk" },
-      "toei": { "line": "Toei Shinjuku Line", "station": "Motoyawata Station", "walkTime": "3 min walk" },
-      "keisei": { "line": "Keisei Main Line", "station": "Keisei Yawata Station", "walkTime": "5 min walk" }
+      "jr": {
+        "line": "JR Sobu Line",
+        "station": "Motoyawata Station (North Exit)",
+        "walkTime": "1 min walk"
+      },
+      "toei": {
+        "line": "Toei Shinjuku Line",
+        "station": "Motoyawata Station",
+        "walkTime": "3 min walk"
+      },
+      "keisei": {
+        "line": "Keisei Main Line",
+        "station": "Keisei Yawata Station",
+        "walkTime": "5 min walk"
+      }
     },
     "parkingNote": "For those arriving by car, please use nearby coin parking."
   },
@@ -202,14 +226,54 @@
       "bio3": "In 2015, he transitioned to crossminton, recording six titles including four consecutive mixed doubles and two consecutive singles titles at the World Championships. Named World's Best Player.",
       "bio4": "He discovered pickleball in 2023 and now works as both a player and tournament director. He incorporated the racket sports community \"Racket Sports Tokyo\" and serves as CEO of RST Agency Inc.",
       "achievements": {
-        "a1": { "year": "2026", "tournament": "JPA Japan Ranking Top Players", "event": "Vietnam Delegation", "result": "National Team", "type": "rep" },
-        "a2": { "year": "2025", "tournament": "PPA World Championship", "event": "Mens Skill 5.0 Doubles", "result": "4th", "type": "other" },
-        "a3": { "year": "2025", "tournament": "KINTO JAPAN CUP 19+A", "event": "Men's Doubles", "result": "Winner", "type": "gold" },
-        "a4": { "year": "2025", "tournament": "UTR PICKLEBALL JAPAN TOUR Vol.1", "event": "Men's Doubles Advanced", "result": "Runner-up", "type": "silver" },
-        "a5": { "year": "2025", "tournament": "UTR Pickleball JAPAN TOUR Vol.3", "event": "Men's Doubles Advanced", "result": "Winner", "type": "gold" },
-        "a6": { "year": "2024", "tournament": "PJF Pickleball Championships in JAPAN", "event": "Skill 5.0 Men's Doubles", "result": "Runner-up", "type": "silver" },
-        "a7": { "year": "2024", "tournament": "JPA TOP TOUR T2", "event": "Pro Men's Doubles / Mixed Doubles", "result": "Winner / Runner-up", "type": "gold" },
-        "a8": { "year": "2024", "tournament": "JPA TOP TOUR T1", "event": "Pro Men's Doubles", "result": "Winner", "type": "gold" }
+        "a1": {
+          "year": "2026",
+          "tournament": "JPA Japan Ranking Top Players",
+          "event": "Vietnam Delegation",
+          "result": "National Team"
+        },
+        "a2": {
+          "year": "2025",
+          "tournament": "PPA World Championship",
+          "event": "Mens Skill 5.0 Doubles",
+          "result": "4th"
+        },
+        "a3": {
+          "year": "2025",
+          "tournament": "KINTO JAPAN CUP 19+A",
+          "event": "Men's Doubles",
+          "result": "Winner"
+        },
+        "a4": {
+          "year": "2025",
+          "tournament": "UTR PICKLEBALL JAPAN TOUR Vol.1",
+          "event": "Men's Doubles Advanced",
+          "result": "Runner-up"
+        },
+        "a5": {
+          "year": "2025",
+          "tournament": "UTR Pickleball JAPAN TOUR Vol.3",
+          "event": "Men's Doubles Advanced",
+          "result": "Winner"
+        },
+        "a6": {
+          "year": "2024",
+          "tournament": "PJF Pickleball Championships in JAPAN",
+          "event": "Skill 5.0 Men's Doubles",
+          "result": "Runner-up"
+        },
+        "a7": {
+          "year": "2024",
+          "tournament": "JPA TOP TOUR T2",
+          "event": "Pro Men's Doubles / Mixed Doubles",
+          "result": "Winner / Runner-up"
+        },
+        "a8": {
+          "year": "2024",
+          "tournament": "JPA TOP TOUR T1",
+          "event": "Pro Men's Doubles",
+          "result": "Winner"
+        }
       }
     },
     "players": {
@@ -259,12 +323,12 @@
       "subtitle": "Facility Overview"
     },
     "story": {
-      "heading1": "\u201cThe place where the",
+      "heading1": "“The place where the",
       "headingAccent": "Big Bang",
-      "heading2": "of pickleball is born\u201d",
+      "heading2": "of pickleball is born”",
       "paragraph1initial": "J",
-      "paragraph1": "ust as the Big Bang gave birth to the universe, this place aims to spread a new pickleball culture. Not just court rentals\u2014we designed an environment from scratch for players serious about growth.",
-      "paragraph2": "Regardless of age or level, this is a place where those serious about improvement can focus on practice and keep pushing forward. Our founder, with world-class competitive experience, stands on the court and supports every player\u2019s growth. This is where it all begins."
+      "paragraph1": "ust as the Big Bang gave birth to the universe, this place aims to spread a new pickleball culture. Not just court rentals—we designed an environment from scratch for players serious about growth.",
+      "paragraph2": "Regardless of age or level, this is a place where those serious about improvement can focus on practice and keep pushing forward. Our founder, with world-class competitive experience, stands on the court and supports every player’s growth. This is where it all begins."
     },
     "court": {
       "surfaceLabel": "SURFACE",
@@ -369,7 +433,7 @@
     "socialLabel": "Social",
     "address": "2-16-6 6F, Yawata, Ichikawa City, Chiba",
     "instagram": "Instagram",
-    "copyright": "\u00a9 2026 RST Agency Inc.",
+    "copyright": "© 2026 RST Agency Inc.",
     "allRights": "All rights reserved.",
     "facility": "Facility",
     "services": "Services",

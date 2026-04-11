@@ -11,6 +11,19 @@ import type { FormEvent } from "react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
+const ACHIEVEMENT_KEYS = ["a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8"] as const;
+
+const ACHIEVEMENT_TYPES: Record<string, string> = {
+  a1: "rep",
+  a2: "other",
+  a3: "gold",
+  a4: "silver",
+  a5: "gold",
+  a6: "silver",
+  a7: "gold",
+  a8: "gold",
+};
+
 interface ContactCategory {
   value: string;
   label: string;
@@ -259,12 +272,13 @@ export default function AboutContent() {
                 <span className="text-[10px] tracking-[0.3em] text-text-gray">EVENT</span>
                 <span className="text-[10px] tracking-[0.3em] text-text-gray text-right">RESULT</span>
               </div>
-              {(["a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8"] as const).map((key) => ({
+              {ACHIEVEMENT_KEYS.map((key) => ({
+                key,
                 year: t(`founder.achievements.${key}.year`),
                 tournament: t(`founder.achievements.${key}.tournament`),
                 event: t(`founder.achievements.${key}.event`),
                 result: t(`founder.achievements.${key}.result`),
-                type: t(`founder.achievements.${key}.type`),
+                type: ACHIEVEMENT_TYPES[key],
               })).map((row, i) => (
                 <motion.div
                   key={i}
