@@ -86,7 +86,7 @@ describe("TeaserContent", () => {
     render(<TeaserContent logoSrc="/logos/tate-neon-hybrid.svg" />);
 
     const link = screen.getByRole("link", { name: "西村昭彦" });
-    expect(link).toHaveAttribute("href", "https://www.instagram.com/adihiko/");
+    expect(link).toHaveAttribute("href", "https://www.instagram.com/akihiko.rst");
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
