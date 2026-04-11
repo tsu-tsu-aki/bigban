@@ -88,7 +88,7 @@ export async function POST(request: Request) {
     text: buildAutoReplyText(replyParams),
   });
 
-  const [adminResult, replyResult] = await Promise.allSettled([adminEmail, autoReply]);
+  const [adminResult] = await Promise.allSettled([adminEmail, autoReply]);
 
   const adminFailed =
     adminResult.status === "rejected" ||
