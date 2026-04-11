@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
 const SECTION_IDS = ["concept", "facility", "services", "pricing", "about", "access"];
 
@@ -123,7 +124,8 @@ export default function HomeNavigation() {
               onSwitch={handleSwitchLocale}
             />
             <a
-              href="#"
+              href={RESERVE_URL}
+              {...EXTERNAL_LINK_PROPS}
               className="bg-accent text-deep-black px-5 py-2 text-xs font-bold uppercase tracking-widest"
             >
               {t("reserve")}
@@ -190,7 +192,8 @@ export default function HomeNavigation() {
           </nav>
 
           <a
-            href="#"
+            href={RESERVE_URL}
+            {...EXTERNAL_LINK_PROPS}
             className="mt-12 bg-accent text-deep-black px-8 py-3 text-sm font-bold uppercase tracking-widest"
           >
             {t("reserve")}

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
+import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
 interface ServiceConfig {
   number: string;
@@ -97,7 +98,8 @@ export default function HomeServices() {
               </p>
               {service.hasCta && (
                 <a
-                  href="#"
+                  href={RESERVE_URL}
+                  {...EXTERNAL_LINK_PROPS}
                   className="inline-block mt-6 bg-accent text-deep-black px-8 py-3 text-xs font-bold uppercase tracking-widest hover:bg-accent/90 transition-colors"
                 >
                   {t(`${service.key}.cta`)}
