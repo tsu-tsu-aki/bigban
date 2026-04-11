@@ -71,15 +71,16 @@ export async function POST(request: Request) {
 
   const from = process.env.RESEND_FROM;
   const toEmail = process.env.CONTACT_TO_EMAIL;
+  const apiKey = process.env.RESEND_API_KEY;
 
-  if (!from || !toEmail) {
+  if (!from || !toEmail || !apiKey) {
     return NextResponse.json(
       { success: false, error: "サーバー設定エラー" },
       { status: 500 },
     );
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const resend = new Resend(apiKey);
 
   const adminEmail = resend.emails.send({
     from,

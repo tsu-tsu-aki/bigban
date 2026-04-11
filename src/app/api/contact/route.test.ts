@@ -235,6 +235,52 @@ describe("POST /api/contact", () => {
     expect(mockSend).not.toHaveBeenCalled();
   });
 
+  it("RESEND_API_KEY未設定時に500を返す", async () => {
+    delete process.env.RESEND_API_KEY;
+    mockSend.mockResolvedValue({ data: { id: "email_789" }, error: null });
+
+    const { POST } = await import("./route");
+    const response = await POST(createRequest(VALID_BODY));
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body.success).toBe(false);
+    expect(body.error).toBe("サーバー設定エラー");
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it("管理者通知のPromiseがrejectされた場合500を返す", async () => {
+    mockSend.mockRejectedValueOnce(new Error("Network error"));
+
+    const { POST } = await import("./route");
+    const response = await POST(createRequest(VALID_BODY));
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body.success).toBe(false);
+  });
+
+  it("自動返信のPromiseがrejectされても201を返しエラーログを出力する", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    mockSend
+      .mockResolvedValueOnce({ data: { id: "email_admin" }, error: null })
+      .mockRejectedValueOnce(new Error("Network error"));
+
+    const { POST } = await import("./route");
+    const response = await POST(createRequest(VALID_BODY));
+    const body = await response.json();
+
+    expect(response.status).toBe(201);
+    expect(body).toEqual({ success: true });
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "自動返信メールの送信に失敗しました:",
+      expect.anything(),
+    );
+
+    consoleErrorSpy.mockRestore();
+  });
+
   it("電話番号なし（任意項目）で201を返す", async () => {
     mockSend.mockResolvedValue({ data: { id: "email_456" }, error: null });
 
