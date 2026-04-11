@@ -90,7 +90,7 @@ export default function HomeAbout() {
             <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4">
               {t("founderBio1")}
             </p>
-            <p className="text-text-gray text-sm lg:text-base leading-relaxed mb-10">
+            <p className="text-text-light/90 text-sm lg:text-base leading-relaxed mb-10">
               {t("founderBio2")}
             </p>
 
