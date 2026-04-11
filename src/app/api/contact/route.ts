@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
+import { buildAutoReplyHtml, buildAutoReplyText } from "@/lib/email-templates";
 
 interface ContactRequestBody {
   name?: string;
@@ -16,7 +17,7 @@ const VALID_CATEGORIES = new Set(["court", "lesson", "press", "other"]);
 const CATEGORY_LABELS: Record<string, string> = {
   court: "コート予約",
   lesson: "レッスン",
-  press: "取材・プレス",
+  press: "取材",
   other: "その他",
 };
 
@@ -64,19 +65,36 @@ export async function POST(request: Request) {
     `名前: ${name}`,
     `メール: ${email}`,
     ...(phone ? [`電話: ${phone}`] : []),
-    `カテゴリ: ${category}`,
+    `カテゴリ: ${categoryLabel}`,
     `メッセージ:\n${message}`,
   ];
 
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const { error } = await resend.emails.send({
-    from: "THE PICKLE BANG THEORY <onboarding@resend.dev>",
-    to: "hello@rstagency.com",
+  const from = process.env.RESEND_FROM ?? "THE PICKLE BANG THEORY <onboarding@resend.dev>";
+
+  const adminEmail = resend.emails.send({
+    from,
+    to: process.env.CONTACT_TO_EMAIL ?? "ttmakhr1028.b@gmail.com",
     subject: `【${categoryLabel}】${name}様からのお問い合わせ`,
     text: textLines.join("\n"),
   });
 
-  if (error) {
+  const replyParams = { name, categoryLabel, message };
+  const autoReply = resend.emails.send({
+    from,
+    to: email,
+    subject: "【THE PICKLE BANG THEORY】お問い合わせありがとうございます",
+    html: buildAutoReplyHtml(replyParams),
+    text: buildAutoReplyText(replyParams),
+  });
+
+  const [adminResult, replyResult] = await Promise.allSettled([adminEmail, autoReply]);
+
+  const adminFailed =
+    adminResult.status === "rejected" ||
+    (adminResult.status === "fulfilled" && adminResult.value.error);
+
+  if (adminFailed) {
     return NextResponse.json(
       { success: false, error: "送信に失敗しました" },
       { status: 500 },

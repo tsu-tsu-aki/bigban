@@ -32,9 +32,11 @@ describe("POST /api/contact", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.RESEND_API_KEY = "re_test_key";
+    process.env.RESEND_FROM = "TEST <test@example.com>";
+    process.env.CONTACT_TO_EMAIL = "test-to@example.com";
   });
 
-  it("有効な入力で201を返し、Resendのemails.sendが正しい引数で呼ばれる", async () => {
+  it("有効な入力で201を返し、管理者通知と自動返信の2通が送信される", async () => {
     mockSend.mockResolvedValue({ data: { id: "email_123" }, error: null });
 
     const { POST } = await import("./route");
@@ -43,19 +45,27 @@ describe("POST /api/contact", () => {
 
     expect(response.status).toBe(201);
     expect(body).toEqual({ success: true });
-    expect(mockSend).toHaveBeenCalledOnce();
+    expect(mockSend).toHaveBeenCalledTimes(2);
 
-    const sendArg = mockSend.mock.calls[0][0];
-    expect(sendArg.from).toBe(
-      "THE PICKLE BANG THEORY <onboarding@resend.dev>",
-    );
-    expect(sendArg.to).toBe("hello@rstagency.com");
-    expect(sendArg.subject).toContain("山田太郎");
-    expect(sendArg.text).toContain("山田太郎");
-    expect(sendArg.text).toContain("taro@example.com");
-    expect(sendArg.text).toContain("090-1234-5678");
-    expect(sendArg.text).toContain("court");
-    expect(sendArg.text).toContain("コートの予約について問い合わせます");
+    // 管理者通知メール
+    const adminArg = mockSend.mock.calls[0][0];
+    expect(adminArg.from).toBe("TEST <test@example.com>");
+    expect(adminArg.to).toBe("test-to@example.com");
+    expect(adminArg.subject).toContain("山田太郎");
+    expect(adminArg.text).toContain("山田太郎");
+    expect(adminArg.text).toContain("taro@example.com");
+    expect(adminArg.text).toContain("090-1234-5678");
+    expect(adminArg.text).toContain("コート予約");
+    expect(adminArg.text).toContain("コートの予約について問い合わせます");
+
+    // 自動返信メール
+    const replyArg = mockSend.mock.calls[1][0];
+    expect(replyArg.from).toBe("TEST <test@example.com>");
+    expect(replyArg.to).toBe("taro@example.com");
+    expect(replyArg.subject).toContain("お問い合わせありがとうございます");
+    expect(replyArg.html).toContain("山田太郎");
+    expect(replyArg.html).toContain("コート予約");
+    expect(replyArg.text).toContain("山田太郎");
   });
 
   it("名前なしで400を返す", async () => {
@@ -158,7 +168,7 @@ describe("POST /api/contact", () => {
     expect(mockSend).not.toHaveBeenCalled();
   });
 
-  it("Resend失敗で500を返す", async () => {
+  it("管理者通知失敗で500を返す", async () => {
     mockSend.mockResolvedValue({
       data: null,
       error: { message: "API error", name: "api_error" },
@@ -172,6 +182,23 @@ describe("POST /api/contact", () => {
     expect(body.success).toBe(false);
   });
 
+  it("管理者通知成功・自動返信失敗でも201を返す", async () => {
+    mockSend
+      .mockResolvedValueOnce({ data: { id: "email_admin" }, error: null })
+      .mockResolvedValueOnce({
+        data: null,
+        error: { message: "API error", name: "api_error" },
+      });
+
+    const { POST } = await import("./route");
+    const response = await POST(createRequest(VALID_BODY));
+    const body = await response.json();
+
+    expect(response.status).toBe(201);
+    expect(body).toEqual({ success: true });
+    expect(mockSend).toHaveBeenCalledTimes(2);
+  });
+
   it("電話番号なし（任意項目）で201を返す", async () => {
     mockSend.mockResolvedValue({ data: { id: "email_456" }, error: null });
 
@@ -181,9 +208,9 @@ describe("POST /api/contact", () => {
 
     expect(response.status).toBe(201);
     expect(body).toEqual({ success: true });
-    expect(mockSend).toHaveBeenCalledOnce();
+    expect(mockSend).toHaveBeenCalledTimes(2);
 
-    const sendArg = mockSend.mock.calls[0][0];
-    expect(sendArg.text).not.toContain("090-1234-5678");
+    const adminArg = mockSend.mock.calls[0][0];
+    expect(adminArg.text).not.toContain("090-1234-5678");
   });
 });
