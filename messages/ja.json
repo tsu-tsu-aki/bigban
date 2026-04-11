@@ -53,21 +53,33 @@
     "poetry1": "1つの小さなプレー。",
     "poetry2": "1つの小さなディンク。",
     "description1": "その積み重ねが、やがて大きなエネルギーとなり、新しいスポーツ文化を生み出していく。",
-    "description2": "THE PICKLE BANG THEORYは、\u201cピックルボールのビッグバン\u201dが生まれる場所を目指しています。",
+    "description2": "THE PICKLE BANG THEORYは、“ピックルボールのビッグバン”が生まれる場所を目指しています。",
     "catchcopy": "小さなディンクから、大きなムーブメントへ。"
   },
   "HomeFacility": {
     "title": "FACILITY",
     "keyNumbers": {
-      "courts": { "value": "3", "labelEn": "COURTS", "labelJa": "プロ仕様コート" },
-      "hours": { "value": "6:00–23:00", "labelEn": "HOURS", "labelJa": "営業時間" },
-      "station": { "value": "1 min", "labelEn": "FROM STATION", "labelJa": "駅徒歩1分" }
+      "courts": {
+        "value": "3",
+        "labelEn": "COURTS",
+        "labelJa": "プロ仕様コート"
+      },
+      "hours": {
+        "value": "6:00–23:00",
+        "labelEn": "HOURS",
+        "labelJa": "営業時間"
+      },
+      "station": {
+        "value": "1 min",
+        "labelEn": "FROM STATION",
+        "labelJa": "駅徒歩1分"
+      }
     },
     "specs": {
       "surface": {
         "labelEn": "SURFACE",
         "labelJa": "ハードコート DecoTurf（デコターフ）",
-        "description": "世界最大級の大会やオリンピックでも採用されてきた高性能サーフェス"
+        "description": "世界最大級の大会やオリンピックでも採用されている高性能サーフェス"
       },
       "type": {
         "labelEn": "TYPE",
@@ -97,7 +109,7 @@
       "showImage": "画像{index}を表示: {alt}"
     },
     "decoturf": {
-      "title": "DecoTurf（デコターフ）は、世界最大級のピックルボール大会やテニスのグランドスラム、オリンピックでも採用されてきたハードコートサーフェス。安定したバウンドと高い耐久性により、世界基準のプレー環境を提供します。",
+      "title": "DecoTurf（デコターフ）は、世界最大級のピックルボール大会やテニスのグランドスラム、オリンピックでも採用されているハードコートサーフェス。安定したバウンドと高い耐久性により、世界基準のプレー環境を提供します。",
       "description": "THE PICKLE BANG THEORYでは、プレイヤーが「本気で上達できる環境」を追求し、このDecoTurf（デコターフ）を採用。技術向上・競技力向上にフォーカスした本格的なプレー環境を提供します。"
     }
   },
@@ -134,7 +146,7 @@
     "title": "PRICING",
     "courtRental": "COURT RENTAL",
     "perHour": "1時間あたりの料金",
-    "promoText": "5月31日までのOPEN記念価格🏷️☝️👽",
+    "promoText": "5月31日までのOPEN記念価格🈹\uFE0F☝️👽",
     "timeSlot": "時間帯",
     "weekday": "平日",
     "weekend": "週末・祝日",
@@ -166,9 +178,21 @@
     "address": "千葉県市川市八幡2-16-6 6階",
     "hours": "営業時間：6:00 – 23:00（不定休）",
     "routes": {
-      "jr": { "line": "JR総武線", "station": "「本八幡駅」北口", "walkTime": "徒歩1分" },
-      "toei": { "line": "都営新宿線", "station": "「本八幡駅」", "walkTime": "徒歩3分" },
-      "keisei": { "line": "京成本線", "station": "「京成八幡駅」", "walkTime": "徒歩5分" }
+      "jr": {
+        "line": "JR総武線",
+        "station": "「本八幡駅」北口",
+        "walkTime": "徒歩1分"
+      },
+      "toei": {
+        "line": "都営新宿線",
+        "station": "「本八幡駅」",
+        "walkTime": "徒歩3分"
+      },
+      "keisei": {
+        "line": "京成本線",
+        "station": "「京成八幡駅」",
+        "walkTime": "徒歩5分"
+      }
     },
     "parkingNote": "お車でお越しの方は近隣のコインパーキングをご利用ください。"
   },
@@ -197,10 +221,60 @@
       "name": "西村昭彦",
       "nameEn": "AKIHIKO NISHIMURA",
       "imageAlt": "西村昭彦",
-      "bio1": "北海道出身。8歳でバドミントンを始め、青森山田高校、中央大学と日本有数のバドミントン強豪校で競技経験を積む。",
-      "bio2": "青森山田高校時代にはインターハイおよび全国高校選抜大会でシングルスベスト8を記録。社会人では国内最高峰大会である全日本総合バドミントン選手権に4度出場し、日本トップ選手らと対戦した。",
-      "bio3": "2015年にクロスミントンへ転向し、世界選手権ミックスダブルス4連覇、シングルス2連覇を含む6度の優勝という世界トップレベルの実績を誇る。",
-      "bio4": "2023年にピックルボールと出会い、現在は選手活動に加え大会ディレクターとしても活動。ラケットスポーツコミュニティ「Racket Sports Tokyo」を法人化し、RST Agency株式会社代表取締役を務める。"
+      "bio1": "北海道出身。8歳でバドミントンを始め、青森山田高校、中央大学と日本有数のバドミントン強豪校で競技経験を積む。青森山田高校時代にはインターハイおよび全国高校選抜大会でシングルスベスト8を記録。",
+      "bio2": "社会人では実業団チームに所属せず個人として活動し国内最高峰大会である全日本総合バドミントン選手権に4度出場し、日本トップ選手らと対戦を重ねる。",
+      "bio3": "2015年にクロスミントンへ転向し、世界選手権ミックスダブルス4連覇、シングルス2連覇を含む通算6度の優勝を記録。世界最優秀選手賞を受賞。",
+      "bio4": "2023年にピックルボールと出会い、現在は選手活動に加え大会ディレクターとしても活動。ラケットスポーツコミュニティ「Racket Sports Tokyo」を法人化し、RST Agency株式会社代表取締役を務める。",
+      "achievements": {
+        "a1": {
+          "year": "2026",
+          "tournament": "JPA 日本ランキング上位者",
+          "event": "ベトナム派遣",
+          "result": "代表メンバー"
+        },
+        "a2": {
+          "year": "2025",
+          "tournament": "PPA World Championship",
+          "event": "Mens Skill 5.0 Doubles",
+          "result": "4位"
+        },
+        "a3": {
+          "year": "2025",
+          "tournament": "KINTO JAPAN CUP 19+A",
+          "event": "男子ダブルス",
+          "result": "優勝"
+        },
+        "a4": {
+          "year": "2025",
+          "tournament": "UTR PICKLEBALL JAPAN TOUR Vol.1",
+          "event": "男子ダブルス 上級",
+          "result": "準優勝"
+        },
+        "a5": {
+          "year": "2025",
+          "tournament": "UTR Pickleball JAPAN TOUR Vol.3",
+          "event": "男子ダブルス 上級",
+          "result": "優勝"
+        },
+        "a6": {
+          "year": "2024",
+          "tournament": "PJF Pickleball Championships in JAPAN",
+          "event": "Skill 5.0 男子ダブルス",
+          "result": "準優勝"
+        },
+        "a7": {
+          "year": "2024",
+          "tournament": "JPA TOP TOUR T2",
+          "event": "プロカテゴリー 男子ダブルス / ミックスダブルス",
+          "result": "優勝 / 準優勝"
+        },
+        "a8": {
+          "year": "2024",
+          "tournament": "JPA TOP TOUR T1",
+          "event": "プロカテゴリー 男子ダブルス",
+          "result": "優勝"
+        }
+      }
     },
     "players": {
       "title": "PBT契約選手",
@@ -249,9 +323,9 @@
       "subtitle": "施設紹介"
     },
     "story": {
-      "heading1": "\u201cピックルボールの",
+      "heading1": "“ピックルボールの",
       "headingAccent": "ビッグバン",
-      "heading2": "が生まれる場所\u201d",
+      "heading2": "が生まれる場所”",
       "paragraph1initial": "宇",
       "paragraph1": "宙の始まりとされるビッグバンのように、この場所から新しいピックルボール文化が広がることを目指している。単なるコートレンタルではなく、プレーヤーが本気で成長するための環境をゼロから設計した。",
       "paragraph2": "年齢やレベルに関係なく、本気で成長したい人が練習に集中し、挑戦し続けられる場所。世界トップレベルの競技経験を持つ代表自らがコートに立ち、プレーヤーの成長に向き合う。ここは、すべての始まりの場所だ。"
@@ -359,7 +433,7 @@
     "socialLabel": "Social",
     "address": "千葉県市川市八幡2-16-6 6階",
     "instagram": "Instagram",
-    "copyright": "\u00a9 2026 RST Agency Inc.",
+    "copyright": "© 2026 RST Agency Inc.",
     "allRights": "All rights reserved.",
     "facility": "Facility",
     "services": "Services",

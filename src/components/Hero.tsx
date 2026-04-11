@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
 function MagneticButton({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -20,7 +21,8 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
   return (
     <motion.a
       ref={ref}
-      href="#reserve"
+      href={RESERVE_URL}
+      {...EXTERNAL_LINK_PROPS}
       animate={{ x: pos.x, y: pos.y }}
       transition={{ type: "spring", stiffness: 200, damping: 15 }}
       onMouseMove={handleMouseMove}
