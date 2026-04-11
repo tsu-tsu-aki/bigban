@@ -197,10 +197,20 @@
       "name": "西村昭彦",
       "nameEn": "AKIHIKO NISHIMURA",
       "imageAlt": "西村昭彦",
-      "bio1": "北海道出身。8歳でバドミントンを始め、青森山田高校、中央大学と日本有数のバドミントン強豪校で競技経験を積む。",
-      "bio2": "青森山田高校時代にはインターハイおよび全国高校選抜大会でシングルスベスト8を記録。社会人では国内最高峰大会である全日本総合バドミントン選手権に4度出場し、日本トップ選手らと対戦した。",
-      "bio3": "2015年にクロスミントンへ転向し、世界選手権ミックスダブルス4連覇、シングルス2連覇を含む6度の優勝という世界トップレベルの実績を誇る。",
-      "bio4": "2023年にピックルボールと出会い、現在は選手活動に加え大会ディレクターとしても活動。ラケットスポーツコミュニティ「Racket Sports Tokyo」を法人化し、RST Agency株式会社代表取締役を務める。"
+      "bio1": "北海道出身。8歳でバドミントンを始め、青森山田高校、中央大学と日本有数のバドミントン強豪校で競技経験を積む。青森山田高校時代にはインターハイおよび全国高校選抜大会でシングルスベスト8を記録。",
+      "bio2": "社会人では実業団チームに所属せず個人として活動し国内最高峰大会である全日本総合バドミントン選手権に4度出場し、日本トップ選手らと対戦を重ねる。",
+      "bio3": "2015年にクロスミントンへ転向し、世界選手権ミックスダブルス4連覇、シングルス2連覇を含む通算6度の優勝を記録。世界最優秀選手賞を受賞。",
+      "bio4": "2023年にピックルボールと出会い、現在は選手活動に加え大会ディレクターとしても活動。ラケットスポーツコミュニティ「Racket Sports Tokyo」を法人化し、RST Agency株式会社代表取締役を務める。",
+      "achievements": {
+        "a1": { "year": "2026", "tournament": "JPA 日本ランキング上位者", "event": "ベトナム派遣", "result": "代表メンバー", "type": "rep" },
+        "a2": { "year": "2025", "tournament": "PPA World Championship", "event": "Mens Skill 5.0 Doubles", "result": "4位", "type": "other" },
+        "a3": { "year": "2025", "tournament": "KINTO JAPAN CUP 19+A", "event": "男子ダブルス", "result": "優勝", "type": "gold" },
+        "a4": { "year": "2025", "tournament": "UTR PICKLEBALL JAPAN TOUR Vol.1", "event": "男子ダブルス 上級", "result": "準優勝", "type": "silver" },
+        "a5": { "year": "2025", "tournament": "UTR Pickleball JAPAN TOUR Vol.3", "event": "男子ダブルス 上級", "result": "優勝", "type": "gold" },
+        "a6": { "year": "2024", "tournament": "PJF Pickleball Championships in JAPAN", "event": "Skill 5.0 男子ダブルス", "result": "準優勝", "type": "silver" },
+        "a7": { "year": "2024", "tournament": "JPA TOP TOUR T2", "event": "プロカテゴリー 男子ダブルス / ミックスダブルス", "result": "優勝 / 準優勝", "type": "gold" },
+        "a8": { "year": "2024", "tournament": "JPA TOP TOUR T1", "event": "プロカテゴリー 男子ダブルス", "result": "優勝", "type": "gold" }
+      }
     },
     "players": {
       "title": "PBT契約選手",

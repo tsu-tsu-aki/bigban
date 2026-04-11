@@ -197,10 +197,20 @@
       "name": "Akihiko Nishimura",
       "nameEn": "AKIHIKO NISHIMURA",
       "imageAlt": "Akihiko Nishimura",
-      "bio1": "Born in Hokkaido. Started badminton at age 8, honing his competitive skills at Aomori Yamada High School and Chuo University, two of Japan's top badminton powerhouses.",
-      "bio2": "During his time at Aomori Yamada High School, he reached the singles quarterfinals at both the Inter-High and the National High School Select Tournament. As a professional, he competed four times in the All Japan Badminton Championships, facing Japan's top players.",
-      "bio3": "In 2015, he transitioned to crossminton, achieving world-class results including four consecutive mixed doubles titles and two consecutive singles titles at the World Championships — six titles in total.",
-      "bio4": "He discovered pickleball in 2023 and now works as both a player and tournament director. He incorporated the racket sports community \"Racket Sports Tokyo\" and serves as CEO of RST Agency Inc."
+      "bio1": "Born in Hokkaido. Started badminton at age 8, honing his competitive skills at Aomori Yamada High School and Chuo University, two of Japan's top badminton powerhouses. Reached the singles quarterfinals at both the Inter-High and the National High School Select Tournament.",
+      "bio2": "As a professional, he competed independently — without joining a corporate team — making four appearances at the All Japan Badminton Championships, the nation's premier tournament, and facing Japan's top players.",
+      "bio3": "In 2015, he transitioned to crossminton, recording six titles including four consecutive mixed doubles and two consecutive singles titles at the World Championships. Named World's Best Player.",
+      "bio4": "He discovered pickleball in 2023 and now works as both a player and tournament director. He incorporated the racket sports community \"Racket Sports Tokyo\" and serves as CEO of RST Agency Inc.",
+      "achievements": {
+        "a1": { "year": "2026", "tournament": "JPA Japan Ranking Top Players", "event": "Vietnam Delegation", "result": "National Team", "type": "rep" },
+        "a2": { "year": "2025", "tournament": "PPA World Championship", "event": "Mens Skill 5.0 Doubles", "result": "4th", "type": "other" },
+        "a3": { "year": "2025", "tournament": "KINTO JAPAN CUP 19+A", "event": "Men's Doubles", "result": "Winner", "type": "gold" },
+        "a4": { "year": "2025", "tournament": "UTR PICKLEBALL JAPAN TOUR Vol.1", "event": "Men's Doubles Advanced", "result": "Runner-up", "type": "silver" },
+        "a5": { "year": "2025", "tournament": "UTR Pickleball JAPAN TOUR Vol.3", "event": "Men's Doubles Advanced", "result": "Winner", "type": "gold" },
+        "a6": { "year": "2024", "tournament": "PJF Pickleball Championships in JAPAN", "event": "Skill 5.0 Men's Doubles", "result": "Runner-up", "type": "silver" },
+        "a7": { "year": "2024", "tournament": "JPA TOP TOUR T2", "event": "Pro Men's Doubles / Mixed Doubles", "result": "Winner / Runner-up", "type": "gold" },
+        "a8": { "year": "2024", "tournament": "JPA TOP TOUR T1", "event": "Pro Men's Doubles", "result": "Winner", "type": "gold" }
+      }
     },
     "players": {
       "title": "PBT Contract Players",

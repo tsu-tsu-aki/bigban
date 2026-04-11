@@ -136,7 +136,7 @@ export default function AboutContent() {
               <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4">
                 {t("company.description1")}
               </p>
-              <p className="text-text-gray text-sm lg:text-base leading-relaxed">
+              <p className="text-text-light/90 text-sm lg:text-base leading-relaxed">
                 {t("company.description2")}
               </p>
             </motion.div>
@@ -230,14 +230,63 @@ export default function AboutContent() {
               <p className="text-text-light/90 text-base lg:text-lg leading-loose mb-4">
                 {t("founder.bio2")}
               </p>
-              <p className="text-text-gray text-base lg:text-lg leading-loose mb-4">
+              <p className="text-text-light/90 text-base lg:text-lg leading-loose mb-4">
                 {t("founder.bio3")}
               </p>
-              <p className="text-text-gray text-base lg:text-lg leading-loose">
+              <p className="text-text-light/90 text-base lg:text-lg leading-loose">
                 {t("founder.bio4")}
               </p>
             </motion.div>
           </div>
+
+          {/* Achievements — MEDAL SHOWCASE */}
+          <motion.div
+            className="mt-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: EASE }}
+          >
+            <h3 className="text-xs tracking-[0.3em] text-text-gray font-bold mb-10">
+              PICKLEBALL CAREER
+            </h3>
+
+            {/* Table */}
+            <div className="overflow-x-auto">
+              <div className="hidden sm:grid grid-cols-[70px_1fr_1fr_120px] gap-4 border-b border-accent/30 pb-2 mb-2">
+                <span className="text-[10px] tracking-[0.3em] text-text-gray">YEAR</span>
+                <span className="text-[10px] tracking-[0.3em] text-text-gray">TOURNAMENT</span>
+                <span className="text-[10px] tracking-[0.3em] text-text-gray">EVENT</span>
+                <span className="text-[10px] tracking-[0.3em] text-text-gray text-right">RESULT</span>
+              </div>
+              {(["a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8"] as const).map((key) => ({
+                year: t(`founder.achievements.${key}.year`),
+                tournament: t(`founder.achievements.${key}.tournament`),
+                event: t(`founder.achievements.${key}.event`),
+                result: t(`founder.achievements.${key}.result`),
+                type: t(`founder.achievements.${key}.type`),
+              })).map((row, i) => (
+                <motion.div
+                  key={i}
+                  className="grid grid-cols-1 sm:grid-cols-[70px_1fr_1fr_120px] gap-1 sm:gap-4 border-b border-white/[0.05] py-3 hover:bg-white/[0.02] transition-colors"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.06, ease: EASE }}
+                >
+                  <span className="text-accent text-sm font-bold">{row.year}</span>
+                  <span className="text-text-light text-sm">{row.tournament}</span>
+                  <span className="text-text-gray text-sm">{row.event}</span>
+                  <span className={`text-sm sm:text-right ${
+                    row.type === "gold" || row.type === "silver" ? "text-accent font-bold" :
+                    "text-text-gray"
+                  }`}>
+                    {row.result}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -255,7 +304,7 @@ export default function AboutContent() {
             <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-6">
               {t("players.title")}
             </h2>
-            <p className="text-text-gray text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
+            <p className="text-text-light/90 text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
               {t("players.description")}
             </p>
 
@@ -278,10 +327,10 @@ export default function AboutContent() {
                   <div className="p-6 text-center">
                     <p className="text-text-light text-lg lg:text-xl font-semibold mb-1">{player.name}</p>
                     {player.ig && (
-                      <p className="text-text-gray text-sm lg:text-base mb-3">{player.ig}</p>
+                      <p className="text-text-light/90 text-sm lg:text-base mb-3">{player.ig}</p>
                     )}
                     {player.bio && (
-                      <p className="text-text-gray text-sm lg:text-base leading-relaxed">{player.bio}</p>
+                      <p className="text-text-light/90 text-sm lg:text-base leading-relaxed">{player.bio}</p>
                     )}
                   </div>
                 </motion.div>
@@ -305,7 +354,7 @@ export default function AboutContent() {
             <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-6">
               {t("crew.title")}
             </h2>
-            <p className="text-text-gray text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
+            <p className="text-text-light/90 text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
               {t("crew.description")}
             </p>
 
@@ -346,7 +395,7 @@ export default function AboutContent() {
             </h2>
 
             <div className="border-l-2 border-accent/20 pl-6 lg:pl-8">
-              <p className="text-text-light/80 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
+              <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
                 {t("news.body")}
               </p>
               <a
