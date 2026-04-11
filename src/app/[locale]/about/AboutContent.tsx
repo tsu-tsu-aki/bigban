@@ -13,7 +13,9 @@ const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
 const ACHIEVEMENT_KEYS = ["a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8"] as const;
 
-const ACHIEVEMENT_TYPES: Record<string, string> = {
+type AchievementType = "gold" | "silver" | "rep" | "other";
+
+const ACHIEVEMENT_TYPES: Record<(typeof ACHIEVEMENT_KEYS)[number], AchievementType> = {
   a1: "rep",
   a2: "other",
   a3: "gold",
@@ -281,7 +283,7 @@ export default function AboutContent() {
                 type: ACHIEVEMENT_TYPES[key],
               })).map((row, i) => (
                 <motion.div
-                  key={i}
+                  key={row.key}
                   className="grid grid-cols-1 sm:grid-cols-[70px_1fr_1fr_120px] gap-1 sm:gap-4 border-b border-white/[0.05] py-3 hover:bg-white/[0.02] transition-colors"
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
