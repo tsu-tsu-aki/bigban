@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
 const navLinks = [
   { key: "facility" as const, href: "/facility" },
@@ -104,7 +105,8 @@ export default function Navigation() {
           <div className="flex items-center gap-6">
             <LanguageToggle isJa={isJa} onSwitch={handleSwitchLocale} />
             <a
-              href="#reserve"
+              href={RESERVE_URL}
+              {...EXTERNAL_LINK_PROPS}
               className="hidden lg:block text-[10px] tracking-[0.2em] uppercase bg-accent text-deep-black px-5 py-2.5 font-semibold hover:bg-accent/90 transition-colors duration-300"
               style={{ borderRadius: "2px" }}
             >
@@ -158,7 +160,8 @@ export default function Navigation() {
               </motion.a>
             ))}
             <motion.a
-              href="#reserve"
+              href={RESERVE_URL}
+              {...EXTERNAL_LINK_PROPS}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}

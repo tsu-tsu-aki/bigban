@@ -48,6 +48,9 @@ describe("HomeHero", () => {
     renderWithProvider(<HomeHero />);
     const cta = screen.getByRole("link", { name: /RESERVE A COURT/ });
     expect(cta).toBeInTheDocument();
+    expect(cta).toHaveAttribute("href", "https://reserva.be/tpbt");
+    expect(cta).toHaveAttribute("target", "_blank");
+    expect(cta).toHaveAttribute("rel", "noopener noreferrer");
   });
 
   it("スクロールインジケーター（SCROLL）を表示する", () => {
