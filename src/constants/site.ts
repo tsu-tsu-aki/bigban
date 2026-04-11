@@ -6,6 +6,6 @@ export const OG_IMAGE = "/og-image.png";
 export const RESERVE_URL = "https://reserva.be/tpbt";
 
 export const EXTERNAL_LINK_PROPS = {
-  target: "_blank" as const,
+  target: "_blank",
   rel: "noopener noreferrer",
-};
+} as const;
