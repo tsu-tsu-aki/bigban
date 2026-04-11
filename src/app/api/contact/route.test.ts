@@ -199,6 +199,21 @@ describe("POST /api/contact", () => {
     expect(mockSend).toHaveBeenCalledTimes(2);
   });
 
+  it("RESEND_FROM未設定時にデフォルト送信元を使用する", async () => {
+    delete process.env.RESEND_FROM;
+    delete process.env.CONTACT_TO_EMAIL;
+    mockSend.mockResolvedValue({ data: { id: "email_789" }, error: null });
+
+    const { POST } = await import("./route");
+    const response = await POST(createRequest(VALID_BODY));
+
+    expect(response.status).toBe(201);
+
+    const adminArg = mockSend.mock.calls[0][0];
+    expect(adminArg.from).toBe("THE PICKLE BANG THEORY <onboarding@resend.dev>");
+    expect(adminArg.to).toBe("ttmakhr1028.b@gmail.com");
+  });
+
   it("電話番号なし（任意項目）で201を返す", async () => {
     mockSend.mockResolvedValue({ data: { id: "email_456" }, error: null });
 
