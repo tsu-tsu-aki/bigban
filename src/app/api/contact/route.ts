@@ -69,12 +69,21 @@ export async function POST(request: Request) {
     `メッセージ:\n${message}`,
   ];
 
+  const from = process.env.RESEND_FROM;
+  const toEmail = process.env.CONTACT_TO_EMAIL;
+
+  if (!from || !toEmail) {
+    return NextResponse.json(
+      { success: false, error: "サーバー設定エラー" },
+      { status: 500 },
+    );
+  }
+
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const from = process.env.RESEND_FROM ?? "THE PICKLE BANG THEORY <onboarding@resend.dev>";
 
   const adminEmail = resend.emails.send({
     from,
-    to: process.env.CONTACT_TO_EMAIL ?? "ttmakhr1028.b@gmail.com",
+    to: toEmail,
     subject: `【${categoryLabel}】${name}様からのお問い合わせ`,
     text: textLines.join("\n"),
   });
@@ -88,7 +97,7 @@ export async function POST(request: Request) {
     text: buildAutoReplyText(replyParams),
   });
 
-  const [adminResult] = await Promise.allSettled([adminEmail, autoReply]);
+  const [adminResult, replyResult] = await Promise.allSettled([adminEmail, autoReply]);
 
   const adminFailed =
     adminResult.status === "rejected" ||
@@ -99,6 +108,14 @@ export async function POST(request: Request) {
       { success: false, error: "送信に失敗しました" },
       { status: 500 },
     );
+  }
+
+  const replyFailed =
+    replyResult.status === "rejected" ||
+    (replyResult.status === "fulfilled" && replyResult.value.error);
+
+  if (replyFailed) {
+    console.error("自動返信メールの送信に失敗しました:", replyResult);
   }
 
   return NextResponse.json({ success: true }, { status: 201 });

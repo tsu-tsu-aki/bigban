@@ -182,7 +182,9 @@ describe("POST /api/contact", () => {
     expect(body.success).toBe(false);
   });
 
-  it("管理者通知成功・自動返信失敗でも201を返す", async () => {
+  it("管理者通知成功・自動返信失敗でも201を返しエラーログを出力する", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
     mockSend
       .mockResolvedValueOnce({ data: { id: "email_admin" }, error: null })
       .mockResolvedValueOnce({
@@ -197,21 +199,40 @@ describe("POST /api/contact", () => {
     expect(response.status).toBe(201);
     expect(body).toEqual({ success: true });
     expect(mockSend).toHaveBeenCalledTimes(2);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "自動返信メールの送信に失敗しました:",
+      expect.anything(),
+    );
+
+    consoleErrorSpy.mockRestore();
   });
 
-  it("RESEND_FROM未設定時にデフォルト送信元を使用する", async () => {
+  it("RESEND_FROM未設定時に500を返す", async () => {
     delete process.env.RESEND_FROM;
+    mockSend.mockResolvedValue({ data: { id: "email_789" }, error: null });
+
+    const { POST } = await import("./route");
+    const response = await POST(createRequest(VALID_BODY));
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body.success).toBe(false);
+    expect(body.error).toBe("サーバー設定エラー");
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it("CONTACT_TO_EMAIL未設定時に500を返す", async () => {
     delete process.env.CONTACT_TO_EMAIL;
     mockSend.mockResolvedValue({ data: { id: "email_789" }, error: null });
 
     const { POST } = await import("./route");
     const response = await POST(createRequest(VALID_BODY));
+    const body = await response.json();
 
-    expect(response.status).toBe(201);
-
-    const adminArg = mockSend.mock.calls[0][0];
-    expect(adminArg.from).toBe("THE PICKLE BANG THEORY <onboarding@resend.dev>");
-    expect(adminArg.to).toBe("ttmakhr1028.b@gmail.com");
+    expect(response.status).toBe(500);
+    expect(body.success).toBe(false);
+    expect(body.error).toBe("サーバー設定エラー");
+    expect(mockSend).not.toHaveBeenCalled();
   });
 
   it("電話番号なし（任意項目）で201を返す", async () => {
