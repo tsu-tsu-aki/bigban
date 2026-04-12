@@ -19,6 +19,7 @@ export async function generateMetadata({
   return {
     title: t("home.title"),
     description: t("home.description"),
+    robots: { index: false, follow: false },
     openGraph: {
       title: t("home.title"),
       description: t("home.description"),
