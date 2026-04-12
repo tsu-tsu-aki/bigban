@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SITE_URL, OG_IMAGE } from "@/constants/site";
 import AboutContent from "./AboutContent";
+import StructuredData from "@/components/StructuredData";
+import { buildBreadcrumb } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
 
@@ -37,5 +39,12 @@ export default async function AboutPage({ params }: AboutPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <AboutContent />;
+  return (
+    <>
+      <StructuredData
+        data={buildBreadcrumb(locale, [{ name: "About", path: "/about" }])}
+      />
+      <AboutContent />
+    </>
+  );
 }
