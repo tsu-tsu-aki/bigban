@@ -1,11 +1,14 @@
-type Schema = object;
+type Schema = { readonly "@context": string; readonly "@type": string };
 
 interface StructuredDataProps {
   data: Schema | readonly Schema[];
 }
 
 function escapeJsonLd(json: string): string {
-  return json.replace(/</g, "\\u003c");
+  return json
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026");
 }
 
 export default function StructuredData({ data }: StructuredDataProps) {

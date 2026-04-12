@@ -38,11 +38,14 @@ export default async function TokushohoPage({ params }: TokushohoPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const breadcrumbName =
+    locale === "ja" ? "特定商取引法に基づく表記" : "Legal Notice";
+
   return (
     <>
       <StructuredData
         data={buildBreadcrumb(locale, [
-          { name: "特定商取引法に基づく表記", path: "/tokushoho" },
+          { name: breadcrumbName, path: "/tokushoho" },
         ])}
       />
       <TokushohoContent />
