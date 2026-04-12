@@ -70,6 +70,13 @@ describe("robots", () => {
 
       expect(result.sitemap).toBeUndefined();
     });
+
+    it("host は設定しない", async () => {
+      const { default: robots } = await import("./robots");
+      const result = robots();
+
+      expect(result.host).toBeUndefined();
+    });
   });
 
   describe("VERCEL_ENV未設定（ローカル開発）", () => {
@@ -83,6 +90,14 @@ describe("robots", () => {
 
       const rules = Array.isArray(result.rules) ? result.rules : [result.rules!];
       expect(rules[0].disallow).toBe("/");
+    });
+
+    it("host と sitemap は設定しない", async () => {
+      const { default: robots } = await import("./robots");
+      const result = robots();
+
+      expect(result.host).toBeUndefined();
+      expect(result.sitemap).toBeUndefined();
     });
   });
 });

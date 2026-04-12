@@ -92,12 +92,12 @@ describe("sitemap", () => {
     }
   });
 
-  it("各エントリに lastModified が設定される", async () => {
+  it("lastModified は設定しない（ビルド毎に値が変わる誤った鮮度シグナル回避）", async () => {
     const { default: sitemap } = await import("./sitemap");
     const entries = sitemap();
 
     for (const entry of entries) {
-      expect(entry.lastModified).toBeInstanceOf(Date);
+      expect(entry.lastModified).toBeUndefined();
     }
   });
 });

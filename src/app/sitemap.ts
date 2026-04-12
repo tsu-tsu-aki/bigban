@@ -4,8 +4,6 @@ import { SITEMAP_ROUTES } from "@/constants/routes";
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
-
   return SITEMAP_ROUTES.map(({ path, priority, changeFrequency }) => {
     const jaPath = path === "/" ? "" : path;
     const enPath = path === "/" ? "/en" : `/en${path}`;
@@ -14,7 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     return {
       url: jaUrl,
-      lastModified: now,
       changeFrequency,
       priority,
       alternates: {
