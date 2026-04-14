@@ -14,6 +14,11 @@ import { IntroEngineG } from "./intro-spikes/IntroEngineG";
 import { IntroEngineH } from "./intro-spikes/IntroEngineH";
 import { IntroEngineI } from "./intro-spikes/IntroEngineI";
 import { IntroEngineJ } from "./intro-spikes/IntroEngineJ";
+import { IntroEngineK } from "./intro-spikes/IntroEngineK";
+import { IntroEngineL } from "./intro-spikes/IntroEngineL";
+import { IntroEngineM } from "./intro-spikes/IntroEngineM";
+import { IntroEngineN } from "./intro-spikes/IntroEngineN";
+import { IntroEngineO } from "./intro-spikes/IntroEngineO";
 import { PATTERN_LABEL, type IntroPattern } from "./intro-spikes/types";
 
 import type { AnimationPhase } from "@/components/teaser/types";
@@ -21,7 +26,11 @@ import type { ReactNode } from "react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 const SESSION_KEY = "bigban-intro-played";
-const VALID_PATTERNS: IntroPattern[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+const VALID_PATTERNS: IntroPattern[] = [
+  "A", "B", "C", "D", "E",
+  "F", "G", "H", "I", "J",
+  "K", "L", "M", "N", "O",
+];
 
 interface HomeIntroProps {
   children: ReactNode;
@@ -95,6 +104,11 @@ export default function HomeIntro({ children }: HomeIntroProps) {
       case "H": return IntroEngineH;
       case "I": return IntroEngineI;
       case "J": return IntroEngineJ;
+      case "K": return IntroEngineK;
+      case "L": return IntroEngineL;
+      case "M": return IntroEngineM;
+      case "N": return IntroEngineN;
+      case "O": return IntroEngineO;
       default:
         return BigBangCanvas;
     }
