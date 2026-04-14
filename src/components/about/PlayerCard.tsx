@@ -21,16 +21,16 @@ export default function PlayerCard({ player }: PlayerCardProps) {
         <span className="text-text-gray text-sm">{t("photoPlaceholder")}</span>
       </div>
       <div className="p-6 text-center">
-        <p className="text-text-light text-lg lg:text-xl font-semibold mb-1">
+        <p className="text-text-light text-lg @lg:text-xl font-semibold mb-1">
           {player.name}
         </p>
         {player.ig && (
-          <p className="text-text-light/90 text-sm lg:text-base mb-3">
+          <p className="text-text-light/90 text-sm @lg:text-base mb-3">
             {player.ig}
           </p>
         )}
         {player.bio && (
-          <p className="text-text-light/90 text-sm lg:text-base leading-relaxed">
+          <p className="text-text-light/90 text-sm @lg:text-base leading-relaxed">
             {player.bio}
           </p>
         )}

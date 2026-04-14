@@ -342,11 +342,11 @@ export default function AboutContent() {
               {t("players.description")}
             </p>
 
-            <div className="md:hidden">
+            <div className="md:hidden @container">
               <PlayerCarousel players={players} />
             </div>
 
-            <div className="hidden md:grid md:grid-cols-2 gap-8">
+            <div className="hidden md:grid md:grid-cols-2 gap-8 @container">
               {players.map((player, i) => (
                 <PlayerCard key={i} player={player} />
               ))}
