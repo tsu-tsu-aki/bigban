@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SITE_URL } from "@/constants/site";
 import TokushohoContent from "./TokushohoContent";
+import StructuredData from "@/components/StructuredData";
+import { buildBreadcrumb } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
 
@@ -36,5 +38,17 @@ export default async function TokushohoPage({ params }: TokushohoPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <TokushohoContent />;
+  const breadcrumbName =
+    locale === "ja" ? "特定商取引法に基づく表記" : "Legal Notice";
+
+  return (
+    <>
+      <StructuredData
+        data={buildBreadcrumb(locale, [
+          { name: breadcrumbName, path: "/tokushoho" },
+        ])}
+      />
+      <TokushohoContent />
+    </>
+  );
 }

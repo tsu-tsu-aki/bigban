@@ -5,6 +5,11 @@ import { SITE_URL } from "@/constants/site";
 import { notFound } from "next/navigation";
 import { Orbitron, Inter, Noto_Sans_JP } from "next/font/google";
 import { routing } from "@/i18n/routing";
+import StructuredData from "@/components/StructuredData";
+import {
+  buildSportsActivityLocation,
+  buildOrganization,
+} from "@/lib/structured-data";
 import "../globals.css";
 
 import type { Metadata } from "next";
@@ -79,6 +84,12 @@ export default async function LocaleLayout({
       className={`${orbitron.variable} ${inter.variable} ${notoSansJP.variable}`}
     >
       <body className="grain-overlay">
+        <StructuredData
+          data={[
+            buildSportsActivityLocation(locale),
+            buildOrganization(),
+          ]}
+        />
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
