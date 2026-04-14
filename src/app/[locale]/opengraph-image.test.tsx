@@ -29,8 +29,8 @@ describe("home opengraph-image", () => {
     };
     mockGetTranslations.mockResolvedValue(mockT);
 
-    const module = await import("./opengraph-image");
-    await module.default({ params: Promise.resolve({ locale: "ja" }) });
+    const mod = await import("./opengraph-image");
+    await mod.default({ params: Promise.resolve({ locale: "ja" }) });
 
     expect(imageResponseSpy).toHaveBeenCalledTimes(1);
     const [, options] = imageResponseSpy.mock.calls[0];
@@ -45,8 +45,8 @@ describe("home opengraph-image", () => {
     };
     mockGetTranslations.mockResolvedValue(mockT);
 
-    const module = await import("./opengraph-image");
-    await module.default({ params: Promise.resolve({ locale: "ja" }) });
+    const mod = await import("./opengraph-image");
+    await mod.default({ params: Promise.resolve({ locale: "ja" }) });
 
     const [element] = imageResponseSpy.mock.calls[0];
     const serialized = JSON.stringify(element);
@@ -55,9 +55,9 @@ describe("home opengraph-image", () => {
   });
 
   it("sizeとcontentTypeをエクスポートしている", async () => {
-    const module = await import("./opengraph-image");
-    expect(module.size).toEqual({ width: 1200, height: 630 });
-    expect(module.contentType).toBe("image/png");
-    expect(module.alt).toBeDefined();
+    const mod = await import("./opengraph-image");
+    expect(mod.size).toEqual({ width: 1200, height: 630 });
+    expect(mod.contentType).toBe("image/png");
+    expect(mod.alt).toBeDefined();
   });
 });
