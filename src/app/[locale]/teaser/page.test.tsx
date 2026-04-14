@@ -62,9 +62,17 @@ vi.mock("next-intl/server", () => ({
 }));
 
 describe("generateMetadata", () => {
+  function buildMockT(keywords: string[]) {
+    const mockT = ((key: string) => `translated:${key}`) as unknown as {
+      (key: string): string;
+      raw: (key: string) => unknown;
+    };
+    mockT.raw = (_key: string) => keywords;
+    return mockT;
+  }
+
   it("日本語メタデータを返す", async () => {
-    const mockT = (key: string) => `translated:${key}`;
-    mockGetTranslations.mockResolvedValue(mockT);
+    mockGetTranslations.mockResolvedValue(buildMockT(["ティザー"]));
 
     const { generateMetadata } = await import("./page");
     const metadata = await generateMetadata({
@@ -74,11 +82,16 @@ describe("generateMetadata", () => {
     expect(metadata.title).toBe("translated:home.title");
     expect(metadata.description).toBe("translated:home.description");
     expect(metadata.openGraph?.locale).toBe("ja_JP");
+    expect(metadata.keywords).toEqual(["ティザー"]);
+    expect(metadata.alternates?.canonical).toBe(
+      "http://localhost:3000/teaser"
+    );
+    expect(metadata.openGraph?.url).toBe("http://localhost:3000/teaser");
+    expect(metadata.robots).toEqual({ index: false, follow: false });
   });
 
   it("英語メタデータを返す", async () => {
-    const mockT = (key: string) => `translated:${key}`;
-    mockGetTranslations.mockResolvedValue(mockT);
+    mockGetTranslations.mockResolvedValue(buildMockT(["teaser"]));
 
     const { generateMetadata } = await import("./page");
     const metadata = await generateMetadata({
@@ -88,6 +101,22 @@ describe("generateMetadata", () => {
     expect(metadata.title).toBe("translated:home.title");
     expect(metadata.description).toBe("translated:home.description");
     expect(metadata.openGraph?.locale).toBe("en_US");
+    expect(metadata.keywords).toEqual(["teaser"]);
+    expect(metadata.alternates?.canonical).toBe(
+      "http://localhost:3000/en/teaser"
+    );
+    expect(metadata.openGraph?.url).toBe("http://localhost:3000/en/teaser");
+  });
+
+  it("imagesを明示せずopengraph-image.tsxに委譲する", async () => {
+    mockGetTranslations.mockResolvedValue(buildMockT([]));
+
+    const { generateMetadata } = await import("./page");
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+
+    expect(metadata.openGraph?.images).toBeUndefined();
   });
 });
 

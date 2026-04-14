@@ -2,15 +2,61 @@
   "Metadata": {
     "home": {
       "title": "駅徒歩1分24時間利用|THE PICKLE BANG THEORY",
-      "description": "クロスミントン世界王者が手がけるプレミアムインドアピックルボール施設。本八幡駅徒歩1分、24時間営業。初心者から上級者まで楽しめるプレミアム空間。"
+      "description": "クロスミントン世界王者が手がけるプレミアムインドアピックルボール施設。本八幡駅徒歩1分、24時間営業。初心者から上級者まで楽しめるプレミアム空間。",
+      "keywords": [
+        "ピックルボール",
+        "本八幡",
+        "本八幡駅徒歩1分",
+        "市川市",
+        "インドア",
+        "24時間",
+        "ピックルボールコート",
+        "ピックルボール施設",
+        "東京 ピックルボール",
+        "千葉 ピックルボール",
+        "初心者",
+        "上級者",
+        "レッスン",
+        "スクール",
+        "貸切"
+      ]
     },
     "about": {
       "title": "ABOUT US|THE PICKLE BANG THEORY",
-      "description": "THE PICKLE BANG THEORYを運営するRST Agency株式会社の会社概要、代表挨拶、選手・スタッフ紹介。"
+      "description": "THE PICKLE BANG THEORYを運営するRST Agency株式会社の会社概要、代表挨拶、選手・スタッフ紹介。",
+      "keywords": [
+        "ピックルボール",
+        "RST Agency",
+        "クロスミントン世界王者",
+        "西村昭彦",
+        "ピックルボール選手",
+        "コーチング",
+        "本八幡",
+        "市川市",
+        "会社概要"
+      ]
     },
     "tokushoho": {
       "title": "特定商取引法に基づく表記|THE PICKLE BANG THEORY",
-      "description": "THE PICKLE BANG THEORYの特定商取引法に基づく表記ページです。"
+      "description": "THE PICKLE BANG THEORYの特定商取引法に基づく表記ページです。",
+      "keywords": [
+        "特定商取引法",
+        "表記",
+        "THE PICKLE BANG THEORY",
+        "運営会社",
+        "RST Agency"
+      ]
+    },
+    "teaser": {
+      "keywords": [
+        "ピックルボール",
+        "本八幡",
+        "本八幡駅徒歩1分",
+        "24時間",
+        "インドア",
+        "2026年4月オープン",
+        "ティザー"
+      ]
     },
     "og": {
       "siteName": "THE PICKLE BANG THEORY"

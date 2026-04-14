@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
-import { SITE_URL, OG_IMAGE } from "@/constants/site";
+import { SITE_URL } from "@/constants/site";
+import { parseKeywords } from "@/lib/og-utils";
 
 import TeaserPage from "./TeaserPage";
 
@@ -15,22 +16,27 @@ export async function generateMetadata({
 }: TeaserPageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const keywords = parseKeywords(t.raw("teaser.keywords"));
+  const canonicalUrl =
+    locale === "ja" ? `${SITE_URL}/teaser` : `${SITE_URL}/${locale}/teaser`;
 
   return {
     title: t("home.title"),
     description: t("home.description"),
+    keywords,
     robots: { index: false, follow: false },
     openGraph: {
       title: t("home.title"),
       description: t("home.description"),
-      images: [OG_IMAGE],
+      url: canonicalUrl,
       locale: locale === "ja" ? "ja_JP" : "en_US",
     },
     alternates: {
+      canonical: canonicalUrl,
       languages: {
-        ja: `${SITE_URL}/`,
-        en: `${SITE_URL}/en`,
-        "x-default": `${SITE_URL}/`,
+        ja: `${SITE_URL}/teaser`,
+        en: `${SITE_URL}/en/teaser`,
+        "x-default": `${SITE_URL}/teaser`,
       },
     },
   };
