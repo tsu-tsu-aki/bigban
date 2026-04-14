@@ -24,6 +24,11 @@ import { IntroEngineQ } from "./intro-spikes/IntroEngineQ";
 import { IntroEngineR } from "./intro-spikes/IntroEngineR";
 import { IntroEngineS } from "./intro-spikes/IntroEngineS";
 import { IntroEngineT } from "./intro-spikes/IntroEngineT";
+import { IntroEngineU } from "./intro-spikes/IntroEngineU";
+import { IntroEngineV } from "./intro-spikes/IntroEngineV";
+import { IntroEngineW } from "./intro-spikes/IntroEngineW";
+import { IntroEngineX } from "./intro-spikes/IntroEngineX";
+import { IntroEngineY } from "./intro-spikes/IntroEngineY";
 import { PATTERN_LABEL, type IntroPattern } from "./intro-spikes/types";
 
 import type { AnimationPhase } from "@/components/teaser/types";
@@ -36,6 +41,7 @@ const VALID_PATTERNS: IntroPattern[] = [
   "F", "G", "H", "I", "J",
   "K", "L", "M", "N", "O",
   "P", "Q", "R", "S", "T",
+  "U", "V", "W", "X", "Y",
 ];
 
 interface HomeIntroProps {
@@ -120,6 +126,11 @@ export default function HomeIntro({ children }: HomeIntroProps) {
       case "R": return IntroEngineR;
       case "S": return IntroEngineS;
       case "T": return IntroEngineT;
+      case "U": return IntroEngineU;
+      case "V": return IntroEngineV;
+      case "W": return IntroEngineW;
+      case "X": return IntroEngineX;
+      case "Y": return IntroEngineY;
       default:
         return BigBangCanvas;
     }

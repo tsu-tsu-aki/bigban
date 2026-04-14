@@ -24,6 +24,11 @@ import { IntroEngineQ } from "@/components/home/intro-spikes/IntroEngineQ";
 import { IntroEngineR } from "@/components/home/intro-spikes/IntroEngineR";
 import { IntroEngineS } from "@/components/home/intro-spikes/IntroEngineS";
 import { IntroEngineT } from "@/components/home/intro-spikes/IntroEngineT";
+import { IntroEngineU } from "@/components/home/intro-spikes/IntroEngineU";
+import { IntroEngineV } from "@/components/home/intro-spikes/IntroEngineV";
+import { IntroEngineW } from "@/components/home/intro-spikes/IntroEngineW";
+import { IntroEngineX } from "@/components/home/intro-spikes/IntroEngineX";
+import { IntroEngineY } from "@/components/home/intro-spikes/IntroEngineY";
 import { PATTERN_LABEL, type IntroPattern } from "@/components/home/intro-spikes/types";
 import { useAnimationPhase } from "@/hooks/useAnimationPhase";
 import type { AnimationPhase } from "@/components/teaser/types";
@@ -34,6 +39,7 @@ const VALID_PATTERNS: IntroPattern[] = [
   "F", "G", "H", "I", "J",
   "K", "L", "M", "N", "O",
   "P", "Q", "R", "S", "T",
+  "U", "V", "W", "X", "Y",
 ];
 
 function readPatternFromUrl(): IntroPattern | null {
@@ -115,6 +121,11 @@ export default function TeaserPage() {
             case "R": return IntroEngineR;
             case "S": return IntroEngineS;
             case "T": return IntroEngineT;
+            case "U": return IntroEngineU;
+            case "V": return IntroEngineV;
+            case "W": return IntroEngineW;
+            case "X": return IntroEngineX;
+            case "Y": return IntroEngineY;
             default: return BigBangCanvas;
           }
         })();

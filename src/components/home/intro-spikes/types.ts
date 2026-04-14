@@ -4,7 +4,8 @@ export type IntroPattern =
   | "A" | "B" | "C" | "D" | "E"
   | "F" | "G" | "H" | "I" | "J"
   | "K" | "L" | "M" | "N" | "O"
-  | "P" | "Q" | "R" | "S" | "T";
+  | "P" | "Q" | "R" | "S" | "T"
+  | "U" | "V" | "W" | "X" | "Y";
 
 export interface IntroEngineProps {
   onPhaseChange: (phase: AnimationPhase) => void;
@@ -31,4 +32,9 @@ export const PATTERN_LABEL: Record<IntroPattern, string> = {
   R: "MAGNETIC DUST",
   S: "PAPER TEAR",
   T: "RIBBON DANCE",
+  U: "COSMIC SERVE",
+  V: "UNIVERSE BIRTH",
+  W: "GALAXY BALL",
+  X: "COURT COSMOS",
+  Y: "RALLY CASCADE",
 };
