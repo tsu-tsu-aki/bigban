@@ -15,16 +15,24 @@ export async function generateMetadata({
 }: TokushohoPageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const keywords = t.raw("tokushoho.keywords") as string[];
+  const canonicalUrl =
+    locale === "ja"
+      ? `${SITE_URL}/tokushoho`
+      : `${SITE_URL}/${locale}/tokushoho`;
 
   return {
     title: t("tokushoho.title"),
     description: t("tokushoho.description"),
+    keywords,
     openGraph: {
       title: t("tokushoho.title"),
       description: t("tokushoho.description"),
+      url: canonicalUrl,
       locale: locale === "ja" ? "ja_JP" : "en_US",
     },
     alternates: {
+      canonical: canonicalUrl,
       languages: {
         ja: `${SITE_URL}/tokushoho`,
         en: `${SITE_URL}/en/tokushoho`,

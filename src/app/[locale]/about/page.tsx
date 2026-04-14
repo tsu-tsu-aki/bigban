@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { SITE_URL, OG_IMAGE } from "@/constants/site";
+import { SITE_URL } from "@/constants/site";
 import AboutContent from "./AboutContent";
 import StructuredData from "@/components/StructuredData";
 import { buildBreadcrumb } from "@/lib/structured-data";
@@ -15,17 +15,22 @@ export async function generateMetadata({
 }: AboutPageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const keywords = t.raw("about.keywords") as string[];
+  const canonicalUrl =
+    locale === "ja" ? `${SITE_URL}/about` : `${SITE_URL}/${locale}/about`;
 
   return {
     title: t("about.title"),
     description: t("about.description"),
+    keywords,
     openGraph: {
       title: t("about.title"),
       description: t("about.description"),
-      images: [OG_IMAGE],
+      url: canonicalUrl,
       locale: locale === "ja" ? "ja_JP" : "en_US",
     },
     alternates: {
+      canonical: canonicalUrl,
       languages: {
         ja: `${SITE_URL}/about`,
         en: `${SITE_URL}/en/about`,
