@@ -27,6 +27,10 @@ vi.mock("embla-carousel-react", () => ({
 
 import PlayerCarousel from "./PlayerCarousel";
 
+const ABOUT = jaMessages.About;
+const PLAYERS = ABOUT.players;
+const CAROUSEL = PLAYERS.carousel;
+
 function renderCarousel() {
   return render(
     <NextIntlClientProvider locale="ja" messages={jaMessages}>
@@ -44,24 +48,24 @@ describe("PlayerCarousel", () => {
 
   it("選手名とComing Soonを含むカードを表示する", () => {
     renderCarousel();
-    expect(screen.getByText("山田 太郎")).toBeInTheDocument();
-    expect(screen.getByText("@taro_yamada_pb")).toBeInTheDocument();
-    expect(screen.getByText("Coming Soon")).toBeInTheDocument();
+    expect(screen.getByText(PLAYERS.playerName)).toBeInTheDocument();
+    expect(screen.getByText(PLAYERS.playerIg)).toBeInTheDocument();
+    expect(screen.getByText(PLAYERS.comingSoon)).toBeInTheDocument();
   });
 
   it("Photoプレースホルダを2枚描画する", () => {
     renderCarousel();
-    const photos = screen.getAllByText("Photo");
+    const photos = screen.getAllByText(ABOUT.photoPlaceholder);
     expect(photos.length).toBe(2);
   });
 
   it("前/次ボタンが描画されている", () => {
     renderCarousel();
     expect(
-      screen.getByRole("button", { name: "前の選手を表示" })
+      screen.getByRole("button", { name: CAROUSEL.prev })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "次の選手を表示" })
+      screen.getByRole("button", { name: CAROUSEL.next })
     ).toBeInTheDocument();
   });
 
@@ -69,7 +73,7 @@ describe("PlayerCarousel", () => {
     const { container } = renderCarousel();
     const carousel = container.querySelector('[aria-roledescription="carousel"]');
     expect(carousel).toBeInTheDocument();
-    expect(carousel?.getAttribute("aria-label")).toBe("PBT契約選手カルーセル");
+    expect(carousel?.getAttribute("aria-label")).toBe(CAROUSEL.regionLabel);
   });
 
   it("各スライドにrole=group + aria-roledescription=slide + aria-label=N/Mが付与されている", () => {
@@ -93,13 +97,13 @@ describe("PlayerCarousel", () => {
 
   it("次ボタンクリックでscrollNextが呼ばれる", () => {
     renderCarousel();
-    fireEvent.click(screen.getByRole("button", { name: "次の選手を表示" }));
+    fireEvent.click(screen.getByRole("button", { name: CAROUSEL.next }));
     expect(mockScrollNext).toHaveBeenCalled();
   });
 
   it("前ボタンクリックでscrollPrevが呼ばれる", () => {
     renderCarousel();
-    fireEvent.click(screen.getByRole("button", { name: "前の選手を表示" }));
+    fireEvent.click(screen.getByRole("button", { name: CAROUSEL.prev }));
     expect(mockScrollPrev).toHaveBeenCalled();
   });
 
@@ -147,8 +151,8 @@ describe("PlayerCarousel", () => {
   it("emblaApiがnullのとき矢印ボタンが何もしない", () => {
     returnApi = null;
     renderCarousel();
-    fireEvent.click(screen.getByRole("button", { name: "次の選手を表示" }));
-    fireEvent.click(screen.getByRole("button", { name: "前の選手を表示" }));
+    fireEvent.click(screen.getByRole("button", { name: CAROUSEL.next }));
+    fireEvent.click(screen.getByRole("button", { name: CAROUSEL.prev }));
     expect(mockScrollNext).not.toHaveBeenCalled();
     expect(mockScrollPrev).not.toHaveBeenCalled();
   });
