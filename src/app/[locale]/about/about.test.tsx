@@ -77,6 +77,18 @@ describe("AboutPage", () => {
     expect(screen.getByText("PBT契約選手")).toBeInTheDocument();
   });
 
+  it("モバイル用カルーセルとPC用2カラムグリッドの両方が存在する", () => {
+    const { container } = renderWithIntl(<AboutPage />);
+
+    const mobileWrap = container.querySelector(
+      '.md\\:hidden [aria-roledescription="carousel"]'
+    );
+    expect(mobileWrap).toBeInTheDocument();
+
+    const pcGrid = container.querySelector(".hidden.md\\:grid.md\\:grid-cols-2");
+    expect(pcGrid).toBeInTheDocument();
+  });
+
   it("PBTクルーセクションを表示する", () => {
     renderWithIntl(<AboutPage />);
     expect(screen.getByText("PBTクルー")).toBeInTheDocument();

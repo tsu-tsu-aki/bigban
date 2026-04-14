@@ -26,15 +26,29 @@ vi.mock("embla-carousel-react", () => ({
 }));
 
 import PlayerCarousel from "./PlayerCarousel";
+import type { Player } from "./PlayerCard";
 
 const ABOUT = jaMessages.About;
 const PLAYERS = ABOUT.players;
 const CAROUSEL = PLAYERS.carousel;
 
-function renderCarousel() {
+const defaultPlayers: Player[] = [
+  {
+    name: PLAYERS.playerName,
+    ig: PLAYERS.playerIg,
+    bio: PLAYERS.playerBio,
+  },
+  {
+    name: PLAYERS.comingSoon,
+    ig: "",
+    bio: "",
+  },
+];
+
+function renderCarousel(players: Player[] = defaultPlayers) {
   return render(
     <NextIntlClientProvider locale="ja" messages={jaMessages}>
-      <PlayerCarousel />
+      <PlayerCarousel players={players} />
     </NextIntlClientProvider>
   );
 }
