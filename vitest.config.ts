@@ -47,7 +47,13 @@ export default defineConfig({
     coverage: {
       provider: "istanbul",
       reporter: ["text", "lcov"],
-      exclude: ["__mocks__/**"],
+      exclude: [
+        "__mocks__/**",
+        // Spike preview files for intro animation patterns. Excluded until a
+        // pattern is chosen and promoted to production. See spike branch
+        // notes in src/components/home/intro-spikes/types.ts.
+        "src/components/home/intro-spikes/**",
+      ],
       thresholds: {
         statements: 100,
         branches: 100,
