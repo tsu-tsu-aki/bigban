@@ -17,6 +17,10 @@ vi.mock("@/i18n/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
 
+vi.mock("embla-carousel-react", () => ({
+  default: () => [vi.fn(), null],
+}));
+
 // Mock IntersectionObserver for HomeNavigation's useActiveSection
 class MockIntersectionObserver {
   observe = vi.fn();

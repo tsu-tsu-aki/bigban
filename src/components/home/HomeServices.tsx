@@ -60,9 +60,9 @@ export default function HomeServices() {
               service.isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
             } gap-8 lg:gap-16 items-center`}
           >
-            {/* Image */}
+            {/* Image — モバイル時は親(px-6)の左右パディング(1.5rem × 2 = 3rem)を負マージンで打ち消し、edge-to-edge 表示にする */}
             <motion.div
-              className="relative w-full lg:w-[60%] aspect-[16/10] rounded-sm overflow-hidden"
+              className="relative w-[calc(100%+3rem)] lg:w-[60%] aspect-[16/10] rounded-none lg:rounded-sm overflow-hidden -mx-6 lg:mx-0"
               initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-150px" }}

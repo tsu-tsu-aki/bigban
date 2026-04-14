@@ -142,6 +142,7 @@
       "lounge": "ラウンジスペース"
     },
     "carousel": {
+      "regionLabel": "施設画像カルーセル",
       "prev": "前の画像",
       "next": "次の画像",
       "showImage": "画像{index}を表示: {alt}"
@@ -240,6 +241,7 @@
     "address": "〒272-0021 千葉県市川市八幡2-16-6 6階"
   },
   "About": {
+    "photoPlaceholder": "Photo",
     "hero": {
       "title": "ABOUT US"
     },
@@ -318,8 +320,15 @@
       "title": "PBT契約選手",
       "description": "THE PICKLE BANG THEORYは、国内外で活躍するピックルボール選手と契約し、施設でのトレーニングや練習など選手をサポートいたします。また、協働によるイベント出演やソーシャルメディアでの発信を通して、ピックルボールを盛り上げます。",
       "playerName": "山田 太郎",
+      "playerIg": "@taro_yamada_pb",
       "playerBio": "元テニスプレーヤー。2024年よりピックルボールに転向し、国内大会で多数入賞。攻撃的なプレースタイルが持ち味。",
-      "comingSoon": "Coming Soon"
+      "comingSoon": "Coming Soon",
+      "carousel": {
+        "regionLabel": "PBT契約選手カルーセル",
+        "prev": "前の選手を表示",
+        "next": "次の選手を表示",
+        "showPlayer": "{index}枚目 {name} を表示"
+      }
     },
     "crew": {
       "title": "PBTクルー",
