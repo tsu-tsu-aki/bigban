@@ -1,11 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import { useTranslations } from "next-intl";
-
-const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
 interface Player {
   name: string;
@@ -67,26 +64,27 @@ export default function PlayerCarousel() {
     emblaApi.scrollNext();
   }, [emblaApi]);
 
+  const photoPlaceholder = t("photoPlaceholder");
+
   return (
-    <motion.div
+    <div
       className="relative"
       aria-roledescription="carousel"
       aria-label={t("players.carousel.regionLabel")}
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: EASE }}
     >
       <div className="overflow-hidden select-none" ref={emblaRef}>
         <div className="flex">
           {players.map((player, i) => (
             <div
-              key={i}
+              key={player.name}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${i + 1} / ${players.length}`}
               className="min-w-0 flex-[0_0_100%] px-2"
             >
               <div className="bg-gradient-to-b from-accent/[0.04] to-transparent border border-text-gray/10 rounded-sm overflow-hidden">
                 <div className="aspect-[4/3] bg-text-gray/5 flex items-center justify-center">
-                  <span className="text-text-gray text-sm">Photo</span>
+                  <span className="text-text-gray text-sm">{photoPlaceholder}</span>
                 </div>
                 <div className="p-6 text-center">
                   <p className="text-text-light text-lg lg:text-xl font-semibold mb-1">
@@ -133,7 +131,7 @@ export default function PlayerCarousel() {
       <div className="flex justify-center gap-3 mt-6">
         {players.map((player, i) => (
           <button
-            key={i}
+            key={player.name}
             type="button"
             onClick={() => handleScrollTo(i)}
             aria-label={t("players.carousel.showPlayer", { index: i + 1, name: player.name })}
@@ -145,6 +143,6 @@ export default function PlayerCarousel() {
           />
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 }

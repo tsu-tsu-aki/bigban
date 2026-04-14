@@ -65,6 +65,22 @@ describe("PlayerCarousel", () => {
     ).toBeInTheDocument();
   });
 
+  it("カルーセル領域にARIAランドマークが付与されている", () => {
+    const { container } = renderCarousel();
+    const carousel = container.querySelector('[aria-roledescription="carousel"]');
+    expect(carousel).toBeInTheDocument();
+    expect(carousel?.getAttribute("aria-label")).toBe("PBT契約選手カルーセル");
+  });
+
+  it("各スライドにrole=group + aria-roledescription=slide + aria-label=N/Mが付与されている", () => {
+    const { container } = renderCarousel();
+    const slides = container.querySelectorAll('[aria-roledescription="slide"]');
+    expect(slides.length).toBe(2);
+    expect(slides[0].getAttribute("role")).toBe("group");
+    expect(slides[0].getAttribute("aria-label")).toBe("1 / 2");
+    expect(slides[1].getAttribute("aria-label")).toBe("2 / 2");
+  });
+
   it("ドットボタンが選手数と同じ数描画される", () => {
     renderCarousel();
     const dotButtons = screen

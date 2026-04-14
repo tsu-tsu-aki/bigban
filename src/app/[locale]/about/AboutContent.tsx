@@ -359,7 +359,7 @@ export default function AboutContent() {
                   transition={{ duration: 0.5, delay: n * 0.1, ease: EASE }}
                 >
                   <div className="aspect-square bg-text-gray/5 flex items-center justify-center">
-                    <span className="text-text-gray text-sm">Photo</span>
+                    <span className="text-text-gray text-sm">{t("photoPlaceholder")}</span>
                   </div>
                   <div className="p-4 text-center">
                     <p className="text-text-light text-sm font-semibold">{t("crew.comingSoon")}</p>

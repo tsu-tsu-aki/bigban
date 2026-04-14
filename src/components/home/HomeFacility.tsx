@@ -138,9 +138,12 @@ export default function HomeFacility() {
         >
           <div className="overflow-hidden rounded-none sm:rounded-sm select-none" ref={emblaRef}>
             <div className="flex">
-              {FACILITY_IMAGES.map((image) => (
+              {FACILITY_IMAGES.map((image, i) => (
                 <div
                   key={image.src}
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`${i + 1} / ${FACILITY_IMAGES.length}`}
                   className="relative aspect-[16/9] min-w-0 flex-[0_0_100%]"
                 >
                   <Image
