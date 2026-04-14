@@ -1,16 +1,34 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { BigBangCanvas } from "@/components/teaser/BigBangCanvas";
 import { TeaserContent } from "@/components/teaser/TeaserContent";
+import { IntroEngineA } from "@/components/home/intro-spikes/IntroEngineA";
+import { IntroEngineB } from "@/components/home/intro-spikes/IntroEngineB";
+import { IntroEngineC } from "@/components/home/intro-spikes/IntroEngineC";
+import { IntroEngineD } from "@/components/home/intro-spikes/IntroEngineD";
+import { IntroEngineE } from "@/components/home/intro-spikes/IntroEngineE";
+import { PATTERN_LABEL, type IntroPattern } from "@/components/home/intro-spikes/types";
 import { useAnimationPhase } from "@/hooks/useAnimationPhase";
 import type { AnimationPhase } from "@/components/teaser/types";
 
 const LOGO_SRC = "/logos/tate-neon-hybrid.svg";
+const VALID_PATTERNS: IntroPattern[] = ["A", "B", "C", "D", "E"];
+
+function readPatternFromUrl(): IntroPattern | null {
+  if (typeof window === "undefined") return null;
+  const params = new URLSearchParams(window.location.search);
+  const raw = params.get("intro");
+  if (raw && (VALID_PATTERNS as string[]).includes(raw)) {
+    return raw as IntroPattern;
+  }
+  return null;
+}
 
 export default function TeaserPage() {
   const { phase, setPhase } = useAnimationPhase();
+  const previewPattern = useMemo(() => readPatternFromUrl(), []);
 
   const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
 
@@ -54,9 +72,30 @@ export default function TeaserPage() {
       />
 
       {/* BigBang Animation */}
-      {phase !== "content" && (
-        <BigBangCanvas onPhaseChange={handlePhaseChange} />
-      )}
+      {phase !== "content" && (() => {
+        const Engine = (() => {
+          switch (previewPattern) {
+            case "A": return IntroEngineA;
+            case "B": return IntroEngineB;
+            case "C": return IntroEngineC;
+            case "D": return IntroEngineD;
+            case "E": return IntroEngineE;
+            default: return BigBangCanvas;
+          }
+        })();
+        return (
+          <>
+            <Engine onPhaseChange={handlePhaseChange} />
+            {previewPattern && (
+              <div className="absolute top-4 left-4 z-[110] px-3 py-1.5 bg-black/80 border border-[#F6FF54]/40 rounded-sm pointer-events-none">
+                <span className="text-[#F6FF54] text-xs tracking-[0.2em] font-bold">
+                  PREVIEW: {previewPattern} — {PATTERN_LABEL[previewPattern]}
+                </span>
+              </div>
+            )}
+          </>
+        );
+      })()}
 
       {/* Teaser Content — fades in after animation completes */}
       {phase === "content" && (

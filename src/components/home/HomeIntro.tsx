@@ -1,15 +1,22 @@
 "use client";
 
-import { useState, useCallback, useSyncExternalStore } from "react";
+import { useState, useCallback, useSyncExternalStore, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { BigBangCanvas } from "@/components/teaser/BigBangCanvas";
+import { IntroEngineA } from "./intro-spikes/IntroEngineA";
+import { IntroEngineB } from "./intro-spikes/IntroEngineB";
+import { IntroEngineC } from "./intro-spikes/IntroEngineC";
+import { IntroEngineD } from "./intro-spikes/IntroEngineD";
+import { IntroEngineE } from "./intro-spikes/IntroEngineE";
+import { PATTERN_LABEL, type IntroPattern } from "./intro-spikes/types";
 
 import type { AnimationPhase } from "@/components/teaser/types";
 import type { ReactNode } from "react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 const SESSION_KEY = "bigban-intro-played";
+const VALID_PATTERNS: IntroPattern[] = ["A", "B", "C", "D", "E"];
 
 interface HomeIntroProps {
   children: ReactNode;
@@ -18,6 +25,16 @@ interface HomeIntroProps {
 /* istanbul ignore next -- SSR-only snapshot */
 const noop = () => () => {};
 
+function readPatternFromUrl(): IntroPattern | null {
+  if (typeof window === "undefined") return null;
+  const params = new URLSearchParams(window.location.search);
+  const raw = params.get("intro");
+  if (raw && (VALID_PATTERNS as string[]).includes(raw)) {
+    return raw as IntroPattern;
+  }
+  return null;
+}
+
 export default function HomeIntro({ children }: HomeIntroProps) {
   const isMounted = useSyncExternalStore(
     noop,
@@ -25,7 +42,10 @@ export default function HomeIntro({ children }: HomeIntroProps) {
     /* istanbul ignore next -- SSR-only snapshot */
     () => false
   );
+  const previewPattern = useMemo(() => readPatternFromUrl(), []);
   const [shouldShowIntro] = useState(() => {
+    // When previewing specific pattern, always show intro
+    if (previewPattern) return true;
     try {
       return sessionStorage.getItem(SESSION_KEY) !== "true";
     } catch {
@@ -35,23 +55,45 @@ export default function HomeIntro({ children }: HomeIntroProps) {
   const [phase, setPhase] = useState<AnimationPhase>("dark");
   const [isIntroComplete, setIsIntroComplete] = useState(!shouldShowIntro);
 
-  const handlePhaseChange = useCallback((newPhase: AnimationPhase) => {
-    setPhase(newPhase);
-    if (newPhase === "content") {
-      try {
-        sessionStorage.setItem(SESSION_KEY, "true");
-      } catch {
-        // sessionStorage unavailable
+  const handlePhaseChange = useCallback(
+    (newPhase: AnimationPhase) => {
+      setPhase(newPhase);
+      if (newPhase === "content") {
+        if (!previewPattern) {
+          try {
+            sessionStorage.setItem(SESSION_KEY, "true");
+          } catch {
+            // sessionStorage unavailable
+          }
+        }
+        setTimeout(() => {
+          setIsIntroComplete(true);
+        }, 2000);
       }
-      setTimeout(() => {
-        setIsIntroComplete(true);
-      }, 2000);
-    }
-  }, []);
+    },
+    [previewPattern]
+  );
 
   if (!isMounted || !shouldShowIntro) {
     return <>{children}</>;
   }
+
+  const Engine = (() => {
+    switch (previewPattern) {
+      case "A":
+        return IntroEngineA;
+      case "B":
+        return IntroEngineB;
+      case "C":
+        return IntroEngineC;
+      case "D":
+        return IntroEngineD;
+      case "E":
+        return IntroEngineE;
+      default:
+        return BigBangCanvas;
+    }
+  })();
 
   return (
     <>
@@ -62,7 +104,15 @@ export default function HomeIntro({ children }: HomeIntroProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: EASE }}
           >
-            <BigBangCanvas onPhaseChange={handlePhaseChange} />
+            <Engine onPhaseChange={handlePhaseChange} />
+
+            {previewPattern && (
+              <div className="absolute top-4 left-4 z-[110] px-3 py-1.5 bg-black/80 border border-accent/40 rounded-sm pointer-events-none">
+                <span className="text-accent text-xs tracking-[0.2em] font-bold">
+                  PREVIEW: {previewPattern} — {PATTERN_LABEL[previewPattern]}
+                </span>
+              </div>
+            )}
 
             {/* Logo after explosion */}
             <AnimatePresence>
