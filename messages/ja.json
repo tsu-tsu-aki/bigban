@@ -319,7 +319,12 @@
       "description": "THE PICKLE BANG THEORYは、国内外で活躍するピックルボール選手と契約し、施設でのトレーニングや練習など選手をサポートいたします。また、協働によるイベント出演やソーシャルメディアでの発信を通して、ピックルボールを盛り上げます。",
       "playerName": "山田 太郎",
       "playerBio": "元テニスプレーヤー。2024年よりピックルボールに転向し、国内大会で多数入賞。攻撃的なプレースタイルが持ち味。",
-      "comingSoon": "Coming Soon"
+      "comingSoon": "Coming Soon",
+      "carousel": {
+        "prev": "前の選手を表示",
+        "next": "次の選手を表示",
+        "showPlayer": "{index}枚目 {name} を表示"
+      }
     },
     "crew": {
       "title": "PBTクルー",

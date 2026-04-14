@@ -62,7 +62,7 @@ export default function HomeServices() {
           >
             {/* Image */}
             <motion.div
-              className="relative w-full lg:w-[60%] aspect-[16/10] rounded-sm overflow-hidden"
+              className="relative w-[calc(100%+3rem)] lg:w-[60%] aspect-[16/10] rounded-none lg:rounded-sm overflow-hidden -mx-6 lg:mx-0"
               initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-150px" }}

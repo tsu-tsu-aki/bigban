@@ -317,7 +317,12 @@
       "description": "THE PICKLE BANG THEORY contracts with pickleball players active both domestically and internationally, supporting them with training and practice at our facility. Through collaborative event appearances and social media outreach, we promote the growth of pickleball.",
       "playerName": "Taro Yamada",
       "playerBio": "Former tennis player. Transitioned to pickleball in 2024, with multiple top finishes in domestic tournaments. Known for his aggressive playing style.",
-      "comingSoon": "Coming Soon"
+      "comingSoon": "Coming Soon",
+      "carousel": {
+        "prev": "Show previous player",
+        "next": "Show next player",
+        "showPlayer": "Show player {index}: {name}"
+      }
     },
     "crew": {
       "title": "PBT Crew",

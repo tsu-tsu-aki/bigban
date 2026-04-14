@@ -128,13 +128,13 @@ export default function HomeFacility() {
 
         {/* Facility Image Carousel */}
         <motion.div
-          className="relative mb-16"
+          className="relative mb-16 w-[calc(100%+3rem)] sm:w-full -mx-6 sm:mx-0"
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-150px" }}
           transition={{ duration: 1.2, ease: EASE }}
         >
-          <div className="overflow-hidden rounded-sm select-none" ref={emblaRef}>
+          <div className="overflow-hidden rounded-none sm:rounded-sm select-none" ref={emblaRef}>
             <div className="flex">
               {FACILITY_IMAGES.map((image) => (
                 <div
@@ -147,7 +147,7 @@ export default function HomeFacility() {
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-deep-black via-deep-black/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-deep-black via-deep-black/30 to-transparent hidden sm:block" />
                 </div>
               ))}
             </div>
