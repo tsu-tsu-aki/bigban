@@ -188,6 +188,18 @@ describe("HomeNavigation", () => {
     expect(header.className).toContain("translate-y-0");
   });
 
+  it("スクロールダウン時もモバイルでは常にtranslate-y-0を保持する (iOS Safari バグ回避)", () => {
+    renderWithIntl(<HomeNavigation />);
+    const header = screen.getByRole("banner");
+
+    Object.defineProperty(window, "scrollY", { value: 200, writable: true });
+    fireEvent.scroll(window);
+
+    expect(header.className).toContain("translate-y-0");
+    expect(header.className).toContain("md:-translate-y-full");
+    expect(header.className).not.toMatch(/(?<!md:)(?<!:)-translate-y-full/);
+  });
+
   it("ホームでロゴクリックするとページ最上部にスクロールする", () => {
     mockPathname = "/";
     const scrollSpy = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
