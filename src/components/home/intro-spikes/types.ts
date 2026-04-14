@@ -3,7 +3,8 @@ import type { AnimationPhase } from "@/components/teaser/types";
 export type IntroPattern =
   | "A" | "B" | "C" | "D" | "E"
   | "F" | "G" | "H" | "I" | "J"
-  | "K" | "L" | "M" | "N" | "O";
+  | "K" | "L" | "M" | "N" | "O"
+  | "P" | "Q" | "R" | "S" | "T";
 
 export interface IntroEngineProps {
   onPhaseChange: (phase: AnimationPhase) => void;
@@ -25,4 +26,9 @@ export const PATTERN_LABEL: Record<IntroPattern, string> = {
   M: "ORIGAMI UNFOLD",
   N: "HOLOGRAM SCAN",
   O: "KALEIDOSCOPE",
+  P: "CINEMATIC WIPE",
+  Q: "LIQUID SPLIT",
+  R: "MAGNETIC DUST",
+  S: "PAPER TEAR",
+  T: "RIBBON DANCE",
 };
