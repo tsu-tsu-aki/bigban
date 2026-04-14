@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeFooter from "@/components/home/HomeFooter";
 import PlayerCarousel from "@/components/about/PlayerCarousel";
+import PlayerCard, { type Player } from "@/components/about/PlayerCard";
 
 import type { FormEvent } from "react";
 
@@ -73,6 +74,21 @@ function SectionHeader({ number, labelEn, id }: SectionHeaderProps) {
 export default function AboutContent() {
   const t = useTranslations("About");
   const categories = useCategories();
+
+  const players: Player[] = [
+    {
+      name: t("players.playerName"),
+      ig: t("players.playerIg"),
+      bio: t("players.playerBio"),
+      hasContent: true,
+    },
+    {
+      name: t("players.comingSoon"),
+      ig: "",
+      bio: "",
+      hasContent: false,
+    },
+  ];
 
   useEffect(() => {
     if (!window.location.hash) {
@@ -325,7 +341,15 @@ export default function AboutContent() {
               {t("players.description")}
             </p>
 
-            <PlayerCarousel />
+            <div className="md:hidden">
+              <PlayerCarousel players={players} />
+            </div>
+
+            <div className="hidden md:grid md:grid-cols-2 gap-8">
+              {players.map((player) => (
+                <PlayerCard key={player.name} player={player} />
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
