@@ -9,12 +9,17 @@ import { IntroEngineB } from "@/components/home/intro-spikes/IntroEngineB";
 import { IntroEngineC } from "@/components/home/intro-spikes/IntroEngineC";
 import { IntroEngineD } from "@/components/home/intro-spikes/IntroEngineD";
 import { IntroEngineE } from "@/components/home/intro-spikes/IntroEngineE";
+import { IntroEngineF } from "@/components/home/intro-spikes/IntroEngineF";
+import { IntroEngineG } from "@/components/home/intro-spikes/IntroEngineG";
+import { IntroEngineH } from "@/components/home/intro-spikes/IntroEngineH";
+import { IntroEngineI } from "@/components/home/intro-spikes/IntroEngineI";
+import { IntroEngineJ } from "@/components/home/intro-spikes/IntroEngineJ";
 import { PATTERN_LABEL, type IntroPattern } from "@/components/home/intro-spikes/types";
 import { useAnimationPhase } from "@/hooks/useAnimationPhase";
 import type { AnimationPhase } from "@/components/teaser/types";
 
 const LOGO_SRC = "/logos/tate-neon-hybrid.svg";
-const VALID_PATTERNS: IntroPattern[] = ["A", "B", "C", "D", "E"];
+const VALID_PATTERNS: IntroPattern[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
 function readPatternFromUrl(): IntroPattern | null {
   if (typeof window === "undefined") return null;
@@ -80,6 +85,11 @@ export default function TeaserPage() {
             case "C": return IntroEngineC;
             case "D": return IntroEngineD;
             case "E": return IntroEngineE;
+            case "F": return IntroEngineF;
+            case "G": return IntroEngineG;
+            case "H": return IntroEngineH;
+            case "I": return IntroEngineI;
+            case "J": return IntroEngineJ;
             default: return BigBangCanvas;
           }
         })();

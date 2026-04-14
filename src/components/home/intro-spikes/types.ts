@@ -1,6 +1,6 @@
 import type { AnimationPhase } from "@/components/teaser/types";
 
-export type IntroPattern = "A" | "B" | "C" | "D" | "E";
+export type IntroPattern = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J";
 
 export interface IntroEngineProps {
   onPhaseChange: (phase: AnimationPhase) => void;
@@ -12,4 +12,9 @@ export const PATTERN_LABEL: Record<IntroPattern, string> = {
   C: "PORTAL OPENING",
   D: "STARFIELD WARP",
   E: "PARTICLE VORTEX",
+  F: "SUPERNOVA BLOOM",
+  G: "GLITCH REVEAL",
+  H: "PICKLEBALL IMPACT",
+  I: "KINETIC GRID",
+  J: "LIQUID INK",
 };
