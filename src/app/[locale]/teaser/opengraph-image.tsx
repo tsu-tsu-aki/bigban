@@ -9,11 +9,12 @@ interface OGImageProps {
   params: Promise<{ locale: string }>;
 }
 
+const OPEN_DATE_LABEL = "2026.4.17 OPEN";
+
 export default async function OpengraphImage({ params }: OGImageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
   const siteName = t("og.siteName");
-  const comingSoonLabel = locale === "ja" ? "2026.4.17 OPEN" : "2026.4.17 OPEN";
 
   return new ImageResponse(
     (
@@ -51,7 +52,7 @@ export default async function OpengraphImage({ params }: OGImageProps) {
             color: "#F6FF54",
           }}
         >
-          {comingSoonLabel}
+          {OPEN_DATE_LABEL}
         </div>
         <div
           style={{

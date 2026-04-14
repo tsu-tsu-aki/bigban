@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SITE_URL } from "@/constants/site";
+import { parseKeywords } from "@/lib/og-utils";
 import TokushohoContent from "./TokushohoContent";
 import StructuredData from "@/components/StructuredData";
 import { buildBreadcrumb } from "@/lib/structured-data";
@@ -15,7 +16,7 @@ export async function generateMetadata({
 }: TokushohoPageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
-  const keywords = t.raw("tokushoho.keywords") as string[];
+  const keywords = parseKeywords(t.raw("tokushoho.keywords"));
   const canonicalUrl =
     locale === "ja"
       ? `${SITE_URL}/tokushoho`

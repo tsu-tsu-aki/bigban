@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SITE_URL } from "@/constants/site";
+import { parseKeywords } from "@/lib/og-utils";
 import AboutContent from "./AboutContent";
 import StructuredData from "@/components/StructuredData";
 import { buildBreadcrumb } from "@/lib/structured-data";
@@ -15,7 +16,7 @@ export async function generateMetadata({
 }: AboutPageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
-  const keywords = t.raw("about.keywords") as string[];
+  const keywords = parseKeywords(t.raw("about.keywords"));
   const canonicalUrl =
     locale === "ja" ? `${SITE_URL}/about` : `${SITE_URL}/${locale}/about`;
 

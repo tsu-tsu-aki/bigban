@@ -46,13 +46,13 @@ describe("Home generateMetadata", () => {
     });
 
     expect(metadata.keywords).toEqual(["kw-a", "kw-b"]);
-    expect(metadata.alternates?.canonical).toBe("http://localhost:3000/");
-    expect(metadata.openGraph?.url).toBe("http://localhost:3000/");
+    expect(metadata.alternates?.canonical).toBe("http://localhost:3000");
+    expect(metadata.openGraph?.url).toBe("http://localhost:3000");
     expect(metadata.openGraph?.locale).toBe("ja_JP");
     expect(metadata.alternates?.languages).toMatchObject({
-      ja: "http://localhost:3000/",
+      ja: "http://localhost:3000",
       en: "http://localhost:3000/en",
-      "x-default": "http://localhost:3000/",
+      "x-default": "http://localhost:3000",
     });
   });
 

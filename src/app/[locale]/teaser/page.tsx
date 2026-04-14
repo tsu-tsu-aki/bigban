@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 import { SITE_URL } from "@/constants/site";
+import { parseKeywords } from "@/lib/og-utils";
 
 import TeaserPage from "./TeaserPage";
 
@@ -15,7 +16,7 @@ export async function generateMetadata({
 }: TeaserPageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
-  const keywords = t.raw("teaser.keywords") as string[];
+  const keywords = parseKeywords(t.raw("teaser.keywords"));
   const canonicalUrl =
     locale === "ja" ? `${SITE_URL}/teaser` : `${SITE_URL}/${locale}/teaser`;
 

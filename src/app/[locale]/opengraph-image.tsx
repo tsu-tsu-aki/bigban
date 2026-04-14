@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getTranslations } from "next-intl/server";
+import { extractPageLabel } from "@/lib/og-utils";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -7,10 +8,6 @@ export const alt = "THE PICKLE BANG THEORY";
 
 interface OGImageProps {
   params: Promise<{ locale: string }>;
-}
-
-function extractPageLabel(title: string): string {
-  return title.split(/\s*\|\s*|\s+·\s+/)[0].trim();
 }
 
 export default async function OpengraphImage({ params }: OGImageProps) {
