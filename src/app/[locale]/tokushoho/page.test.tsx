@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render } from "@testing-library/react";
 
 const mockGetTranslations = vi.fn();
 
@@ -67,5 +68,39 @@ describe("Tokushoho generateMetadata", () => {
       "http://localhost:3000/en/tokushoho"
     );
     expect(metadata.openGraph?.locale).toBe("en_US");
+  });
+});
+
+describe("Tokushoho Page", () => {
+  it("日本語でBreadcrumbを含めて描画する", async () => {
+    const mockT = ((key: string) => `translated:${key}`) as unknown as {
+      (key: string): string;
+      raw: (key: string) => unknown;
+    };
+    mockT.raw = (_key: string) => [];
+    mockGetTranslations.mockResolvedValue(mockT);
+
+    const { default: TokushohoPage } = await import("./page");
+    const element = await TokushohoPage({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+    const { container } = render(element);
+    expect(container).toBeTruthy();
+  });
+
+  it("英語でBreadcrumbを含めて描画する", async () => {
+    const mockT = ((key: string) => `translated:${key}`) as unknown as {
+      (key: string): string;
+      raw: (key: string) => unknown;
+    };
+    mockT.raw = (_key: string) => [];
+    mockGetTranslations.mockResolvedValue(mockT);
+
+    const { default: TokushohoPage } = await import("./page");
+    const element = await TokushohoPage({
+      params: Promise.resolve({ locale: "en" }),
+    });
+    const { container } = render(element);
+    expect(container).toBeTruthy();
   });
 });

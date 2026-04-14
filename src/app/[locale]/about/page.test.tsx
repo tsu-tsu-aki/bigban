@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render } from "@testing-library/react";
 
 const mockGetTranslations = vi.fn();
 
@@ -69,5 +70,16 @@ describe("About generateMetadata", () => {
     });
 
     expect(metadata.openGraph?.images).toBeUndefined();
+  });
+});
+
+describe("About Page", () => {
+  it("localeを設定しAboutコンポーネントを描画する", async () => {
+    const { default: AboutPage } = await import("./page");
+    const element = await AboutPage({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+    const { container } = render(element);
+    expect(container).toBeTruthy();
   });
 });
