@@ -101,11 +101,21 @@ describe("PlayerCarousel", () => {
     expect(mockOn).toHaveBeenCalledWith("select", expect.any(Function));
   });
 
-  it("選択時にselectedIndexが更新される", () => {
+  it("選択時にアクティブドットのクラスが切り替わる", () => {
     mockSelectedScrollSnap.mockReturnValue(1);
     renderCarousel();
-    // 初回 onSelect が実行されたとき selectedScrollSnap が呼ばれている
-    expect(mockSelectedScrollSnap).toHaveBeenCalled();
+    const dots = screen
+      .getAllByRole("button")
+      .filter((b) => b.getAttribute("aria-label")?.includes("枚目"));
+    expect(dots[0].className).not.toContain("bg-accent");
+    expect(dots[1].className).toContain("bg-accent");
+    expect(dots[1].className).toContain("scale-125");
+  });
+
+  it("アンマウント時にemblaApi.offでリスナーを解除する", () => {
+    const { unmount } = renderCarousel();
+    unmount();
+    expect(mockOff).toHaveBeenCalledWith("select", expect.any(Function));
   });
 
   it("emblaApiがnullのときはscrollToが何もしない", () => {
