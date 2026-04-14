@@ -37,13 +37,11 @@ const defaultPlayers: Player[] = [
     name: PLAYERS.playerName,
     ig: PLAYERS.playerIg,
     bio: PLAYERS.playerBio,
-    hasContent: true,
   },
   {
     name: PLAYERS.comingSoon,
     ig: "",
     bio: "",
-    hasContent: false,
   },
 ];
 

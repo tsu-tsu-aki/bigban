@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -75,20 +75,21 @@ export default function AboutContent() {
   const t = useTranslations("About");
   const categories = useCategories();
 
-  const players: Player[] = [
-    {
-      name: t("players.playerName"),
-      ig: t("players.playerIg"),
-      bio: t("players.playerBio"),
-      hasContent: true,
-    },
-    {
-      name: t("players.comingSoon"),
-      ig: "",
-      bio: "",
-      hasContent: false,
-    },
-  ];
+  const players = useMemo<Player[]>(
+    () => [
+      {
+        name: t("players.playerName"),
+        ig: t("players.playerIg"),
+        bio: t("players.playerBio"),
+      },
+      {
+        name: t("players.comingSoon"),
+        ig: "",
+        bio: "",
+      },
+    ],
+    [t]
+  );
 
   useEffect(() => {
     if (!window.location.hash) {
@@ -346,8 +347,8 @@ export default function AboutContent() {
             </div>
 
             <div className="hidden md:grid md:grid-cols-2 gap-8">
-              {players.map((player) => (
-                <PlayerCard key={player.name} player={player} />
+              {players.map((player, i) => (
+                <PlayerCard key={i} player={player} />
               ))}
             </div>
           </motion.div>

@@ -54,7 +54,7 @@ export default function PlayerCarousel({ players }: PlayerCarouselProps) {
         <div className="flex">
           {players.map((player, i) => (
             <div
-              key={player.name}
+              key={i}
               role="group"
               aria-roledescription="slide"
               aria-label={`${i + 1} / ${players.length}`}
@@ -90,7 +90,7 @@ export default function PlayerCarousel({ players }: PlayerCarouselProps) {
       <div className="flex justify-center gap-3 mt-6">
         {players.map((player, i) => (
           <button
-            key={player.name}
+            key={i}
             type="button"
             onClick={() => handleScrollTo(i)}
             aria-label={t("players.carousel.showPlayer", { index: i + 1, name: player.name })}

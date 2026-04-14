@@ -6,7 +6,6 @@ export interface Player {
   name: string;
   ig: string;
   bio: string;
-  hasContent: boolean;
 }
 
 interface PlayerCardProps {

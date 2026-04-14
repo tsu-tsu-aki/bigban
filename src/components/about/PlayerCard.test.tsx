@@ -8,14 +8,12 @@ const activePlayer: Player = {
   name: "山田 太郎",
   ig: "@taro_yamada_pb",
   bio: "元テニスプレーヤー。2024年よりピックルボールに転向。",
-  hasContent: true,
 };
 
 const comingSoonPlayer: Player = {
   name: "Coming Soon",
   ig: "",
   bio: "",
-  hasContent: false,
 };
 
 function renderCard(player: Player) {
@@ -49,7 +47,7 @@ describe("PlayerCard", () => {
     ).toBeInTheDocument();
   });
 
-  it("hasContent=false/ig空/bio空 のときは IG と bio を描画しない", () => {
+  it("ig / bio が空文字のときは IG と bio を描画しない", () => {
     renderCard(comingSoonPlayer);
     expect(screen.getByText(comingSoonPlayer.name)).toBeInTheDocument();
     expect(screen.queryByText(activePlayer.ig)).not.toBeInTheDocument();
