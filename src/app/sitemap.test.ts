@@ -12,25 +12,25 @@ describe("sitemap", () => {
     vi.unstubAllEnvs();
   });
 
-  it("想定5ページ（/, /facility, /services, /about, /tokushoho）を含む", async () => {
+  it("想定3ページ（/, /about, /tokushoho）を含む", async () => {
     const { default: sitemap } = await import("./sitemap");
     const entries = sitemap();
 
-    expect(entries).toHaveLength(5);
+    expect(entries).toHaveLength(3);
     const urls = entries.map((e) => e.url);
     expect(urls).toContain(`${PROD_URL}`);
-    expect(urls).toContain(`${PROD_URL}/facility`);
-    expect(urls).toContain(`${PROD_URL}/services`);
     expect(urls).toContain(`${PROD_URL}/about`);
     expect(urls).toContain(`${PROD_URL}/tokushoho`);
   });
 
-  it("/teaser は sitemap に含まれない", async () => {
+  it("/teaser / /facility / /services は sitemap に含まれない", async () => {
     const { default: sitemap } = await import("./sitemap");
     const entries = sitemap();
 
     const urls = entries.map((e) => e.url);
     expect(urls.some((u) => u.includes("/teaser"))).toBe(false);
+    expect(urls.some((u) => u.includes("/facility"))).toBe(false);
+    expect(urls.some((u) => u.includes("/services"))).toBe(false);
   });
 
   it("各エントリに ja/en/x-default の alternates.languages が設定される", async () => {
@@ -52,8 +52,8 @@ describe("sitemap", () => {
     const home = entries.find((e) => e.url === PROD_URL);
     expect(home?.alternates?.languages?.ja).toBe(PROD_URL);
 
-    const facility = entries.find((e) => e.url === `${PROD_URL}/facility`);
-    expect(facility?.alternates?.languages?.ja).toBe(`${PROD_URL}/facility`);
+    const about = entries.find((e) => e.url === `${PROD_URL}/about`);
+    expect(about?.alternates?.languages?.ja).toBe(`${PROD_URL}/about`);
   });
 
   it("en URL は /en prefix 付き", async () => {
@@ -63,8 +63,8 @@ describe("sitemap", () => {
     const home = entries.find((e) => e.url === PROD_URL);
     expect(home?.alternates?.languages?.en).toBe(`${PROD_URL}/en`);
 
-    const facility = entries.find((e) => e.url === `${PROD_URL}/facility`);
-    expect(facility?.alternates?.languages?.en).toBe(`${PROD_URL}/en/facility`);
+    const about = entries.find((e) => e.url === `${PROD_URL}/about`);
+    expect(about?.alternates?.languages?.en).toBe(`${PROD_URL}/en/about`);
   });
 
   it("x-default は ja URL と一致する", async () => {

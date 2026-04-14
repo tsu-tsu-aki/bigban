@@ -1,6 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { SITE_URL, OG_IMAGE } from "@/constants/site";
+import { SITE_URL } from "@/constants/site";
+import { parseKeywords } from "@/lib/og-utils";
 import AboutContent from "./AboutContent";
+import StructuredData from "@/components/StructuredData";
+import { buildBreadcrumb } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
 
@@ -13,17 +16,22 @@ export async function generateMetadata({
 }: AboutPageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const keywords = parseKeywords(t.raw("about.keywords"));
+  const canonicalUrl =
+    locale === "ja" ? `${SITE_URL}/about` : `${SITE_URL}/${locale}/about`;
 
   return {
     title: t("about.title"),
     description: t("about.description"),
+    keywords,
     openGraph: {
       title: t("about.title"),
       description: t("about.description"),
-      images: [OG_IMAGE],
+      url: canonicalUrl,
       locale: locale === "ja" ? "ja_JP" : "en_US",
     },
     alternates: {
+      canonical: canonicalUrl,
       languages: {
         ja: `${SITE_URL}/about`,
         en: `${SITE_URL}/en/about`,
@@ -37,5 +45,12 @@ export default async function AboutPage({ params }: AboutPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <AboutContent />;
+  return (
+    <>
+      <StructuredData
+        data={buildBreadcrumb(locale, [{ name: "About", path: "/about" }])}
+      />
+      <AboutContent />
+    </>
+  );
 }

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeFooter from "@/components/home/HomeFooter";
+import PlayerCarousel from "@/components/about/PlayerCarousel";
 
 import type { FormEvent } from "react";
 
@@ -124,7 +125,7 @@ export default function AboutContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE }}
           >
-            <h1 className="font-serif text-6xl sm:text-7xl lg:text-8xl font-black tracking-[0.15em] text-text-light">
+            <h1 className="font-serif text-5xl sm:text-7xl lg:text-8xl font-black tracking-[0.08em] sm:tracking-[0.15em] text-text-light">
               {t("hero.title")}
             </h1>
             <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
@@ -324,34 +325,7 @@ export default function AboutContent() {
               {t("players.description")}
             </p>
 
-            <div className="grid grid-cols-2 gap-4 sm:gap-8">
-              {[
-                { name: t("players.playerName"), ig: "@taro_yamada_pb", bio: t("players.playerBio"), hasContent: true },
-                { name: t("players.comingSoon"), ig: "", bio: "", hasContent: false },
-              ].map((player, n) => (
-                <motion.div
-                  key={n}
-                  className="bg-gradient-to-b from-accent/[0.04] to-transparent border border-text-gray/10 rounded-sm overflow-hidden"
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: n * 0.15, ease: EASE }}
-                >
-                  <div className="aspect-[4/3] bg-text-gray/5 flex items-center justify-center">
-                    <span className="text-text-gray text-sm">Photo</span>
-                  </div>
-                  <div className="p-6 text-center">
-                    <p className="text-text-light text-lg lg:text-xl font-semibold mb-1">{player.name}</p>
-                    {player.ig && (
-                      <p className="text-text-light/90 text-sm lg:text-base mb-3">{player.ig}</p>
-                    )}
-                    {player.bio && (
-                      <p className="text-text-light/90 text-sm lg:text-base leading-relaxed">{player.bio}</p>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            <PlayerCarousel />
           </motion.div>
         </div>
       </section>
@@ -374,20 +348,22 @@ export default function AboutContent() {
               {t("crew.description")}
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
               {[1, 2, 3].map((n) => (
                 <motion.div
                   key={n}
-                  className="bg-gradient-to-b from-accent/[0.04] to-transparent border border-text-gray/10 rounded-sm p-6 text-center"
+                  className="bg-gradient-to-b from-accent/[0.04] to-transparent border border-text-gray/10 rounded-sm overflow-hidden"
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: n * 0.1, ease: EASE }}
                 >
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-text-gray/10 flex items-center justify-center">
-                    <span className="text-text-gray text-xs">Photo</span>
+                  <div className="aspect-square bg-text-gray/5 flex items-center justify-center">
+                    <span className="text-text-gray text-sm">{t("photoPlaceholder")}</span>
                   </div>
-                  <p className="text-text-light text-sm font-semibold">{t("crew.comingSoon")}</p>
+                  <div className="p-4 text-center">
+                    <p className="text-text-light text-sm font-semibold">{t("crew.comingSoon")}</p>
+                  </div>
                 </motion.div>
               ))}
             </div>

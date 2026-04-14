@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { SITE_URL, OG_IMAGE } from "@/constants/site";
+import { SITE_URL } from "@/constants/site";
+import { parseKeywords } from "@/lib/og-utils";
 import HomeIntro from "@/components/home/HomeIntro";
 import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeHero from "@/components/home/HomeHero";
@@ -22,21 +23,26 @@ export async function generateMetadata({
 }: HomePageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const keywords = parseKeywords(t.raw("home.keywords"));
+  const canonicalUrl =
+    locale === "ja" ? SITE_URL : `${SITE_URL}/${locale}`;
 
   return {
     title: t("home.title"),
     description: t("home.description"),
+    keywords,
     openGraph: {
       title: t("home.title"),
       description: t("home.description"),
-      images: [OG_IMAGE],
+      url: canonicalUrl,
       locale: locale === "ja" ? "ja_JP" : "en_US",
     },
     alternates: {
+      canonical: canonicalUrl,
       languages: {
-        ja: `${SITE_URL}/`,
+        ja: SITE_URL,
         en: `${SITE_URL}/en`,
-        "x-default": `${SITE_URL}/`,
+        "x-default": SITE_URL,
       },
     },
   };
