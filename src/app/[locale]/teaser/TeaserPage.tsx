@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { BigBangCanvas } from "@/components/teaser/BigBangCanvas";
+import { StarfieldWarpIntro } from "@/components/intro/StarfieldWarpIntro";
 import { TeaserContent } from "@/components/teaser/TeaserContent";
 import { useAnimationPhase } from "@/hooks/useAnimationPhase";
 import type { AnimationPhase } from "@/components/teaser/types";
@@ -53,9 +53,9 @@ export default function TeaserPage() {
         }}
       />
 
-      {/* BigBang Animation */}
+      {/* Starfield warp intro animation */}
       {phase !== "content" && (
-        <BigBangCanvas onPhaseChange={handlePhaseChange} />
+        <StarfieldWarpIntro onPhaseChange={handlePhaseChange} />
       )}
 
       {/* Teaser Content — fades in after animation completes */}

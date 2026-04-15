@@ -1,15 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { BigBangCanvas } from "./BigBangCanvas";
+import { StarfieldWarpIntro } from "./StarfieldWarpIntro";
 
 const mockGetContext = vi.fn(() => ({
   clearRect: vi.fn(),
   fillRect: vi.fn(),
   beginPath: vi.fn(),
   arc: vi.fn(),
+  moveTo: vi.fn(),
+  lineTo: vi.fn(),
   fill: vi.fn(),
   stroke: vi.fn(),
-  drawImage: vi.fn(),
   save: vi.fn(),
   restore: vi.fn(),
   scale: vi.fn(),
@@ -22,13 +23,15 @@ const mockGetContext = vi.fn(() => ({
   fillStyle: "",
   strokeStyle: "",
   lineWidth: 1,
+  shadowBlur: 0,
+  shadowColor: "",
 }));
 
-HTMLCanvasElement.prototype.getContext = mockGetContext as unknown as typeof HTMLCanvasElement.prototype.getContext;
+HTMLCanvasElement.prototype.getContext =
+  mockGetContext as unknown as typeof HTMLCanvasElement.prototype.getContext;
 
-describe("BigBangCanvas", () => {
+describe("StarfieldWarpIntro", () => {
   beforeEach(() => {
-    vi.useFakeTimers();
     vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
       setTimeout(() => cb(performance.now()), 16);
       return 1;
@@ -37,32 +40,30 @@ describe("BigBangCanvas", () => {
   });
 
   afterEach(() => {
-    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
   it("canvas 要素が role=img と aria-label 付きでレンダリングされる", () => {
-    render(<BigBangCanvas onPhaseChange={vi.fn()} />);
+    render(<StarfieldWarpIntro onPhaseChange={vi.fn()} />);
 
     const canvas = screen.getByRole("img");
     expect(canvas).toBeInTheDocument();
-    expect(canvas).toHaveAttribute("aria-label", "ビッグバン シネマティック演出");
+    expect(canvas).toHaveAttribute("aria-label", "ハイパースペース・ワープ シネマティック演出");
   });
 
-  it("canvas が全画面表示される", () => {
-    render(<BigBangCanvas onPhaseChange={vi.fn()} />);
-
+  it("canvas タグでレンダリングされる", () => {
+    render(<StarfieldWarpIntro onPhaseChange={vi.fn()} />);
     const canvas = screen.getByRole("img");
     expect(canvas.tagName).toBe("CANVAS");
   });
 
   it("マウント時に onPhaseChange が dark で呼ばれる", () => {
     const onPhaseChange = vi.fn();
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
     expect(onPhaseChange).toHaveBeenCalledWith("dark");
   });
 
-  it("prefers-reduced-motion 時は canvas がレンダリングされない", () => {
+  it("prefers-reduced-motion 時は canvas がレンダリングされず即 content が呼ばれる", () => {
     window.matchMedia = vi.fn().mockImplementation((query: string) => ({
       matches: query === "(prefers-reduced-motion: reduce)",
       media: query,
@@ -75,19 +76,19 @@ describe("BigBangCanvas", () => {
     }));
 
     const onPhaseChange = vi.fn();
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
 
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
     expect(onPhaseChange).toHaveBeenCalledWith("content");
   });
 
   it("アンマウント時にアニメーションがクリーンアップされる", () => {
-    const { unmount } = render(<BigBangCanvas onPhaseChange={vi.fn()} />);
+    const { unmount } = render(<StarfieldWarpIntro onPhaseChange={vi.fn()} />);
     unmount();
     expect(window.cancelAnimationFrame).toHaveBeenCalled();
   });
 
-  it("dark フェーズで星を描画する", () => {
+  it("drift フェーズの描画で onPhaseChange が dark のまま維持される", () => {
     const onPhaseChange = vi.fn();
 
     let currentTime = 0;
@@ -99,16 +100,20 @@ describe("BigBangCanvas", () => {
       return rafCallbacks.length;
     });
 
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
 
-    // dark phase: elapsed = 500ms
+    // drift phase: elapsed = 500ms
     currentTime = 500;
     rafCallbacks[rafCallbacks.length - 1](currentTime);
 
     expect(onPhaseChange).toHaveBeenCalledWith("dark");
+    // 500ms ではまだ converge には遷移しない
+    expect(
+      onPhaseChange.mock.calls.filter((c) => c[0] === "converge").length
+    ).toBe(0);
   });
 
-  it("converge フェーズに遷移する", () => {
+  it("drift を抜けると converge フェーズに遷移する", () => {
     const onPhaseChange = vi.fn();
 
     let currentTime = 0;
@@ -120,16 +125,16 @@ describe("BigBangCanvas", () => {
       return rafCallbacks.length;
     });
 
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
 
-    // converge phase: elapsed > 1500
-    currentTime = 2000;
+    // elapsed = 1500 (> T_DRIFT 900)
+    currentTime = 1500;
     rafCallbacks[rafCallbacks.length - 1](currentTime);
 
     expect(onPhaseChange).toHaveBeenCalledWith("converge");
   });
 
-  it("explode フェーズに遷移する", () => {
+  it("accel/hyperspace 進行中 phaseProgress の各域で色分岐をカバー", () => {
     const onPhaseChange = vi.fn();
 
     let currentTime = 0;
@@ -141,16 +146,53 @@ describe("BigBangCanvas", () => {
       return rafCallbacks.length;
     });
 
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
 
-    // explode phase: elapsed > 3000
-    currentTime = 3500;
+    // phaseProgress < 0.4 (accel 初期)
+    currentTime = 1200;
+    rafCallbacks[rafCallbacks.length - 1](currentTime);
+
+    // phaseProgress ∈ [0.4, 0.75)
+    currentTime = 1900;
+    rafCallbacks[rafCallbacks.length - 1](currentTime);
+
+    // phaseProgress >= 0.75 → hyperspace flare ブランチも通過
+    currentTime = 2500;
+    rafCallbacks[rafCallbacks.length - 1](currentTime);
+
+    // hyperspace 以降
+    currentTime = 3000;
+    rafCallbacks[rafCallbacks.length - 1](currentTime);
+
+    expect(onPhaseChange).toHaveBeenCalledWith("converge");
+  });
+
+  it("hyperspace を抜けると explode フェーズに遷移する", () => {
+    const onPhaseChange = vi.fn();
+
+    let currentTime = 0;
+    vi.spyOn(performance, "now").mockImplementation(() => currentTime);
+
+    const rafCallbacks: FrameRequestCallback[] = [];
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+      rafCallbacks.push(cb);
+      return rafCallbacks.length;
+    });
+
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
+
+    // まず converge に
+    currentTime = 1500;
+    rafCallbacks[rafCallbacks.length - 1](currentTime);
+
+    // T_HYPER(3400) 以降 → explode
+    currentTime = 3600;
     rafCallbacks[rafCallbacks.length - 1](currentTime);
 
     expect(onPhaseChange).toHaveBeenCalledWith("explode");
   });
 
-  it("explode フェーズでフラッシュが減衰する", () => {
+  it("burst 終了後 content フェーズに遷移しアニメーションが停止する", () => {
     const onPhaseChange = vi.fn();
 
     let currentTime = 0;
@@ -162,35 +204,14 @@ describe("BigBangCanvas", () => {
       return rafCallbacks.length;
     });
 
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
 
-    // First frame in explode phase
-    currentTime = 3100;
+    // converge → explode → content
+    currentTime = 1500;
     rafCallbacks[rafCallbacks.length - 1](currentTime);
-
-    // Second frame - flash should still be > 0 but decaying
-    currentTime = 3200;
+    currentTime = 3600;
     rafCallbacks[rafCallbacks.length - 1](currentTime);
-
-    expect(onPhaseChange).toHaveBeenCalledWith("explode");
-  });
-
-  it("content フェーズに遷移しアニメーションが停止する", () => {
-    const onPhaseChange = vi.fn();
-
-    let currentTime = 0;
-    vi.spyOn(performance, "now").mockImplementation(() => currentTime);
-
-    const rafCallbacks: FrameRequestCallback[] = [];
-    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
-      rafCallbacks.push(cb);
-      return rafCallbacks.length;
-    });
-
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
-
-    // content phase: elapsed > 4000
-    currentTime = 5000;
+    currentTime = 5000; // T_BURST 4700 超え
     rafCallbacks[rafCallbacks.length - 1](currentTime);
 
     expect(onPhaseChange).toHaveBeenCalledWith("content");
@@ -198,14 +219,7 @@ describe("BigBangCanvas", () => {
 
   it("resize イベントで canvas サイズが更新される", () => {
     const onPhaseChange = vi.fn();
-
-    const rafCallbacks: FrameRequestCallback[] = [];
-    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
-      rafCallbacks.push(cb);
-      return rafCallbacks.length;
-    });
-
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
 
     window.dispatchEvent(new Event("resize"));
 
@@ -214,16 +228,15 @@ describe("BigBangCanvas", () => {
   });
 
   it("getContext が null を返した場合アニメーションが開始されない", () => {
-    mockGetContext.mockReturnValueOnce(null as unknown as ReturnType<typeof mockGetContext>);
+    mockGetContext.mockReturnValueOnce(
+      null as unknown as ReturnType<typeof mockGetContext>
+    );
     const onPhaseChange = vi.fn();
-
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
-
-    // onPhaseChange should only be called for initial dark (from useState), not from animation
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
     expect(screen.getByRole("img")).toBeInTheDocument();
   });
 
-  it("同じフェーズで setPhase を呼んでも onPhaseChange が重複呼び出しされない", () => {
+  it("同じフェーズで setPhase を呼んでも onPhaseChange が重複しない", () => {
     const onPhaseChange = vi.fn();
 
     let currentTime = 0;
@@ -235,28 +248,21 @@ describe("BigBangCanvas", () => {
       return rafCallbacks.length;
     });
 
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
 
-    // Call dark phase twice — second call should not trigger onPhaseChange again
+    // drift 内2回連続
     currentTime = 100;
     rafCallbacks[rafCallbacks.length - 1](currentTime);
-
     currentTime = 200;
     rafCallbacks[rafCallbacks.length - 1](currentTime);
 
-    // dark is called from initial setup + first rAF, but not duplicated
-    const darkCalls = onPhaseChange.mock.calls.filter(
-      (c: unknown[]) => c[0] === "dark"
-    );
-    // Initial dark + setPhase("dark") from first callback = should be same count as with second callback
-    expect(darkCalls.length).toBeGreaterThanOrEqual(1);
+    const darkCalls = onPhaseChange.mock.calls.filter((c) => c[0] === "dark");
+    // dark は一度だけ (useEffect からの初期呼出し)
+    expect(darkCalls.length).toBe(1);
   });
 
-  it("モバイル幅で星と爆発パーティクル数が少なくなる", () => {
+  it("burst 中に flashAlpha / ringAlpha が 0 に達する分岐をカバー", () => {
     const onPhaseChange = vi.fn();
-
-    const originalInnerWidth = window.innerWidth;
-    Object.defineProperty(window, "innerWidth", { value: 375, writable: true, configurable: true });
 
     let currentTime = 0;
     vi.spyOn(performance, "now").mockImplementation(() => currentTime);
@@ -267,99 +273,25 @@ describe("BigBangCanvas", () => {
       return rafCallbacks.length;
     });
 
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
 
-    // dark phase
-    currentTime = 500;
+    // converge → explode の後、burst の終盤で flashAlpha=0 / ringAlpha=0 の分岐を通過
+    currentTime = 1500;
     rafCallbacks[rafCallbacks.length - 1](currentTime);
-
-    expect(onPhaseChange).toHaveBeenCalledWith("dark");
-
-    Object.defineProperty(window, "innerWidth", { value: originalInnerWidth, writable: true, configurable: true });
-  });
-
-  it("ctx.scale が関数でない場合スキップされる", () => {
-    const ctxWithoutScale = {
-      clearRect: vi.fn(),
-      fillRect: vi.fn(),
-      beginPath: vi.fn(),
-      arc: vi.fn(),
-      fill: vi.fn(),
-      stroke: vi.fn(),
-      drawImage: vi.fn(),
-      save: vi.fn(),
-      restore: vi.fn(),
-      createRadialGradient: vi.fn(() => ({
-        addColorStop: vi.fn(),
-      })),
-      canvas: { width: 1440, height: 900 },
-      globalCompositeOperation: "source-over",
-      globalAlpha: 1,
-      fillStyle: "",
-      strokeStyle: "",
-      lineWidth: 1,
-    };
-    mockGetContext.mockReturnValueOnce(ctxWithoutScale as unknown as ReturnType<typeof mockGetContext>);
-
-    const onPhaseChange = vi.fn();
-
-    const rafCallbacks: FrameRequestCallback[] = [];
-    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
-      rafCallbacks.push(cb);
-      return rafCallbacks.length;
-    });
-
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
-
-    expect(onPhaseChange).toHaveBeenCalledWith("dark");
-  });
-
-  it("devicePixelRatio が未定義の場合デフォルト値が使われる", () => {
-    const onPhaseChange = vi.fn();
-
-    const originalDpr = window.devicePixelRatio;
-    Object.defineProperty(window, "devicePixelRatio", { value: undefined, writable: true, configurable: true });
-
-    const rafCallbacks: FrameRequestCallback[] = [];
-    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
-      rafCallbacks.push(cb);
-      return rafCallbacks.length;
-    });
-
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
-
-    expect(onPhaseChange).toHaveBeenCalledWith("dark");
-
-    Object.defineProperty(window, "devicePixelRatio", { value: originalDpr, writable: true, configurable: true });
-  });
-
-  it("explode フェーズでパーティクルの life が 0 以下になる", () => {
-    const onPhaseChange = vi.fn();
-
-    let currentTime = 0;
-    vi.spyOn(performance, "now").mockImplementation(() => currentTime);
-
-    const rafCallbacks: FrameRequestCallback[] = [];
-    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
-      rafCallbacks.push(cb);
-      return rafCallbacks.length;
-    });
-
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
-
-    // Run many frames in the explode phase to let p.life decay below 0
-    // p.life starts at 1 and decreases by 0.012 per frame -> ~84 frames to reach 0
-    for (let i = 0; i < 90; i++) {
-      currentTime = 3001 + i;
-      rafCallbacks[rafCallbacks.length - 1](currentTime);
-    }
+    currentTime = 3600;
+    rafCallbacks[rafCallbacks.length - 1](currentTime);
+    // T_HYPER (3400) + burst の 80% 超え (t > 1/1.1 ≈ 0.909) → ringAlpha = 0
+    currentTime = 4600;
+    rafCallbacks[rafCallbacks.length - 1](currentTime);
 
     expect(onPhaseChange).toHaveBeenCalledWith("explode");
   });
 
-  it("canvas の ref が null の場合アニメーションが開始されない", () => {
-    mockGetContext.mockReturnValueOnce(null as unknown as ReturnType<typeof mockGetContext>);
+  it("T_BURST 以降に初回 render されると phaseRef が explode でなくても早期returnする", () => {
     const onPhaseChange = vi.fn();
+
+    let currentTime = 0;
+    vi.spyOn(performance, "now").mockImplementation(() => currentTime);
 
     const rafCallbacks: FrameRequestCallback[] = [];
     vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
@@ -367,10 +299,61 @@ describe("BigBangCanvas", () => {
       return rafCallbacks.length;
     });
 
-    render(<BigBangCanvas onPhaseChange={onPhaseChange} />);
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
 
-    // rAF should not have been called since ctx is null
-    expect(rafCallbacks).toHaveLength(0);
+    // 一気に T_BURST (4700) 超え → phaseRef は "dark" のまま、if (phaseRef === "explode") は false
+    currentTime = 5000;
+    rafCallbacks[rafCallbacks.length - 1](currentTime);
+
+    // content には遷移しない (explode 経由していないため)
+    const contentCalls = onPhaseChange.mock.calls.filter((c) => c[0] === "content");
+    expect(contentCalls.length).toBe(0);
+  });
+
+  it("devicePixelRatio が未定義の場合フォールバック値 1 が使われる", () => {
+    const original = window.devicePixelRatio;
+    Object.defineProperty(window, "devicePixelRatio", {
+      value: 0,
+      writable: true,
+      configurable: true,
+    });
+
+    const onPhaseChange = vi.fn();
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
+
+    expect(screen.getByRole("img")).toBeInTheDocument();
+
+    Object.defineProperty(window, "devicePixelRatio", {
+      value: original,
+      writable: true,
+      configurable: true,
+    });
+  });
+
+  it("星が画面後方 (z<=0) に達するとリセットされる", () => {
+    const onPhaseChange = vi.fn();
+
+    let currentTime = 0;
+    vi.spyOn(performance, "now").mockImplementation(() => currentTime);
+
+    const rafCallbacks: FrameRequestCallback[] = [];
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+      rafCallbacks.push(cb);
+      return rafCallbacks.length;
+    });
+
+    render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
+
+    // accel フェーズで複数フレーム実行 → 一部の星が z<=0 になりリセット
+    for (let i = 0; i < 50; i++) {
+      currentTime = 1500 + i * 50;
+      rafCallbacks[rafCallbacks.length - 1](currentTime);
+    }
+
+    // エラーなく complete までいく
+    currentTime = 5000;
+    rafCallbacks[rafCallbacks.length - 1](currentTime);
+
+    expect(onPhaseChange).toHaveBeenCalledWith("content");
   });
 });
-

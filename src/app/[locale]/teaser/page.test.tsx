@@ -3,8 +3,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 import TeaserPage from "./TeaserPage";
 
-vi.mock("@/components/teaser/BigBangCanvas", () => ({
-  BigBangCanvas: ({ onPhaseChange }: { onPhaseChange: (phase: string) => void }) => {
+vi.mock("@/components/intro/StarfieldWarpIntro", () => ({
+  StarfieldWarpIntro: ({ onPhaseChange }: { onPhaseChange: (phase: string) => void }) => {
     setTimeout(() => onPhaseChange("content"), 0);
     return <canvas data-testid="canvas-engine" />;
   },
