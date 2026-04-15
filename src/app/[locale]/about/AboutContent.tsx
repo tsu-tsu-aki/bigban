@@ -334,7 +334,7 @@ export default function AboutContent() {
             <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-6">
               {t("players.title")}
             </h2>
-            <p className="text-text-light/90 text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
+            <p className="text-text-light/90 text-sm lg:text-base leading-relaxed mb-12">
               {t("players.description")}
             </p>
 
