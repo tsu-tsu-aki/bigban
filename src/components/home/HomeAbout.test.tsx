@@ -70,6 +70,17 @@ describe("HomeAbout", () => {
     ).toBeInTheDocument();
   });
 
+  it("活動内容テキストを表示する", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeAbout />
+      </NextIntlClientProvider>
+    );
+    expect(
+      screen.getByText(/選手活動及びJPA TOP TOUR大会ディレクター/)
+    ).toBeInTheDocument();
+  });
+
   it("詳しく見るリンクを表示する", () => {
     render(
       <NextIntlClientProvider locale="ja" messages={jaMessages}>
