@@ -140,7 +140,7 @@ describe("AboutPage", () => {
     expect(screen.getByText("PICKLEBALL CAREER")).toBeInTheDocument();
     expect(screen.getByText("YEAR")).toBeInTheDocument();
     expect(screen.getByText("TOURNAMENT")).toBeInTheDocument();
-    expect(screen.getByText("EVENT")).toBeInTheDocument();
+    expect(screen.getByText("CATEGORY")).toBeInTheDocument();
     expect(screen.getByText("RESULT")).toBeInTheDocument();
   });
 

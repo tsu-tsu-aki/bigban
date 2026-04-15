@@ -285,7 +285,7 @@ export default function AboutContent() {
               <div className="hidden sm:grid grid-cols-[70px_1fr_1fr_120px] gap-4 border-b border-accent/30 pb-2 mb-2">
                 <span className="text-[10px] tracking-[0.3em] text-text-gray">YEAR</span>
                 <span className="text-[10px] tracking-[0.3em] text-text-gray">TOURNAMENT</span>
-                <span className="text-[10px] tracking-[0.3em] text-text-gray">EVENT</span>
+                <span className="text-[10px] tracking-[0.3em] text-text-gray">CATEGORY</span>
                 <span className="text-[10px] tracking-[0.3em] text-text-gray text-right">RESULT</span>
               </div>
               {ACHIEVEMENT_KEYS.map((key) => ({
