@@ -66,7 +66,7 @@ describe("HomeAbout", () => {
       </NextIntlClientProvider>
     );
     expect(
-      screen.getByText(/クロスミントン世界選手権6度優勝/)
+      screen.getByText(/クロスミントン世界チャンピオン/)
     ).toBeInTheDocument();
   });
 
