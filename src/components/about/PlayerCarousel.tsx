@@ -1,38 +1,18 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useTranslations } from "next-intl";
+import PlayerCard, { type Player } from "./PlayerCard";
 
-interface Player {
-  name: string;
-  ig: string;
-  bio: string;
-  hasContent: boolean;
+interface PlayerCarouselProps {
+  players: Player[];
 }
 
-export default function PlayerCarousel() {
+export default function PlayerCarousel({ players }: PlayerCarouselProps) {
   const t = useTranslations("About");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
-
-  const players = useMemo<Player[]>(
-    () => [
-      {
-        name: t("players.playerName"),
-        ig: t("players.playerIg"),
-        bio: t("players.playerBio"),
-        hasContent: true,
-      },
-      {
-        name: t("players.comingSoon"),
-        ig: "",
-        bio: "",
-        hasContent: false,
-      },
-    ],
-    [t]
-  );
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -64,8 +44,6 @@ export default function PlayerCarousel() {
     emblaApi.scrollNext();
   }, [emblaApi]);
 
-  const photoPlaceholder = t("photoPlaceholder");
-
   return (
     <div
       className="relative"
@@ -76,32 +54,13 @@ export default function PlayerCarousel() {
         <div className="flex">
           {players.map((player, i) => (
             <div
-              key={player.name}
+              key={i}
               role="group"
               aria-roledescription="slide"
               aria-label={`${i + 1} / ${players.length}`}
               className="min-w-0 flex-[0_0_100%] px-2"
             >
-              <div className="bg-gradient-to-b from-accent/[0.04] to-transparent border border-text-gray/10 rounded-sm overflow-hidden">
-                <div className="aspect-[4/3] bg-text-gray/5 flex items-center justify-center">
-                  <span className="text-text-gray text-sm">{photoPlaceholder}</span>
-                </div>
-                <div className="p-6 text-center">
-                  <p className="text-text-light text-lg lg:text-xl font-semibold mb-1">
-                    {player.name}
-                  </p>
-                  {player.ig && (
-                    <p className="text-text-light/90 text-sm lg:text-base mb-3">
-                      {player.ig}
-                    </p>
-                  )}
-                  {player.bio && (
-                    <p className="text-text-light/90 text-sm lg:text-base leading-relaxed">
-                      {player.bio}
-                    </p>
-                  )}
-                </div>
-              </div>
+              <PlayerCard player={player} />
             </div>
           ))}
         </div>
@@ -131,7 +90,7 @@ export default function PlayerCarousel() {
       <div className="flex justify-center gap-3 mt-6">
         {players.map((player, i) => (
           <button
-            key={player.name}
+            key={i}
             type="button"
             onClick={() => handleScrollTo(i)}
             aria-label={t("players.carousel.showPlayer", { index: i + 1, name: player.name })}

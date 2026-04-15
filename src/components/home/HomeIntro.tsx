@@ -3,7 +3,7 @@
 import { useState, useCallback, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { BigBangCanvas } from "@/components/teaser/BigBangCanvas";
+import { StarfieldWarpIntro } from "@/components/intro/StarfieldWarpIntro";
 
 import type { AnimationPhase } from "@/components/teaser/types";
 import type { ReactNode } from "react";
@@ -62,7 +62,7 @@ export default function HomeIntro({ children }: HomeIntroProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: EASE }}
           >
-            <BigBangCanvas onPhaseChange={handlePhaseChange} />
+            <StarfieldWarpIntro onPhaseChange={handlePhaseChange} />
 
             {/* Logo after explosion */}
             <AnimatePresence>

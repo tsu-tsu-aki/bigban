@@ -2,14 +2,14 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import HomeIntro from "./HomeIntro";
 
-vi.mock("@/components/teaser/BigBangCanvas", () => ({
-  BigBangCanvas: ({
+vi.mock("@/components/intro/StarfieldWarpIntro", () => ({
+  StarfieldWarpIntro: ({
     onPhaseChange,
   }: {
     onPhaseChange: (phase: string) => void;
   }) => (
     <canvas
-      data-testid="bigbang-canvas"
+      data-testid="starfield-warp-intro"
       onClick={() => onPhaseChange("content")}
       onDoubleClick={() => onPhaseChange("explode")}
     />
@@ -58,7 +58,7 @@ describe("HomeIntro", () => {
         <div data-testid="home-content">Home</div>
       </HomeIntro>
     );
-    expect(screen.getByTestId("bigbang-canvas")).toBeInTheDocument();
+    expect(screen.getByTestId("starfield-warp-intro")).toBeInTheDocument();
     expect(screen.getByTestId("home-content")).toBeInTheDocument();
   });
 
@@ -69,7 +69,7 @@ describe("HomeIntro", () => {
         <div data-testid="home-content">Home</div>
       </HomeIntro>
     );
-    expect(screen.queryByTestId("bigbang-canvas")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("starfield-warp-intro")).not.toBeInTheDocument();
     expect(screen.getByTestId("home-content")).toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe("HomeIntro", () => {
         <div data-testid="home-content">Home</div>
       </HomeIntro>
     );
-    const canvas = screen.getByTestId("bigbang-canvas");
+    const canvas = screen.getByTestId("starfield-warp-intro");
     act(() => {
       canvas.dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
     });
@@ -94,7 +94,7 @@ describe("HomeIntro", () => {
         <div data-testid="home-content">Home</div>
       </HomeIntro>
     );
-    const canvas = screen.getByTestId("bigbang-canvas");
+    const canvas = screen.getByTestId("starfield-warp-intro");
     act(() => {
       canvas.click();
     });
@@ -107,7 +107,7 @@ describe("HomeIntro", () => {
         <div data-testid="home-content">Home</div>
       </HomeIntro>
     );
-    const canvas = screen.getByTestId("bigbang-canvas");
+    const canvas = screen.getByTestId("starfield-warp-intro");
     act(() => {
       canvas.click();
     });
@@ -120,14 +120,14 @@ describe("HomeIntro", () => {
         <div data-testid="home-content">Home</div>
       </HomeIntro>
     );
-    const canvas = screen.getByTestId("bigbang-canvas");
+    const canvas = screen.getByTestId("starfield-warp-intro");
     act(() => {
       canvas.click();
     });
     act(() => {
       vi.advanceTimersByTime(2100);
     });
-    expect(screen.queryByTestId("bigbang-canvas")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("starfield-warp-intro")).not.toBeInTheDocument();
   });
 
   it("childrenを常に表示する", () => {
@@ -155,7 +155,7 @@ describe("HomeIntro", () => {
         <div data-testid="home-content">Home</div>
       </HomeIntro>
     );
-    expect(screen.queryByTestId("bigbang-canvas")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("starfield-warp-intro")).not.toBeInTheDocument();
     expect(screen.getByTestId("home-content")).toBeInTheDocument();
   });
 });
