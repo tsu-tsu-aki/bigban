@@ -96,7 +96,7 @@ describe("HomeFacility", () => {
     expect(screen.getByText("空調完備")).toBeInTheDocument();
     expect(screen.getByText("自動販売機")).toBeInTheDocument();
     expect(screen.getByText("レンタル用具あり")).toBeInTheDocument();
-    expect(screen.getByText("無人チェックイン対応予定")).toBeInTheDocument();
+    expect(screen.getByText("無人チェックイン対応")).toBeInTheDocument();
     expect(screen.getByText("ショーコート1面に変更可能")).toBeInTheDocument();
   });
 
