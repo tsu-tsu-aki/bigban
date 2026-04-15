@@ -45,9 +45,10 @@ export default function TeaserPage() {
         }}
       />
 
-      {/* Starfield warp intro animation — fixed overlay でスクロールを抑止 */}
+      {/* Starfield warp intro animation — fixed overlay でスクロールを抑止し
+          カスタムカーソル (z-[100]) よりも手前に配置 (HomeIntro と同じ) */}
       {phase !== "content" && (
-        <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 z-[100]">
           <StarfieldWarpIntro onPhaseChange={setPhase} />
         </div>
       )}
