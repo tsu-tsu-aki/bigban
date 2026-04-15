@@ -45,9 +45,11 @@ export default function TeaserPage() {
         }}
       />
 
-      {/* Starfield warp intro animation */}
+      {/* Starfield warp intro animation — fixed overlay でスクロールを抑止 */}
       {phase !== "content" && (
-        <StarfieldWarpIntro onPhaseChange={setPhase} />
+        <div className="fixed inset-0 z-50">
+          <StarfieldWarpIntro onPhaseChange={setPhase} />
+        </div>
       )}
 
       {/* Teaser Content — fades in after animation completes */}
