@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import jaMessages from "../../../messages/ja.json";
+import enMessages from "../../../messages/en.json";
 import HomeAbout from "./HomeAbout";
 
 import type React from "react";
@@ -66,7 +67,18 @@ describe("HomeAbout", () => {
       </NextIntlClientProvider>
     );
     expect(
-      screen.getByText(/クロスミントン世界選手権6度優勝/)
+      screen.getByText(/クロスミントン世界チャンピオン/)
+    ).toBeInTheDocument();
+  });
+
+  it("活動内容テキストを表示する", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeAbout />
+      </NextIntlClientProvider>
+    );
+    expect(
+      screen.getByText(/選手活動及びJPA TOP TOUR大会ディレクター/)
     ).toBeInTheDocument();
   });
 
@@ -87,5 +99,27 @@ describe("HomeAbout", () => {
     );
     const link = screen.getByText("詳しく見る").closest("a");
     expect(link).toHaveAttribute("href", "/about");
+  });
+
+  it("英語ロケールでfounderBio1を表示する", () => {
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <HomeAbout />
+      </NextIntlClientProvider>
+    );
+    expect(
+      screen.getByText(/Crossminton World Champion/)
+    ).toBeInTheDocument();
+  });
+
+  it("英語ロケールでfounderBio2を表示する", () => {
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <HomeAbout />
+      </NextIntlClientProvider>
+    );
+    expect(
+      screen.getByText(/JPA TOP TOUR tournament director/)
+    ).toBeInTheDocument();
   });
 });
