@@ -29,14 +29,14 @@ export default function PlayerCard({ player }: PlayerCardProps) {
               aria-hidden="true"
               fill
               sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover blur-2xl scale-110 opacity-40"
+              className="object-cover blur-2xl scale-110"
             />
             <Image
               src={player.image}
               alt={player.imageAlt ?? player.name}
               fill
               sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-contain"
+              className="object-contain scale-[0.78]"
             />
           </>
         ) : (
