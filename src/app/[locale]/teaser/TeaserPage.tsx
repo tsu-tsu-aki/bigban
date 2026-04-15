@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { BigBangCanvas } from "@/components/teaser/BigBangCanvas";
+import { StarfieldWarpIntro } from "@/components/intro/StarfieldWarpIntro";
 import { TeaserContent } from "@/components/teaser/TeaserContent";
 import { useAnimationPhase } from "@/hooks/useAnimationPhase";
-import type { AnimationPhase } from "@/components/teaser/types";
 
 const LOGO_SRC = "/logos/tate-neon-hybrid.svg";
 
@@ -20,13 +19,6 @@ export default function TeaserPage() {
     window.addEventListener("mousemove", handler);
     return () => window.removeEventListener("mousemove", handler);
   }, []);
-
-  const handlePhaseChange = useCallback(
-    (newPhase: AnimationPhase) => {
-      setPhase(newPhase);
-    },
-    [setPhase]
-  );
 
   return (
     <div
@@ -53,9 +45,12 @@ export default function TeaserPage() {
         }}
       />
 
-      {/* BigBang Animation */}
+      {/* Starfield warp intro animation — fixed overlay でスクロールを抑止し
+          カスタムカーソル (z-[100]) よりも手前に配置 (HomeIntro と同じ) */}
       {phase !== "content" && (
-        <BigBangCanvas onPhaseChange={handlePhaseChange} />
+        <div className="fixed inset-0 z-[100]">
+          <StarfieldWarpIntro onPhaseChange={setPhase} />
+        </div>
       )}
 
       {/* Teaser Content — fades in after animation completes */}
