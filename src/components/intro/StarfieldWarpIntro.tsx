@@ -45,7 +45,7 @@ export interface StarfieldWarpIntroProps {
 export function StarfieldWarpIntro({ onPhaseChange }: StarfieldWarpIntroProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animFrameRef = useRef<number>(0);
-  const phaseRef = useRef<AnimationPhase>("dark");
+  const phaseRef = useRef<AnimationPhase | null>(null);
   const startTimeRef = useRef<number>(0);
   const starsRef = useRef<WarpStar[]>([]);
 
@@ -63,6 +63,7 @@ export function StarfieldWarpIntro({ onPhaseChange }: StarfieldWarpIntroProps) {
 
   const setPhase = useCallback(
     (phase: AnimationPhase) => {
+      /* istanbul ignore else -- defensive guard: 呼出元が phaseRef を確認してから呼ぶため else 分岐は通常通らない */
       if (phaseRef.current !== phase) {
         phaseRef.current = phase;
         onPhaseChange(phase);
@@ -80,8 +81,9 @@ export function StarfieldWarpIntro({ onPhaseChange }: StarfieldWarpIntroProps) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const dpr = window.devicePixelRatio || 1;
     const resize = () => {
+      // マルチモニター移動で DPR が変わる可能性があるため毎回取得
+      const dpr = window.devicePixelRatio || 1;
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       canvas.style.width = `${window.innerWidth}px`;
@@ -102,8 +104,6 @@ export function StarfieldWarpIntro({ onPhaseChange }: StarfieldWarpIntroProps) {
       };
     });
 
-    // 初回は setPhase の比較で弾かれるため直接通知
-    onPhaseChange("dark");
     setPhase("dark");
     startTimeRef.current = performance.now();
 
@@ -227,7 +227,9 @@ export function StarfieldWarpIntro({ onPhaseChange }: StarfieldWarpIntroProps) {
           ctx.fillRect(sx, sy, 2, 2);
         });
       } else {
-        if (phaseRef.current === "explode") setPhase("content");
+        // タブ非アクティブからの復帰などで elapsed が T_BURST を一気に超えた場合でも
+        // 必ず content に遷移するよう、phaseRef のガードは付けない
+        setPhase("content");
         return;
       }
 
@@ -240,7 +242,7 @@ export function StarfieldWarpIntro({ onPhaseChange }: StarfieldWarpIntroProps) {
       cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener("resize", resize);
     };
-  }, [isReducedMotion, onPhaseChange, setPhase]);
+  }, [isReducedMotion, setPhase]);
 
   if (isReducedMotion) return null;
 

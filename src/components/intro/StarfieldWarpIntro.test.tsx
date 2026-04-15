@@ -287,7 +287,7 @@ describe("StarfieldWarpIntro", () => {
     expect(onPhaseChange).toHaveBeenCalledWith("explode");
   });
 
-  it("T_BURST 以降に初回 render されると phaseRef が explode でなくても早期returnする", () => {
+  it("タブ復帰等で elapsed が T_BURST を一気に超えても content に遷移する", () => {
     const onPhaseChange = vi.fn();
 
     let currentTime = 0;
@@ -301,13 +301,11 @@ describe("StarfieldWarpIntro", () => {
 
     render(<StarfieldWarpIntro onPhaseChange={onPhaseChange} />);
 
-    // 一気に T_BURST (4700) 超え → phaseRef は "dark" のまま、if (phaseRef === "explode") は false
+    // 一気に T_BURST (4700) 超え → phaseRef が explode を経由していなくても content に遷移する
     currentTime = 5000;
     rafCallbacks[rafCallbacks.length - 1](currentTime);
 
-    // content には遷移しない (explode 経由していないため)
-    const contentCalls = onPhaseChange.mock.calls.filter((c) => c[0] === "content");
-    expect(contentCalls.length).toBe(0);
+    expect(onPhaseChange).toHaveBeenCalledWith("content");
   });
 
   it("devicePixelRatio が未定義の場合フォールバック値 1 が使われる", () => {
