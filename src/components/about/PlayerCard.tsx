@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import InstagramIcon from "@/components/icons/InstagramIcon";
 
 export interface Player {
   name: string;
@@ -54,9 +55,10 @@ export default function PlayerCard({ player }: PlayerCardProps) {
             href={`https://www.instagram.com/${player.ig.replace(/^@/, "")}/`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block text-text-light/90 text-sm @lg:text-base mb-3 hover:text-accent transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 text-text-light/90 text-sm @lg:text-base mb-3 hover:text-accent transition-colors"
           >
-            {player.ig}
+            <InstagramIcon className="w-4 h-4 @lg:w-[18px] @lg:h-[18px]" />
+            <span>{player.ig}</span>
           </a>
         )}
         {player.bio && (

@@ -46,6 +46,14 @@ describe("PlayerCard", () => {
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
 
+  it("IGリンク内にInstagramアイコンを表示する", () => {
+    renderCard(activePlayer);
+    const link = screen.getByText(activePlayer.ig).closest("a");
+    const svg = link?.querySelector("svg");
+    expect(svg).toBeInTheDocument();
+    expect(svg?.getAttribute("aria-hidden")).toBe("true");
+  });
+
   it("bioを表示する", () => {
     renderCard(activePlayer);
     expect(screen.getByText(activePlayer.bio)).toBeInTheDocument();
