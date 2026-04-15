@@ -50,9 +50,14 @@ export default function PlayerCard({ player }: PlayerCardProps) {
           {player.name}
         </p>
         {player.ig && (
-          <p className="text-text-light/90 text-sm @lg:text-base mb-3">
+          <a
+            href={`https://www.instagram.com/${player.ig.replace(/^@/, "")}/`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-text-light/90 text-sm @lg:text-base mb-3 hover:text-accent transition-colors"
+          >
             {player.ig}
-          </p>
+          </a>
         )}
         {player.bio && (
           <p className="text-text-light/90 text-sm @lg:text-base leading-relaxed">

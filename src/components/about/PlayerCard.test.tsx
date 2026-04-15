@@ -35,6 +35,17 @@ describe("PlayerCard", () => {
     expect(screen.getByText(activePlayer.ig)).toBeInTheDocument();
   });
 
+  it("IGハンドルがInstagramプロフィールへの外部リンクになっている", () => {
+    renderCard(activePlayer);
+    const link = screen.getByText(activePlayer.ig).closest("a");
+    expect(link).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/taro_yamada_pb/"
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
   it("bioを表示する", () => {
     renderCard(activePlayer);
     expect(screen.getByText(activePlayer.bio)).toBeInTheDocument();
