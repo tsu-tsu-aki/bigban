@@ -81,6 +81,8 @@ export default function AboutContent() {
         name: t("players.playerName"),
         ig: t("players.playerIg"),
         bio: t("players.playerBio"),
+        image: "/images/yuta-yoshida.jpg",
+        imageAlt: t("players.playerName"),
       },
       {
         name: t("players.comingSoon"),

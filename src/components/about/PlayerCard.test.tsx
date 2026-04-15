@@ -60,6 +60,19 @@ describe("PlayerCard", () => {
     expect(photoArea).toBeInTheDocument();
   });
 
+  it("image プロパティが指定されているときは画像を表示しプレースホルダは表示しない", () => {
+    renderCard({
+      ...activePlayer,
+      image: "/images/yuta-yoshida.jpg",
+      imageAlt: "吉田 裕太",
+    });
+    const img = screen.getByAltText("吉田 裕太");
+    expect(img).toBeInTheDocument();
+    expect(
+      screen.queryByText(jaMessages.About.photoPlaceholder)
+    ).not.toBeInTheDocument();
+  });
+
   it("カード外枠に h-full を持ち高さ揃えに対応する", () => {
     const { container } = renderCard(activePlayer);
     const card = container.firstChild as HTMLElement;
