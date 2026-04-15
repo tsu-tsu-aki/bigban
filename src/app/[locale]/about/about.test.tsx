@@ -146,7 +146,7 @@ describe("AboutPage", () => {
 
   it("戦績データが全件表示される", () => {
     renderWithIntl(<AboutPage />);
-    expect(screen.getByText("JPA 日本ランキング上位者")).toBeInTheDocument();
+    expect(screen.getByText("Pickleball D-Joy Tour 2026")).toBeInTheDocument();
     expect(screen.getByText("PPA World Championship")).toBeInTheDocument();
     expect(screen.getByText("KINTO JAPAN CUP 19+A")).toBeInTheDocument();
     expect(screen.getByText("JPA TOP TOUR T1")).toBeInTheDocument();
@@ -157,7 +157,7 @@ describe("AboutPage", () => {
     renderWithIntl(<AboutPage />);
     const goldResults = screen.getAllByText("優勝");
     expect(goldResults.length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText("代表メンバー")).toBeInTheDocument();
+    expect(screen.getByText("JPA日本ランキング上位者として選抜")).toBeInTheDocument();
     expect(screen.getByText("4位")).toBeInTheDocument();
   });
 
