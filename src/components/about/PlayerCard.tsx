@@ -20,17 +20,29 @@ export default function PlayerCard({ player }: PlayerCardProps) {
 
   return (
     <div className="bg-gradient-to-b from-accent/[0.04] to-transparent border border-text-gray/10 rounded-sm overflow-hidden h-full">
-      <div className="relative aspect-[4/3] bg-text-gray/5 flex items-center justify-center overflow-hidden">
+      <div className="relative aspect-[4/5] bg-text-gray/5 overflow-hidden">
         {player.image ? (
-          <Image
-            src={player.image}
-            alt={player.imageAlt ?? player.name}
-            fill
-            sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-cover"
-          />
+          <>
+            <Image
+              src={player.image}
+              alt=""
+              aria-hidden="true"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover blur-2xl scale-110 opacity-40"
+            />
+            <Image
+              src={player.image}
+              alt={player.imageAlt ?? player.name}
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-contain"
+            />
+          </>
         ) : (
-          <span className="text-text-gray text-sm">{t("photoPlaceholder")}</span>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-text-gray text-sm">{t("photoPlaceholder")}</span>
+          </div>
         )}
       </div>
       <div className="p-6 text-center">

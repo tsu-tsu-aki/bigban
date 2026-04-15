@@ -54,10 +54,23 @@ describe("PlayerCard", () => {
     expect(screen.queryByText(activePlayer.bio)).not.toBeInTheDocument();
   });
 
-  it("aspect-[4/3] の Photo 領域を持つ", () => {
+  it("aspect-[4/5] の Photo 領域を持つ", () => {
     const { container } = renderCard(activePlayer);
-    const photoArea = container.querySelector('.aspect-\\[4\\/3\\]');
+    const photoArea = container.querySelector('.aspect-\\[4\\/5\\]');
     expect(photoArea).toBeInTheDocument();
+  });
+
+  it("image 指定時は object-contain の主画像とブラー背景の2枚を描画する", () => {
+    const { container } = renderCard({
+      ...activePlayer,
+      image: "/images/yuta-yoshida.jpg",
+      imageAlt: "吉田 裕太",
+    });
+    const containImg = container.querySelector("img.object-contain");
+    const blurImg = container.querySelector("img.blur-2xl");
+    expect(containImg).toBeInTheDocument();
+    expect(blurImg).toBeInTheDocument();
+    expect(blurImg?.getAttribute("aria-hidden")).toBe("true");
   });
 
   it("image プロパティが指定されているときは画像を表示しプレースホルダは表示しない", () => {
