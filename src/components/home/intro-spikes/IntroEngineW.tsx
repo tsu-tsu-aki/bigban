@@ -86,6 +86,7 @@ export function IntroEngineW({ onPhaseChange }: IntroEngineProps) {
     const T_BURST = T_GROW + DURATION.burst;
 
     const drawOrb = (cx: number, cy: number, r: number, rotation: number, holeGlowT: number) => {
+      if (r < 1) return; // guard against zero/negative radius (appear phase start)
       // Body with radial gradient
       const grad = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.35, r * 0.1, cx, cy, r);
       grad.addColorStop(0, "#FFFAA0");
