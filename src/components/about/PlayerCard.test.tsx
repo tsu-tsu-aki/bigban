@@ -105,6 +105,15 @@ describe("PlayerCard", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("imageAlt 未指定時は player.name をaltにフォールバックする", () => {
+    renderCard({
+      ...activePlayer,
+      image: "/images/yuta-yoshida.jpg",
+    });
+    const img = screen.getByAltText(activePlayer.name);
+    expect(img).toBeInTheDocument();
+  });
+
   it("カード外枠に h-full を持ち高さ揃えに対応する", () => {
     const { container } = renderCard(activePlayer);
     const card = container.firstChild as HTMLElement;
