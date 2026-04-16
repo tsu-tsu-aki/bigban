@@ -20,6 +20,7 @@ vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => {
     const { fill, priority, ...rest } = props;
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         {...rest}
         data-fill={fill ? "true" : undefined}
@@ -137,6 +138,18 @@ describe("HomeIntro", () => {
       </HomeIntro>
     );
     expect(screen.getByTestId("home-content")).toBeInTheDocument();
+  });
+
+  it("マウント時にintro-pendingクラスを解除する", () => {
+    document.documentElement.classList.add("intro-pending");
+    render(
+      <HomeIntro>
+        <div data-testid="home-content">Home</div>
+      </HomeIntro>
+    );
+    expect(
+      document.documentElement.classList.contains("intro-pending")
+    ).toBe(false);
   });
 
   it("sessionStorageアクセスエラー時はイントロをスキップする", () => {
