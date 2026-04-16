@@ -184,6 +184,32 @@ describe("useCrowdfundingPopup", () => {
     expect(result.current.isOpen).toBe(false);
   });
 
+  it("aboutセクションが画面内にある（まだ通過していない）場合はisOpenがfalse", () => {
+    const { result } = renderHook(() => useCrowdfundingPopup());
+
+    // aboutセクションがまだ画面下方にある状態
+    vi.spyOn(aboutSection, "getBoundingClientRect").mockReturnValue({
+      bottom: 500,
+      top: 100,
+      left: 0,
+      right: 0,
+      width: 0,
+      height: 400,
+      x: 0,
+      y: 100,
+      toJSON: vi.fn(),
+    });
+
+    act(() => {
+      observerCallback(
+        [{ isIntersecting: false } as IntersectionObserverEntry],
+        {} as IntersectionObserver
+      );
+    });
+
+    expect(result.current.isOpen).toBe(false);
+  });
+
   it("aboutセクションが存在しない場合もエラーにならない", () => {
     aboutSection.remove();
     const { result } = renderHook(() => useCrowdfundingPopup());

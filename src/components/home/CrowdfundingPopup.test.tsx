@@ -71,6 +71,13 @@ describe("CrowdfundingPopup", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
+  it("ESC以外のキーではonCloseが呼ばれない", () => {
+    const onClose = vi.fn();
+    renderWithIntl(<CrowdfundingPopup isOpen={true} onClose={onClose} />);
+    fireEvent.keyDown(document, { key: "Enter" });
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
   it("CTAリンクがCAMP-FIRE URLを持つ", () => {
     renderWithIntl(<CrowdfundingPopup isOpen={true} onClose={vi.fn()} />);
     const ctaLink = screen.getByRole("link", { name: /CAMP-FIRE/ });
