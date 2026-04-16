@@ -8,9 +8,9 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
 const FACILITY_IMAGES = [
-  { src: "/images/sarasota-guide-uHdY8VYTfbI-unsplash.jpg", altKey: "court" as const },
-  { src: "/images/facility-interior-01.png", altKey: "training" as const },
-  { src: "/images/facility-interior-02.png", altKey: "lounge" as const },
+  { src: "/images/facility.jpg", altKey: "court" as const },
+  { src: "/images/comingsoon.svg", altKey: "training" as const },
+  { src: "/images/comingsoon.svg", altKey: "lounge" as const },
 ];
 
 const FEATURE_KEYS = [

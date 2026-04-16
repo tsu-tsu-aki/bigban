@@ -49,7 +49,7 @@ export function buildSportsActivityLocation(
     name: "THE PICKLE BANG THEORY",
     url: SITE_URL,
     logo: `${SITE_URL}/logos/yoko-neon.png`,
-    image: `${SITE_URL}/images/facility-interior-01.png`,
+    image: `${SITE_URL}/images/facility.jpg`,
     sport: "Pickleball",
     address: {
       "@type": "PostalAddress",

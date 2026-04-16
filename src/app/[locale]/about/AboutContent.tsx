@@ -250,7 +250,7 @@ export default function AboutContent() {
             >
               <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm">
                 <Image
-                  src="/images/founder-nishimura.png"
+                  src="/images/about-nishimura.jpg"
                   alt={t("founder.imageAlt")}
                   fill
                   className="object-cover"
