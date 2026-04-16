@@ -124,6 +124,18 @@ describe("HomeNavigation", () => {
     expect(jpButtons[0].className).toContain("cursor-default");
   });
 
+  // EN選択時の逆パターン
+  it("ENが選択中のとき、JPボタンに hover:text-accent と cursor-pointer が適用される", () => {
+    renderWithIntl(<HomeNavigation />, "en");
+    const jpButtons = screen.getAllByRole("button", { name: "JP" });
+    expect(jpButtons[0].className).toContain("hover:text-accent");
+    expect(jpButtons[0].className).toContain("cursor-pointer");
+
+    const enButtons = screen.getAllByRole("button", { name: "EN" });
+    expect(enButtons[0].className).not.toContain("hover:text-accent");
+    expect(enButtons[0].className).toContain("cursor-default");
+  });
+
   it("RESERVEボタンを表示する", () => {
     renderWithIntl(<HomeNavigation />);
     const reserveLinks = screen.getAllByRole("link", { name: "RESERVE" });
