@@ -59,6 +59,11 @@ describe("AboutPage", () => {
     expect(contactElements.length).toBeGreaterThanOrEqual(1);
   });
 
+  it("CONTACTセクションに施設住所が表示される", () => {
+    renderWithIntl(<AboutPage />);
+    expect(screen.getByText("千葉県市川市八幡2-16-6 6階")).toBeInTheDocument();
+  });
+
   it("RST Agency情報を表示する", () => {
     renderWithIntl(<AboutPage />);
     const rstElements = screen.getAllByText("RST Agency株式会社");
