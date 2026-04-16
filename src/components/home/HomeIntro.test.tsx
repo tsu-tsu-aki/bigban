@@ -139,6 +139,18 @@ describe("HomeIntro", () => {
     expect(screen.getByTestId("home-content")).toBeInTheDocument();
   });
 
+  it("マウント時にintro-pendingクラスを解除する", () => {
+    document.documentElement.classList.add("intro-pending");
+    render(
+      <HomeIntro>
+        <div data-testid="home-content">Home</div>
+      </HomeIntro>
+    );
+    expect(
+      document.documentElement.classList.contains("intro-pending")
+    ).toBe(false);
+  });
+
   it("sessionStorageアクセスエラー時はイントロをスキップする", () => {
     Object.defineProperty(window, "sessionStorage", {
       value: {
