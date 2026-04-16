@@ -129,19 +129,6 @@ describe("useCrowdfundingPopup", () => {
     );
   });
 
-  it("openPopupでisOpenがtrueになる（sessionStorageは変更しない）", () => {
-    mockStorage[SESSION_KEY] = "true";
-    const { result } = renderHook(() => useCrowdfundingPopup());
-    expect(result.current.isOpen).toBe(false);
-
-    act(() => {
-      result.current.openPopup();
-    });
-
-    expect(result.current.isOpen).toBe(true);
-    expect(window.sessionStorage.setItem).not.toHaveBeenCalled();
-  });
-
   it("sessionStorageアクセスエラー時でもスクロールで表示される", () => {
     Object.defineProperty(window, "sessionStorage", {
       value: {
@@ -173,7 +160,7 @@ describe("useCrowdfundingPopup", () => {
     expect(result.current.isOpen).toBe(true);
   });
 
-  it("sessionStorage書き込みエラー時もclosePopupが正常に動作する", () => {
+  it("sessionStorage書き込みエラー時���closePopupが正常に動作する", () => {
     Object.defineProperty(window, "sessionStorage", {
       value: {
         getItem: vi.fn(() => null),
@@ -186,8 +173,16 @@ describe("useCrowdfundingPopup", () => {
 
     const { result } = renderHook(() => useCrowdfundingPopup());
 
+    vi.spyOn(aboutSection, "getBoundingClientRect").mockReturnValue({
+      bottom: -100, top: -500, left: 0, right: 0,
+      width: 0, height: 400, x: 0, y: -500, toJSON: vi.fn(),
+    });
+
     act(() => {
-      result.current.openPopup();
+      observerCallback(
+        [{ isIntersecting: false } as IntersectionObserverEntry],
+        {} as IntersectionObserver
+      );
     });
     expect(result.current.isOpen).toBe(true);
 

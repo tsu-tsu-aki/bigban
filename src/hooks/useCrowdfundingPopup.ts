@@ -24,7 +24,6 @@ export function useCrowdfundingPopup() {
   });
 
   const [isTriggered, setIsTriggered] = useState(false);
-  const [isManualOpen, setIsManualOpen] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const hasTriggered = useRef(false);
 
@@ -54,10 +53,9 @@ export function useCrowdfundingPopup() {
     return () => observer.disconnect();
   }, [isMounted, isNotDismissed]);
 
-  const isOpen = isMounted && ((isTriggered && !isDismissed) || isManualOpen);
+  const isOpen = isMounted && isTriggered && !isDismissed;
 
   const closePopup = useCallback(() => {
-    setIsManualOpen(false);
     setIsDismissed(true);
     try {
       sessionStorage.setItem(SESSION_KEY, "true");
@@ -66,9 +64,5 @@ export function useCrowdfundingPopup() {
     }
   }, []);
 
-  const openPopup = useCallback(() => {
-    setIsManualOpen(true);
-  }, []);
-
-  return { isOpen, openPopup, closePopup };
+  return { isOpen, closePopup };
 }

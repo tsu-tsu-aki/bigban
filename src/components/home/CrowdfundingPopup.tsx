@@ -34,7 +34,7 @@ export default function CrowdfundingPopup({
 
       if (e.key === "Tab" && dialogRef.current) {
         const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-          'button, a[href], [tabindex]:not([tabindex="-1"])'
+          'button:not([aria-hidden="true"]), a[href], [tabindex]:not([tabindex="-1"])'
         );
         /* istanbul ignore next -- defensive guard: dialog always has focusable elements */
         if (focusable.length === 0) return;
@@ -70,10 +70,12 @@ export default function CrowdfundingPopup({
           transition={{ duration: 0.8, ease: EASE }}
           className="fixed inset-0 z-[70] flex items-center justify-center p-4"
         >
-          <div
+          <button
             data-testid="crowdfunding-backdrop"
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="absolute inset-0 w-full h-full bg-black/80 backdrop-blur-sm cursor-default"
             onClick={onClose}
+            tabIndex={-1}
+            aria-hidden="true"
           />
 
           <motion.div

@@ -194,15 +194,13 @@ export default function HomeNavigation() {
             ))}
           </nav>
 
-          <div className="mt-12 flex flex-col items-center gap-4">
-            <a
-              href={RESERVE_URL}
-              {...EXTERNAL_LINK_PROPS}
-              className="bg-accent text-deep-black px-8 py-3 text-sm font-bold uppercase tracking-widest"
-            >
-              {t("reserve")}
-            </a>
-          </div>
+          <a
+            href={RESERVE_URL}
+            {...EXTERNAL_LINK_PROPS}
+            className="mt-12 bg-accent text-deep-black px-8 py-3 text-sm font-bold uppercase tracking-widest"
+          >
+            {t("reserve")}
+          </a>
         </motion.div>
       )}
     </AnimatePresence>
