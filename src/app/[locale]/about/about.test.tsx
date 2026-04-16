@@ -104,6 +104,16 @@ describe("AboutPage", () => {
   it("PBTクルーセクションを表示する", () => {
     renderWithIntl(<AboutPage />);
     expect(screen.getByText("PBTクルー")).toBeInTheDocument();
+    expect(screen.getByText("勝間田靖子 / Yasuko the Pickleballer")).toBeInTheDocument();
+    expect(screen.getByText("河野 みすず / Misuzu Kouno")).toBeInTheDocument();
+    expect(screen.getByText("堤 暁寛 / Akihiro Tsutsumi")).toBeInTheDocument();
+    const igLink = screen.getByRole("link", {
+      name: /@yasuko_the_pickleballer/,
+    });
+    expect(igLink).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/yasuko_the_pickleballer/"
+    );
   });
 
   it("ニュースセクションを表示する", () => {

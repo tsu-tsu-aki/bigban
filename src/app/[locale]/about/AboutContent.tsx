@@ -8,6 +8,7 @@ import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeFooter from "@/components/home/HomeFooter";
 import PlayerCarousel from "@/components/about/PlayerCarousel";
 import PlayerCard, { type Player } from "@/components/about/PlayerCard";
+import CrewCard from "@/components/about/CrewCard";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import { CAMPFIRE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
@@ -384,21 +385,32 @@ export default function AboutContent() {
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
-              {[1, 2, 3].map((n) => (
+              {[
+                {
+                  name: t("crew.yasuko.name"),
+                  ig: t("crew.yasuko.ig"),
+                  image: "/images/crew-yasuko.jpg",
+                },
+                {
+                  name: t("crew.misuzu.name"),
+                  ig: t("crew.misuzu.ig"),
+                  image: "/images/crew-misuzu.jpg",
+                },
+                {
+                  name: t("crew.akihiro.name"),
+                  ig: t("crew.akihiro.ig"),
+                  image: "/images/crew-akihiro.jpg",
+                  imagePosition: "object-[35%_20%]",
+                },
+              ].map((member, i) => (
                 <motion.div
-                  key={n}
-                  className="bg-gradient-to-b from-accent/[0.04] to-transparent border border-text-gray/10 rounded-sm overflow-hidden"
+                  key={member.name}
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: n * 0.1, ease: EASE }}
+                  transition={{ duration: 0.5, delay: i * 0.1, ease: EASE }}
                 >
-                  <div className="aspect-square bg-text-gray/5 flex items-center justify-center">
-                    <span className="text-text-gray text-sm">{t("photoPlaceholder")}</span>
-                  </div>
-                  <div className="p-4 text-center">
-                    <p className="text-text-light text-sm font-semibold">{t("crew.comingSoon")}</p>
-                  </div>
+                  <CrewCard member={member} />
                 </motion.div>
               ))}
             </div>
