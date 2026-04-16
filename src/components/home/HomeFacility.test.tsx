@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
+import * as framerMotion from "framer-motion";
 import jaMessages from "../../../messages/ja.json";
 import HomeFacility from "./HomeFacility";
 
@@ -35,6 +36,10 @@ describe("HomeFacility", () => {
     vi.clearAllMocks();
     mockSelectedScrollSnap.mockReturnValue(0);
     returnApi = mockEmblaApi;
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('セクションID "facility" を持つ', () => {
@@ -240,5 +245,26 @@ describe("HomeFacility", () => {
       </NextIntlClientProvider>
     );
     expect(mockOn).not.toHaveBeenCalled();
+  });
+
+  it("カルーセルがビューポートに入った時に1枚目にリセットされる", () => {
+    vi.spyOn(framerMotion, "useInView").mockReturnValue(true);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(mockScrollTo).toHaveBeenCalledWith(0, true);
+  });
+
+  it("ビューポートに入った時にemblaApiがnullならリセットしない", () => {
+    returnApi = null;
+    vi.spyOn(framerMotion, "useInView").mockReturnValue(true);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(mockScrollTo).not.toHaveBeenCalled();
   });
 });
