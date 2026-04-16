@@ -2,18 +2,19 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
-import InstagramIcon from "@/components/icons/InstagramIcon";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeFooter from "@/components/home/HomeFooter";
 import PlayerCarousel from "@/components/about/PlayerCarousel";
 import PlayerCard, { type Player } from "@/components/about/PlayerCard";
+import InstagramIcon from "@/components/icons/InstagramIcon";
 
 import type { FormEvent } from "react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
+// a5 (Vol.3 優勝) を a4 (Vol.1 準優勝) より先に表示するため意図的に逆順
 const ACHIEVEMENT_KEYS = ["a1", "a2", "a3", "a5", "a4", "a6", "a7", "a8"] as const;
 
 type AchievementType = "gold" | "silver" | "rep" | "other";
