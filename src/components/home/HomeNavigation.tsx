@@ -6,7 +6,9 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { useCrowdfundingPopup } from "@/hooks/useCrowdfundingPopup";
 import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
+import CrowdfundingPopup from "./CrowdfundingPopup";
 
 const SECTION_IDS = ["concept", "facility", "services", "pricing", "about", "access"];
 
@@ -27,6 +29,7 @@ export default function HomeNavigation() {
   const router = useRouter();
   const activeSection = useActiveSection(SECTION_IDS);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isOpen: isCrowdfundingOpen, closePopup } = useCrowdfundingPopup();
 
   const handleLogoClick = useCallback(
     (e: React.MouseEvent) => {
@@ -201,6 +204,8 @@ export default function HomeNavigation() {
         </motion.div>
       )}
     </AnimatePresence>
+
+    <CrowdfundingPopup isOpen={isCrowdfundingOpen} onClose={closePopup} />
     </>
   );
 }

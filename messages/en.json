@@ -335,6 +335,9 @@
     },
     "news": {
       "title": "News",
+      "crowdfundingHeadline": "Crowdfunding Now Live!",
+      "crowdfundingBody": "We're looking for people who want to help build and energize THE PICKLE BANG THEORY. We look forward to your support.",
+      "crowdfundingLink": "CAMP-FIRE",
       "body": "Crossminton World Champion Akihiko Nishimura to open urban pickleball facility 'THE PICKLE BANG THEORY' 1 min from Motoyawata Station in spring 2026",
       "prTimes": "PR TIMES"
     },
@@ -399,5 +402,13 @@
   },
   "Common": {
     "logoAlt": "THE PICKLE BANG THEORY"
+  },
+  "CrowdfundingPopup": {
+    "headline": "Crowdfunding Now Live!",
+    "subheadline": "We're looking for people to help us grow and rally behind PBT",
+    "cta": "Support on CAMP-FIRE",
+    "ctaAriaLabel": "Open CAMP-FIRE crowdfunding page (new tab)",
+    "close": "Close",
+    "imageAlt": "THE PICKLE BANG THEORY Crowdfunding"
   }
 }
