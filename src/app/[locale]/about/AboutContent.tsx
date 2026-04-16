@@ -14,7 +14,7 @@ import type { FormEvent } from "react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
-const ACHIEVEMENT_KEYS = ["a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8"] as const;
+const ACHIEVEMENT_KEYS = ["a1", "a2", "a3", "a5", "a4", "a6", "a7", "a8"] as const;
 
 type AchievementType = "gold" | "silver" | "rep" | "other";
 
