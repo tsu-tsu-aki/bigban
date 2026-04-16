@@ -9,8 +9,8 @@ import Autoplay from "embla-carousel-autoplay";
 
 const FACILITY_IMAGES = [
   { src: "/images/facility.jpg", altKey: "court" as const },
-  { src: "/images/comingsoon.svg", altKey: "training" as const },
-  { src: "/images/comingsoon.svg", altKey: "lounge" as const },
+  { src: "/images/comingsoon.jpg", altKey: "training" as const },
+  { src: "/images/comingsoon.jpg", altKey: "lounge" as const },
 ];
 
 const FEATURE_KEYS = [
