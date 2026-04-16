@@ -21,7 +21,7 @@ export default function HomeAbout() {
     >
       {/* Background image */}
       <Image
-        src="/images/jon-matthews-ViVHl-M_ezI-unsplash.jpg"
+        src="/images/home-nishimura.jpg"
         alt=""
         fill
         className="object-cover"
@@ -59,9 +59,9 @@ export default function HomeAbout() {
             viewport={{ once: true, margin: "-150px" }}
             transition={{ duration: 1.1, ease: EASE }}
           >
-            <div className="relative aspect-[4/3] sm:aspect-[3/4] w-full max-w-sm mx-auto lg:mx-0 overflow-hidden rounded-sm">
+            <div className="relative aspect-[4/3] w-full max-w-sm mx-auto lg:mx-0 overflow-hidden rounded-sm">
               <Image
-                src="/images/jon-matthews-ViVHl-M_ezI-unsplash.jpg"
+                src="/images/home-nishimura.jpg"
                 alt={t("founderImageAlt")}
                 fill
                 className="object-cover"

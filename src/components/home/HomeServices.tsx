@@ -16,11 +16,11 @@ interface ServiceConfig {
 }
 
 const SERVICES: ServiceConfig[] = [
-  { number: "01", key: "service01", isReversed: false, isDark: true, imageSrc: "/images/alex-saks-3k-yNMhYl5k-unsplash.jpg", imageAlt: "Empty court with net and balls", hasCta: true },
-  { number: "02", key: "service02", isReversed: true, isDark: false, imageSrc: "/images/jon-matthews-usqfZcs_GfM-unsplash.jpg", imageAlt: "Female player reaching for a shot", hasCta: false },
-  { number: "03", key: "service03", isReversed: false, isDark: true, imageSrc: "/images/jon-matthews-q13YtbIPuv0-unsplash.jpg", imageAlt: "Male player in ready stance", hasCta: false },
-  { number: "04", key: "service04", isReversed: true, isDark: false, imageSrc: "/images/jon-matthews-1gOtJQQyN04-unsplash.jpg", imageAlt: "Two players on the court", hasCta: false },
-  { number: "05", key: "service05", isReversed: false, isDark: true, imageSrc: "/images/luxe-pickleball-VTKZwNXhaSc-unsplash.jpg", imageAlt: "Paddles crossed on court", hasCta: false },
+  { number: "01", key: "service01", isReversed: false, isDark: true, imageSrc: "/images/rental.jpg", imageAlt: "Court rental", hasCta: true },
+  { number: "02", key: "service02", isReversed: true, isDark: false, imageSrc: "/images/lesson.jpg", imageAlt: "Lessons & clinics", hasCta: false },
+  { number: "03", key: "service03", isReversed: false, isDark: true, imageSrc: "/images/training.jpg", imageAlt: "Training program", hasCta: false },
+  { number: "04", key: "service04", isReversed: true, isDark: false, imageSrc: "/images/tournament.jpg", imageAlt: "Tournaments & leagues", hasCta: false },
+  { number: "05", key: "service05", isReversed: false, isDark: true, imageSrc: "/images/event.jpg", imageAlt: "Events", hasCta: false },
 ];
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
