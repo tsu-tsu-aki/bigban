@@ -87,12 +87,9 @@ export default async function LocaleLayout({
       <body className="grain-overlay">
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(sessionStorage.getItem('bigban-intro-played')!=='true'){if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-pending')}}}catch(e){}`,
+            __html: `try{var p=location.pathname;if((p==='/'||/^\\/[a-z]{2}\\/?$/.test(p))&&sessionStorage.getItem('bigban-intro-played')!=='true'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-pending')}}catch(e){}`,
           }}
         />
-        <noscript>
-          <style>{"html.intro-pending main{visibility:visible}"}</style>
-        </noscript>
         <StructuredData
           data={[
             buildSportsActivityLocation(locale),
