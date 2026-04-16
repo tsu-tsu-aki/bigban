@@ -108,6 +108,20 @@ describe("HomeNavigation", () => {
     expect(mockPush).not.toHaveBeenCalled();
   });
 
+  it("非選択の言語ボタンに hover:text-accent が適用されている", () => {
+    renderWithIntl(<HomeNavigation />);
+    const enButtons = screen.getAllByRole("button", { name: "EN" });
+    expect(enButtons[0].className).toContain("hover:text-accent");
+    expect(enButtons[0].className).toContain("cursor-default");
+  });
+
+  it("選択中の言語ボタンに hover:text-accent が適用されていない", () => {
+    renderWithIntl(<HomeNavigation />);
+    const jpButtons = screen.getAllByRole("button", { name: "JP" });
+    expect(jpButtons[0].className).not.toContain("hover:text-accent");
+    expect(jpButtons[0].className).toContain("cursor-default");
+  });
+
   it("RESERVEボタンを表示する", () => {
     renderWithIntl(<HomeNavigation />);
     const reserveLinks = screen.getAllByRole("link", { name: "RESERVE" });

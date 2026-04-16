@@ -216,7 +216,7 @@ function LanguageToggle({ isJa, onSwitch }: LanguageToggleProps) {
       <button
         onClick={() => onSwitch("ja")}
         aria-pressed={isJa}
-        className={isJa ? "text-text-light" : "text-text-gray"}
+        className={isJa ? "text-text-light cursor-default" : "text-text-gray hover:text-accent transition-colors cursor-default"}
       >
         JP
       </button>
@@ -224,7 +224,7 @@ function LanguageToggle({ isJa, onSwitch }: LanguageToggleProps) {
       <button
         onClick={() => onSwitch("en")}
         aria-pressed={!isJa}
-        className={isJa ? "text-text-gray" : "text-text-light"}
+        className={isJa ? "text-text-gray hover:text-accent transition-colors cursor-default" : "text-text-light cursor-default"}
       >
         EN
       </button>
