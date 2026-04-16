@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { EXTERNAL_LINK_PROPS } from "@/constants/site";
 
-const EASE = [0.25, 0.46, 0.45, 0.94] as const;
+const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
 const CAMPFIRE_URL =
   "https://camp-fire.jp/projects/926247/view?utm_campaign=cp_po_share_c_msg_mypage_projects_show";
@@ -43,7 +43,7 @@ export default function CrowdfundingPopup({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: EASE as unknown as number[] }}
+          transition={{ duration: 0.8, ease: EASE }}
           className="fixed inset-0 z-[70] flex items-center justify-center p-4"
         >
           <div
@@ -56,7 +56,7 @@ export default function CrowdfundingPopup({
             initial={{ opacity: 0, scale: 0.96, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -12 }}
-            transition={{ duration: 1.0, delay: 0.2, ease: EASE as unknown as number[] }}
+            transition={{ duration: 1.0, delay: 0.2, ease: EASE }}
             className="relative max-w-md w-full bg-deep-black border border-accent/30 border-t-2 border-t-accent overflow-hidden"
           >
             <button
