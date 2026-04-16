@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
+import InstagramIcon from "@/components/icons/InstagramIcon";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
@@ -83,9 +84,19 @@ export default function HomeAbout() {
             <h3 className="font-serif text-4xl lg:text-5xl text-text-light mb-2">
               {t("founderName")}
             </h3>
-            <p className="text-sm tracking-[0.15em] text-text-gray mb-8">
+            <p className="text-sm tracking-[0.15em] text-text-gray mb-4">
               {t("founderNameEn")}
             </p>
+
+            <a
+              href={`https://www.instagram.com/${t("founderInstagram").replace(/^@/, "")}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-text-light/90 text-sm mb-8 hover:text-accent transition-colors"
+            >
+              <InstagramIcon className="w-4 h-4" />
+              <span>{t("founderInstagram")}</span>
+            </a>
 
             <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4">
               {t("founderBio1")}

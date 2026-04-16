@@ -101,6 +101,22 @@ describe("HomeAbout", () => {
     expect(link).toHaveAttribute("href", "/about");
   });
 
+  it("Instagramリンクを表示する", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeAbout />
+      </NextIntlClientProvider>
+    );
+    const link = screen.getByText("@akihiko.rst").closest("a");
+    expect(link).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/akihiko.rst/"
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link?.querySelector("svg")).toBeInTheDocument();
+  });
+
   it("英語ロケールでfounderBio1を表示する", () => {
     render(
       <NextIntlClientProvider locale="en" messages={enMessages}>

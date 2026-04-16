@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import InstagramIcon from "@/components/icons/InstagramIcon";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import HomeNavigation from "@/components/home/HomeNavigation";
@@ -226,6 +227,15 @@ export default function AboutContent() {
                 {t("founder.nameEn")}
               </p>
             </div>
+            <a
+              href={`https://www.instagram.com/${t("founder.instagram").replace(/^@/, "")}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 mt-3 text-text-light/90 text-sm hover:text-accent transition-colors"
+            >
+              <InstagramIcon className="w-4 h-4" />
+              <span>{t("founder.instagram")}</span>
+            </a>
           </motion.div>
 
           {/* Photo left + Text right */}

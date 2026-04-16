@@ -114,6 +114,18 @@ describe("AboutPage", () => {
     );
   });
 
+  it("FOUNDERセクションに西村昭彦のInstagramリンクを表示する", () => {
+    renderWithIntl(<AboutPage />);
+    const link = screen.getByText("@akihiko.rst").closest("a");
+    expect(link).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/akihiko.rst/"
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link?.querySelector("svg")).toBeInTheDocument();
+  });
+
   it("メールアドレスを表示しない", () => {
     renderWithIntl(<AboutPage />);
     const emailElements = screen.queryAllByText(/hello@rstagency/);
