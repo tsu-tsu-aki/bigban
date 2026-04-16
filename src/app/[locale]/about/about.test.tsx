@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import AboutPage from "./AboutContent";
 import jaMessages from "../../../../messages/ja.json";
+import enMessages from "../../../../messages/en.json";
 
 import type { ReactElement } from "react";
 
@@ -29,9 +30,10 @@ class MockIntersectionObserver {
 }
 global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
 
-function renderWithIntl(ui: ReactElement) {
+function renderWithIntl(ui: ReactElement, locale: "ja" | "en" = "ja") {
+  const messages = locale === "ja" ? jaMessages : enMessages;
   return render(
-    <NextIntlClientProvider locale="ja" messages={jaMessages}>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       {ui}
     </NextIntlClientProvider>
   );
@@ -59,9 +61,14 @@ describe("AboutPage", () => {
     expect(contactElements.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("CONTACTセクションに施設住所が表示される", () => {
+  it("CONTACTセクションに施設住所が表示される（JP）", () => {
     renderWithIntl(<AboutPage />);
     expect(screen.getByText("千葉県市川市八幡2-16-6 6階")).toBeInTheDocument();
+  });
+
+  it("CONTACTセクションに施設住所が表示される（EN）", () => {
+    renderWithIntl(<AboutPage />, "en");
+    expect(screen.getByText("2-16-6 6F, Yawata, Ichikawa City, Chiba")).toBeInTheDocument();
   });
 
   it("RST Agency情報を表示する", () => {
