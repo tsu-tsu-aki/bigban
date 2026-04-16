@@ -1,9 +1,11 @@
+import { useId } from "react";
+
 interface InstagramIconProps {
   className?: string;
 }
 
 export default function InstagramIcon({ className }: InstagramIconProps) {
-  const gradientId = "instagram-brand-gradient";
+  const gradientId = `instagram-brand-gradient-${useId()}`;
 
   return (
     <svg

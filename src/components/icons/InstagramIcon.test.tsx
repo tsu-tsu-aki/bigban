@@ -18,11 +18,23 @@ describe("InstagramIcon", () => {
   it("ブランドグラデーションでfillを描画する", () => {
     const { container } = render(<InstagramIcon />);
     const svg = container.querySelector("svg");
-    expect(svg?.getAttribute("fill")).toContain("url(#instagram-brand-gradient)");
+    expect(svg?.getAttribute("fill")).toMatch(/^url\(#instagram-brand-gradient-/);
     const gradient = container.querySelector("linearGradient");
     expect(gradient).toBeInTheDocument();
     const stops = container.querySelectorAll("stop");
     expect(stops.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("複数インスタンスでgradient IDが衝突しない", () => {
+    const { container } = render(
+      <>
+        <InstagramIcon />
+        <InstagramIcon />
+      </>
+    );
+    const gradients = container.querySelectorAll("linearGradient");
+    const ids = Array.from(gradients).map(g => g.getAttribute("id"));
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
   it("classNameを受け取って適用する", () => {
