@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import AboutPage from "./AboutContent";
 import jaMessages from "../../../../messages/ja.json";
+import enMessages from "../../../../messages/en.json";
 
 import type { ReactElement } from "react";
 
@@ -29,9 +30,10 @@ class MockIntersectionObserver {
 }
 global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
 
-function renderWithIntl(ui: ReactElement) {
+function renderWithIntl(ui: ReactElement, locale: "ja" | "en" = "ja") {
+  const messages = locale === "ja" ? jaMessages : enMessages;
   return render(
-    <NextIntlClientProvider locale="ja" messages={jaMessages}>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       {ui}
     </NextIntlClientProvider>
   );
@@ -57,6 +59,16 @@ describe("AboutPage", () => {
     expect(screen.getByText("NEWS")).toBeInTheDocument();
     const contactElements = screen.getAllByText("CONTACT");
     expect(contactElements.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("CONTACTセクションに施設住所が表示される（JP）", () => {
+    renderWithIntl(<AboutPage />);
+    expect(screen.getByText("千葉県市川市八幡2-16-6 6階")).toBeInTheDocument();
+  });
+
+  it("CONTACTセクションに施設住所が表示される（EN）", () => {
+    renderWithIntl(<AboutPage />, "en");
+    expect(screen.getByText("2-16-6 6F, Yawata, Ichikawa City, Chiba")).toBeInTheDocument();
   });
 
   it("RST Agency情報を表示する", () => {
@@ -92,11 +104,27 @@ describe("AboutPage", () => {
   it("PBTクルーセクションを表示する", () => {
     renderWithIntl(<AboutPage />);
     expect(screen.getByText("PBTクルー")).toBeInTheDocument();
+    expect(screen.getByText("勝間田靖子 / Yasuko the Pickleballer")).toBeInTheDocument();
+    expect(screen.getByText("河野 みすず / Misuzu Kouno")).toBeInTheDocument();
+    expect(screen.getByText("堤 暁寛 / Akihiro Tsutsumi")).toBeInTheDocument();
+    const igLink = screen.getByRole("link", {
+      name: /@yasuko_the_pickleballer/,
+    });
+    expect(igLink).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/yasuko_the_pickleballer/"
+    );
   });
 
   it("ニュースセクションを表示する", () => {
     renderWithIntl(<AboutPage />);
     expect(screen.getByText("ニュース")).toBeInTheDocument();
+    expect(screen.getByText("クラウドファンディング実施中！")).toBeInTheDocument();
+    const campfireLink = screen.getByRole("link", { name: /CAMP-FIRE/ });
+    expect(campfireLink).toHaveAttribute(
+      "href",
+      "https://camp-fire.jp/projects/926247/view?utm_campaign=cp_po_share_c_msg_mypage_projects_show"
+    );
     expect(screen.getByText("PR TIMES")).toBeInTheDocument();
   });
 
@@ -112,6 +140,18 @@ describe("AboutPage", () => {
       "href",
       "https://www.instagram.com/thepicklebangtheory"
     );
+  });
+
+  it("FOUNDERセクションに西村昭彦のInstagramリンクを表示する", () => {
+    renderWithIntl(<AboutPage />);
+    const link = screen.getByText("@akihiko.rst").closest("a");
+    expect(link).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/akihiko.rst/"
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link?.querySelector("svg")).toBeInTheDocument();
   });
 
   it("メールアドレスを表示しない", () => {
@@ -140,13 +180,13 @@ describe("AboutPage", () => {
     expect(screen.getByText("PICKLEBALL CAREER")).toBeInTheDocument();
     expect(screen.getByText("YEAR")).toBeInTheDocument();
     expect(screen.getByText("TOURNAMENT")).toBeInTheDocument();
-    expect(screen.getByText("EVENT")).toBeInTheDocument();
+    expect(screen.getByText("CATEGORY")).toBeInTheDocument();
     expect(screen.getByText("RESULT")).toBeInTheDocument();
   });
 
   it("戦績データが全件表示される", () => {
     renderWithIntl(<AboutPage />);
-    expect(screen.getByText("JPA 日本ランキング上位者")).toBeInTheDocument();
+    expect(screen.getByText("Pickleball D-Joy Tour 2026")).toBeInTheDocument();
     expect(screen.getByText("PPA World Championship")).toBeInTheDocument();
     expect(screen.getByText("KINTO JAPAN CUP 19+A")).toBeInTheDocument();
     expect(screen.getByText("JPA TOP TOUR T1")).toBeInTheDocument();
@@ -157,7 +197,7 @@ describe("AboutPage", () => {
     renderWithIntl(<AboutPage />);
     const goldResults = screen.getAllByText("優勝");
     expect(goldResults.length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText("代表メンバー")).toBeInTheDocument();
+    expect(screen.getByText("JPA日本ランキング上位者として選抜")).toBeInTheDocument();
     expect(screen.getByText("4位")).toBeInTheDocument();
   });
 

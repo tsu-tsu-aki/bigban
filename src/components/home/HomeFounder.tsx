@@ -43,7 +43,7 @@ export default function HomeFounder() {
     >
       {/* Background image */}
       <Image
-        src="/images/jon-matthews-ViVHl-M_ezI-unsplash.jpg"
+        src="/images/home-nishimura.jpg"
         alt=""
         fill
         className="object-cover"

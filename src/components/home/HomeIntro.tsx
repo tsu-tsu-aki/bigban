@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useSyncExternalStore } from "react";
+import { useState, useCallback, useEffect, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { StarfieldWarpIntro } from "@/components/intro/StarfieldWarpIntro";
@@ -34,6 +34,10 @@ export default function HomeIntro({ children }: HomeIntroProps) {
   });
   const [phase, setPhase] = useState<AnimationPhase>("dark");
   const [isIntroComplete, setIsIntroComplete] = useState(!shouldShowIntro);
+
+  useEffect(() => {
+    document.documentElement.classList.remove("intro-pending");
+  }, []);
 
   const handlePhaseChange = useCallback((newPhase: AnimationPhase) => {
     setPhase(newPhase);

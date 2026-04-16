@@ -24,7 +24,7 @@ export default function HomeHero() {
       {/* Full-width 16:9 background image */}
       <div className="relative aspect-[16/9] min-h-[calc(100vh-100px)] w-full">
         <Image
-          src="/images/jon-matthews-YFNDwuYoyCA-unsplash.jpg"
+          src="/images/hero.jpg"
           alt={t("heroImageAlt")}
           fill
           className="object-cover"

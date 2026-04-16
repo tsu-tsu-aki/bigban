@@ -8,9 +8,9 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
 const FACILITY_IMAGES = [
-  { src: "/images/sarasota-guide-uHdY8VYTfbI-unsplash.jpg", altKey: "court" as const },
-  { src: "/images/facility-interior-01.png", altKey: "training" as const },
-  { src: "/images/facility-interior-02.png", altKey: "lounge" as const },
+  { src: "/images/facility.jpg", altKey: "court" as const },
+  { src: "/images/comingsoon.jpg", altKey: "training" as const },
+  { src: "/images/comingsoon.jpg", altKey: "lounge" as const },
 ];
 
 const FEATURE_KEYS = [
@@ -140,7 +140,7 @@ export default function HomeFacility() {
             <div className="flex">
               {FACILITY_IMAGES.map((image, i) => (
                 <div
-                  key={image.src}
+                  key={image.altKey}
                   role="group"
                   aria-roledescription="slide"
                   aria-label={`${i + 1} / ${FACILITY_IMAGES.length}`}
@@ -184,7 +184,7 @@ export default function HomeFacility() {
           <div className="flex justify-center gap-3 mt-6">
             {FACILITY_IMAGES.map((image, i) => (
               <button
-                key={image.src}
+                key={image.altKey}
                 type="button"
                 onClick={() => handleScrollTo(i)}
                 aria-label={t("carousel.showImage", { index: i + 1, alt: t(`images.${image.altKey}`) })}

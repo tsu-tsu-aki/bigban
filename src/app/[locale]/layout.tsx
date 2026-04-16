@@ -82,8 +82,14 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       className={`${orbitron.variable} ${inter.variable} ${notoSansJP.variable}`}
+      suppressHydrationWarning
     >
       <body className="grain-overlay">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var p=location.pathname;if((p==='/'||/^\\/[a-z]{2}\\/?$/.test(p))&&sessionStorage.getItem('bigban-intro-played')!=='true'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-pending')}}catch(e){}`,
+          }}
+        />
         <StructuredData
           data={[
             buildSportsActivityLocation(locale),

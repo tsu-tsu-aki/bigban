@@ -8,12 +8,16 @@ import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeFooter from "@/components/home/HomeFooter";
 import PlayerCarousel from "@/components/about/PlayerCarousel";
 import PlayerCard, { type Player } from "@/components/about/PlayerCard";
+import CrewCard from "@/components/about/CrewCard";
+import InstagramIcon from "@/components/icons/InstagramIcon";
+import { CAMPFIRE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
 import type { FormEvent } from "react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
-const ACHIEVEMENT_KEYS = ["a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8"] as const;
+// a5 (Vol.3 優勝) を a4 (Vol.1 準優勝) より先に表示するため意図的に逆順
+const ACHIEVEMENT_KEYS = ["a1", "a2", "a3", "a5", "a4", "a6", "a7", "a8"] as const;
 
 type AchievementType = "gold" | "silver" | "rep" | "other";
 
@@ -81,6 +85,8 @@ export default function AboutContent() {
         name: t("players.playerName"),
         ig: t("players.playerIg"),
         bio: t("players.playerBio"),
+        image: "/images/yuta-yoshida.jpg",
+        imageAlt: t("players.playerName"),
       },
       {
         name: t("players.comingSoon"),
@@ -193,10 +199,6 @@ export default function AboutContent() {
                     <dd className="text-text-light mt-1">{t("company.valueCeo")}</dd>
                   </div>
                   <div>
-                    <dt className="text-text-gray">{t("company.labelAddress")}</dt>
-                    <dd className="text-text-light mt-1">{t("company.valueAddress")}</dd>
-                  </div>
-                  <div>
                     <dt className="text-text-gray">{t("company.labelBusiness")}</dt>
                     <dd className="text-text-light mt-1">{t("company.valueBusiness")}</dd>
                   </div>
@@ -228,6 +230,15 @@ export default function AboutContent() {
                 {t("founder.nameEn")}
               </p>
             </div>
+            <a
+              href={`https://www.instagram.com/${t("founder.instagram").replace(/^@/, "")}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 mt-3 text-text-light/90 text-sm hover:text-accent transition-colors"
+            >
+              <InstagramIcon className="w-4 h-4" />
+              <span>{t("founder.instagram")}</span>
+            </a>
           </motion.div>
 
           {/* Photo left + Text right */}
@@ -241,7 +252,7 @@ export default function AboutContent() {
             >
               <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm">
                 <Image
-                  src="/images/founder-nishimura.png"
+                  src="/images/about-nishimura.jpg"
                   alt={t("founder.imageAlt")}
                   fill
                   className="object-cover"
@@ -289,7 +300,7 @@ export default function AboutContent() {
               <div className="hidden sm:grid grid-cols-[70px_1fr_1fr_120px] gap-4 border-b border-accent/30 pb-2 mb-2">
                 <span className="text-[10px] tracking-[0.3em] text-text-gray">YEAR</span>
                 <span className="text-[10px] tracking-[0.3em] text-text-gray">TOURNAMENT</span>
-                <span className="text-[10px] tracking-[0.3em] text-text-gray">EVENT</span>
+                <span className="text-[10px] tracking-[0.3em] text-text-gray">CATEGORY</span>
                 <span className="text-[10px] tracking-[0.3em] text-text-gray text-right">RESULT</span>
               </div>
               {ACHIEVEMENT_KEYS.map((key) => ({
@@ -338,7 +349,7 @@ export default function AboutContent() {
             <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-6">
               {t("players.title")}
             </h2>
-            <p className="text-text-light/90 text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
+            <p className="text-text-light/90 text-sm lg:text-base leading-relaxed mb-12">
               {t("players.description")}
             </p>
 
@@ -374,21 +385,32 @@ export default function AboutContent() {
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
-              {[1, 2, 3].map((n) => (
+              {[
+                {
+                  name: t("crew.yasuko.name"),
+                  ig: t("crew.yasuko.ig"),
+                  image: "/images/crew-yasuko.jpg",
+                },
+                {
+                  name: t("crew.misuzu.name"),
+                  ig: t("crew.misuzu.ig"),
+                  image: "/images/crew-misuzu.jpg",
+                },
+                {
+                  name: t("crew.akihiro.name"),
+                  ig: t("crew.akihiro.ig"),
+                  image: "/images/crew-akihiro.jpg",
+                  imagePosition: "object-[35%_20%]",
+                },
+              ].map((member, i) => (
                 <motion.div
-                  key={n}
-                  className="bg-gradient-to-b from-accent/[0.04] to-transparent border border-text-gray/10 rounded-sm overflow-hidden"
+                  key={member.name}
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: n * 0.1, ease: EASE }}
+                  transition={{ duration: 0.5, delay: i * 0.1, ease: EASE }}
                 >
-                  <div className="aspect-square bg-text-gray/5 flex items-center justify-center">
-                    <span className="text-text-gray text-sm">{t("photoPlaceholder")}</span>
-                  </div>
-                  <div className="p-4 text-center">
-                    <p className="text-text-light text-sm font-semibold">{t("crew.comingSoon")}</p>
-                  </div>
+                  <CrewCard member={member} />
                 </motion.div>
               ))}
             </div>
@@ -411,18 +433,35 @@ export default function AboutContent() {
               {t("news.title")}
             </h2>
 
-            <div className="border-l-2 border-accent/20 pl-6 lg:pl-8">
-              <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
-                {t("news.body")}
-              </p>
-              <a
-                href="https://prtimes.jp/main/html/rd/p/000000003.000179043.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-accent text-sm tracking-wide hover:gap-3 transition-all duration-300"
-              >
-                {t("news.prTimes")} <span className="text-lg">→</span>
-              </a>
+            <div className="space-y-10">
+              <div className="border-l-2 border-accent/20 pl-6 lg:pl-8">
+                <h3 className="text-accent text-lg lg:text-xl font-bold mb-3">
+                  {t("news.crowdfundingHeadline")}
+                </h3>
+                <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
+                  {t("news.crowdfundingBody")}
+                </p>
+                <a
+                  href={CAMPFIRE_URL}
+                  {...EXTERNAL_LINK_PROPS}
+                  className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
+                >
+                  {t("news.crowdfundingLink")} <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">→</span>
+                </a>
+              </div>
+
+              <div className="border-l-2 border-accent/20 pl-6 lg:pl-8">
+                <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
+                  {t("news.body")}
+                </p>
+                <a
+                  href="https://prtimes.jp/main/html/rd/p/000000003.000179043.html"
+                  {...EXTERNAL_LINK_PROPS}
+                  className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
+                >
+                  {t("news.prTimes")} <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">→</span>
+                </a>
+              </div>
             </div>
           </motion.div>
         </div>

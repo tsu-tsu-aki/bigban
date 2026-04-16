@@ -6,7 +6,9 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { useCrowdfundingPopup } from "@/hooks/useCrowdfundingPopup";
 import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
+import CrowdfundingPopup from "./CrowdfundingPopup";
 
 const SECTION_IDS = ["concept", "facility", "services", "pricing", "about", "access"];
 
@@ -27,6 +29,7 @@ export default function HomeNavigation() {
   const router = useRouter();
   const activeSection = useActiveSection(SECTION_IDS);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isOpen: isCrowdfundingOpen, closePopup } = useCrowdfundingPopup();
 
   const handleLogoClick = useCallback(
     (e: React.MouseEvent) => {
@@ -201,6 +204,8 @@ export default function HomeNavigation() {
         </motion.div>
       )}
     </AnimatePresence>
+
+    <CrowdfundingPopup isOpen={isCrowdfundingOpen} onClose={closePopup} />
     </>
   );
 }
@@ -216,7 +221,7 @@ function LanguageToggle({ isJa, onSwitch }: LanguageToggleProps) {
       <button
         onClick={() => onSwitch("ja")}
         aria-pressed={isJa}
-        className={isJa ? "text-text-light" : "text-text-gray"}
+        className={isJa ? "text-text-light cursor-default" : "text-text-gray hover:text-accent motion-safe:transition-colors cursor-pointer"}
       >
         JP
       </button>
@@ -224,7 +229,7 @@ function LanguageToggle({ isJa, onSwitch }: LanguageToggleProps) {
       <button
         onClick={() => onSwitch("en")}
         aria-pressed={!isJa}
-        className={isJa ? "text-text-gray" : "text-text-light"}
+        className={isJa ? "text-text-gray hover:text-accent motion-safe:transition-colors cursor-pointer" : "text-text-light cursor-default"}
       >
         EN
       </button>
