@@ -62,7 +62,7 @@ export default function PlayerCard({ player }: PlayerCardProps) {
           </a>
         )}
         {player.bio && (
-          <p className="text-text-light/90 text-sm @lg:text-base leading-relaxed">
+          <p className="text-text-light/90 text-sm @lg:text-base leading-relaxed whitespace-pre-line">
             {player.bio}
           </p>
         )}
