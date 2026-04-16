@@ -434,7 +434,7 @@ export default function AboutContent() {
                   {...EXTERNAL_LINK_PROPS}
                   className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
                 >
-                  {t("news.crowdfundingLink")} <span className="inline-block text-lg transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  {t("news.crowdfundingLink")} <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">→</span>
                 </a>
               </div>
 
@@ -447,7 +447,7 @@ export default function AboutContent() {
                   {...EXTERNAL_LINK_PROPS}
                   className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
                 >
-                  {t("news.prTimes")} <span className="inline-block text-lg transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  {t("news.prTimes")} <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">→</span>
                 </a>
               </div>
             </div>
