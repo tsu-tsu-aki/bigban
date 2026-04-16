@@ -46,7 +46,7 @@ export default function PlayerCard({ player }: PlayerCardProps) {
           </div>
         )}
       </div>
-      <div className="p-6 text-center">
+      <div className="p-6">
         <p className="text-text-light text-lg @lg:text-xl font-semibold mb-1">
           {player.name}
         </p>
