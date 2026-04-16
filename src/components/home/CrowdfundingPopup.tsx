@@ -1,15 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { EXTERNAL_LINK_PROPS } from "@/constants/site";
+import { CAMPFIRE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
 const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
-
-const CAMPFIRE_URL =
-  "https://camp-fire.jp/projects/926247/view?utm_campaign=cp_po_share_c_msg_mypage_projects_show";
 
 interface CrowdfundingPopupProps {
   isOpen: boolean;
@@ -21,12 +18,38 @@ export default function CrowdfundingPopup({
   onClose,
 }: CrowdfundingPopupProps) {
   const t = useTranslations("CrowdfundingPopup");
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
 
+    closeButtonRef.current?.focus();
+
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, a[href], [tabindex]:not([tabindex="-1"])'
+        );
+        /* istanbul ignore next -- defensive guard: dialog always has focusable elements */
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
 
     document.addEventListener("keydown", handleKeyDown);
@@ -37,6 +60,7 @@ export default function CrowdfundingPopup({
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="crowdfunding-title"
@@ -60,6 +84,7 @@ export default function CrowdfundingPopup({
             className="relative max-w-md w-full bg-deep-black border border-accent/30 border-t-2 border-t-accent overflow-hidden"
           >
             <button
+              ref={closeButtonRef}
               aria-label={t("close")}
               onClick={onClose}
               className="absolute top-3 right-3 z-10 text-text-gray hover:text-text-light motion-safe:transition-colors bg-black/50 rounded-full w-8 h-8 flex items-center justify-center"

@@ -19,7 +19,7 @@ export function useCrowdfundingPopup() {
     try {
       return sessionStorage.getItem(SESSION_KEY) !== "true";
     } catch {
-      return false;
+      return true;
     }
   });
 

@@ -9,6 +9,7 @@ import HomeFooter from "@/components/home/HomeFooter";
 import PlayerCarousel from "@/components/about/PlayerCarousel";
 import PlayerCard, { type Player } from "@/components/about/PlayerCard";
 import InstagramIcon from "@/components/icons/InstagramIcon";
+import { CAMPFIRE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
 import type { FormEvent } from "react";
 
@@ -429,12 +430,11 @@ export default function AboutContent() {
                   {t("news.crowdfundingBody")}
                 </p>
                 <a
-                  href="https://camp-fire.jp/projects/926247/view?utm_campaign=cp_po_share_c_msg_mypage_projects_show"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-accent text-sm tracking-wide hover:gap-3 transition-all duration-300"
+                  href={CAMPFIRE_URL}
+                  {...EXTERNAL_LINK_PROPS}
+                  className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
                 >
-                  {t("news.crowdfundingLink")} <span className="text-lg">→</span>
+                  {t("news.crowdfundingLink")} <span className="inline-block text-lg transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </a>
               </div>
 
@@ -444,11 +444,10 @@ export default function AboutContent() {
                 </p>
                 <a
                   href="https://prtimes.jp/main/html/rd/p/000000003.000179043.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-accent text-sm tracking-wide hover:gap-3 transition-all duration-300"
+                  {...EXTERNAL_LINK_PROPS}
+                  className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
                 >
-                  {t("news.prTimes")} <span className="text-lg">→</span>
+                  {t("news.prTimes")} <span className="inline-block text-lg transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </a>
               </div>
             </div>

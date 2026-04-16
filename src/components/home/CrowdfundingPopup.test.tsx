@@ -78,6 +78,40 @@ describe("CrowdfundingPopup", () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
+  it("モーダル表示時に閉じるボタンにフォーカスが移る", () => {
+    renderWithIntl(<CrowdfundingPopup isOpen={true} onClose={vi.fn()} />);
+    const closeButton = screen.getByLabelText("閉じる");
+    expect(document.activeElement).toBe(closeButton);
+  });
+
+  it("Tabキーでフォーカスがダイアログ内にトラップされる", () => {
+    renderWithIntl(<CrowdfundingPopup isOpen={true} onClose={vi.fn()} />);
+    const closeButton = screen.getByLabelText("閉じる");
+    const ctaLink = screen.getByRole("link", { name: /CAMP-FIRE/ });
+
+    // 最後の要素からTabで最初に戻る
+    (ctaLink as HTMLElement).focus();
+    fireEvent.keyDown(document, { key: "Tab" });
+    expect(document.activeElement).toBe(closeButton);
+
+    // 最初の要素からShift+Tabで最後に戻る
+    closeButton.focus();
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+    expect(document.activeElement).toBe(ctaLink);
+  });
+
+  it("中間のフォーカス可能要素でTabキーは通常遷移する", () => {
+    renderWithIntl(<CrowdfundingPopup isOpen={true} onClose={vi.fn()} />);
+    const closeButton = screen.getByLabelText("閉じる");
+
+    // 中間要素（最初でも最後でもない）でTabしてもpreventDefaultされない
+    closeButton.focus();
+    const event = new KeyboardEvent("keydown", { key: "Tab", bubbles: true });
+    const preventSpy = vi.spyOn(event, "preventDefault");
+    document.dispatchEvent(event);
+    expect(preventSpy).not.toHaveBeenCalled();
+  });
+
   it("CTAリンクがCAMP-FIRE URLを持つ", () => {
     renderWithIntl(<CrowdfundingPopup isOpen={true} onClose={vi.fn()} />);
     const ctaLink = screen.getByRole("link", { name: /CAMP-FIRE/ });
