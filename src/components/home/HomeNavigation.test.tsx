@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import HomeNavigation from "./HomeNavigation";
@@ -55,6 +55,11 @@ const NAV_ITEMS = [
 ];
 
 describe("HomeNavigation", () => {
+  beforeEach(() => {
+    // デフォルトでポップアップを非表示にし、既存テストとの競合を防ぐ
+    sessionStorage.setItem("bigban-crowdfunding-dismissed", "true");
+  });
+
   it("ロゴ画像を表示する", () => {
     renderWithIntl(<HomeNavigation />);
     const logo = screen.getByAltText("THE PICKLE BANG THEORY");
@@ -262,5 +267,11 @@ describe("HomeNavigation", () => {
     renderWithIntl(<HomeNavigation />, "en");
     const nav = screen.getByRole("navigation", { name: "Main Navigation" });
     expect(nav).toBeInTheDocument();
+  });
+
+  it("sessionStorage未設定時でもスクロール前はポップアップが非表示", () => {
+    sessionStorage.removeItem("bigban-crowdfunding-dismissed");
+    renderWithIntl(<HomeNavigation />);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });

@@ -337,6 +337,9 @@
     },
     "news": {
       "title": "ニュース",
+      "crowdfundingHeadline": "クラウドファンディング実施中！",
+      "crowdfundingBody": "THE PICKLE BANG THEORYを一緒に育て上げてくれる方、盛り上げてくれる方を募集しています。皆さまのご支援をお待ちしております。",
+      "crowdfundingLink": "CAMP-FIRE",
       "body": "クロスミントン世界王者・西村昭彦 本八幡駅徒歩1分に都市型ピックルボール施設『THE PICKLE BANG THEORY』2026年春オープン",
       "prTimes": "PR TIMES"
     },
@@ -401,5 +404,15 @@
   },
   "Common": {
     "logoAlt": "THE PICKLE BANG THEORY"
+  },
+  "CrowdfundingPopup": {
+    "headline": "クラファン実施中！",
+    "subheadline": "PBTを一緒に育て上げてくれる方、盛り上げてくれる方を募集します",
+    "cta": "CAMP-FIREで支援する",
+    "ctaAriaLabel": "CAMP-FIREのクラウドファンディングページを開く（新しいタブ）",
+    "close": "閉じる",
+    "imageAlt": "THE PICKLE BANG THEORY クラウドファンディング",
+    "badgeLabel": "クラファン募集中",
+    "openPopup": "クラウドファンディング情報を開く"
   }
 }
