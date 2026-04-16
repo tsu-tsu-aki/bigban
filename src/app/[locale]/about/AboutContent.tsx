@@ -8,12 +8,14 @@ import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeFooter from "@/components/home/HomeFooter";
 import PlayerCarousel from "@/components/about/PlayerCarousel";
 import PlayerCard, { type Player } from "@/components/about/PlayerCard";
+import InstagramIcon from "@/components/icons/InstagramIcon";
 
 import type { FormEvent } from "react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
-const ACHIEVEMENT_KEYS = ["a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8"] as const;
+// a5 (Vol.3 優勝) を a4 (Vol.1 準優勝) より先に表示するため意図的に逆順
+const ACHIEVEMENT_KEYS = ["a1", "a2", "a3", "a5", "a4", "a6", "a7", "a8"] as const;
 
 type AchievementType = "gold" | "silver" | "rep" | "other";
 
@@ -81,6 +83,8 @@ export default function AboutContent() {
         name: t("players.playerName"),
         ig: t("players.playerIg"),
         bio: t("players.playerBio"),
+        image: "/images/yuta-yoshida.jpg",
+        imageAlt: t("players.playerName"),
       },
       {
         name: t("players.comingSoon"),
@@ -193,10 +197,6 @@ export default function AboutContent() {
                     <dd className="text-text-light mt-1">{t("company.valueCeo")}</dd>
                   </div>
                   <div>
-                    <dt className="text-text-gray">{t("company.labelAddress")}</dt>
-                    <dd className="text-text-light mt-1">{t("company.valueAddress")}</dd>
-                  </div>
-                  <div>
                     <dt className="text-text-gray">{t("company.labelBusiness")}</dt>
                     <dd className="text-text-light mt-1">{t("company.valueBusiness")}</dd>
                   </div>
@@ -228,6 +228,15 @@ export default function AboutContent() {
                 {t("founder.nameEn")}
               </p>
             </div>
+            <a
+              href={`https://www.instagram.com/${t("founder.instagram").replace(/^@/, "")}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 mt-3 text-text-light/90 text-sm hover:text-accent transition-colors"
+            >
+              <InstagramIcon className="w-4 h-4" />
+              <span>{t("founder.instagram")}</span>
+            </a>
           </motion.div>
 
           {/* Photo left + Text right */}
@@ -289,7 +298,7 @@ export default function AboutContent() {
               <div className="hidden sm:grid grid-cols-[70px_1fr_1fr_120px] gap-4 border-b border-accent/30 pb-2 mb-2">
                 <span className="text-[10px] tracking-[0.3em] text-text-gray">YEAR</span>
                 <span className="text-[10px] tracking-[0.3em] text-text-gray">TOURNAMENT</span>
-                <span className="text-[10px] tracking-[0.3em] text-text-gray">EVENT</span>
+                <span className="text-[10px] tracking-[0.3em] text-text-gray">CATEGORY</span>
                 <span className="text-[10px] tracking-[0.3em] text-text-gray text-right">RESULT</span>
               </div>
               {ACHIEVEMENT_KEYS.map((key) => ({
@@ -338,7 +347,7 @@ export default function AboutContent() {
             <h2 className="text-text-light text-2xl lg:text-3xl font-bold mb-6">
               {t("players.title")}
             </h2>
-            <p className="text-text-light/90 text-sm lg:text-base leading-relaxed mb-12 max-w-2xl">
+            <p className="text-text-light/90 text-sm lg:text-base leading-relaxed mb-12">
               {t("players.description")}
             </p>
 

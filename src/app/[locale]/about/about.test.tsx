@@ -114,6 +114,18 @@ describe("AboutPage", () => {
     );
   });
 
+  it("FOUNDERセクションに西村昭彦のInstagramリンクを表示する", () => {
+    renderWithIntl(<AboutPage />);
+    const link = screen.getByText("@akihiko.rst").closest("a");
+    expect(link).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/akihiko.rst/"
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link?.querySelector("svg")).toBeInTheDocument();
+  });
+
   it("メールアドレスを表示しない", () => {
     renderWithIntl(<AboutPage />);
     const emailElements = screen.queryAllByText(/hello@rstagency/);
@@ -140,13 +152,13 @@ describe("AboutPage", () => {
     expect(screen.getByText("PICKLEBALL CAREER")).toBeInTheDocument();
     expect(screen.getByText("YEAR")).toBeInTheDocument();
     expect(screen.getByText("TOURNAMENT")).toBeInTheDocument();
-    expect(screen.getByText("EVENT")).toBeInTheDocument();
+    expect(screen.getByText("CATEGORY")).toBeInTheDocument();
     expect(screen.getByText("RESULT")).toBeInTheDocument();
   });
 
   it("戦績データが全件表示される", () => {
     renderWithIntl(<AboutPage />);
-    expect(screen.getByText("JPA 日本ランキング上位者")).toBeInTheDocument();
+    expect(screen.getByText("Pickleball D-Joy Tour 2026")).toBeInTheDocument();
     expect(screen.getByText("PPA World Championship")).toBeInTheDocument();
     expect(screen.getByText("KINTO JAPAN CUP 19+A")).toBeInTheDocument();
     expect(screen.getByText("JPA TOP TOUR T1")).toBeInTheDocument();
@@ -157,7 +169,7 @@ describe("AboutPage", () => {
     renderWithIntl(<AboutPage />);
     const goldResults = screen.getAllByText("優勝");
     expect(goldResults.length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText("代表メンバー")).toBeInTheDocument();
+    expect(screen.getByText("JPA日本ランキング上位者として選抜")).toBeInTheDocument();
     expect(screen.getByText("4位")).toBeInTheDocument();
   });
 

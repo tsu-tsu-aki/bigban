@@ -130,7 +130,7 @@
       "airConditioning": "Full Air Conditioning",
       "vendingMachine": "Vending Machines",
       "rentalEquipment": "Equipment Rental Available",
-      "unmannedCheckin": "Unmanned Check-in (Planned)",
+      "unmannedCheckin": "Unmanned Check-in",
       "showCourt": "Convertible to 1 Show Court",
       "preparing": "Coming Soon"
     },
@@ -205,6 +205,7 @@
     "founderNameEn": "AKIHIKO NISHIMURA",
     "founderBio1": "Crossminton World Champion. Discovered pickleball in 2023.",
     "founderBio2": "Expanding his scope of activity as a player, JPA TOP TOUR tournament director, and facility producer.",
+    "founderInstagram": "@akihiko.rst",
     "readMore": "Learn More",
     "founderImageAlt": "Akihiko Nishimura"
   },
@@ -249,15 +250,14 @@
       "description2": "We also plan and execute pickleball-focused events, organize official tournaments, and manage athletes. Our members, including the CEO, are competitive players themselves.",
       "labelCompanyName": "Company Name",
       "labelCeo": "CEO",
-      "labelAddress": "Address",
       "labelBusiness": "Business",
       "valueCeo": "Akihiko Nishimura",
-      "valueAddress": "Shinagawa-ku, Tokyo",
       "valueBusiness": "Sports Facility Operations / Sports Events / Tournament Management / Sports Equipment Planning & Sales"
     },
     "founder": {
       "name": "Akihiko Nishimura",
       "nameEn": "AKIHIKO NISHIMURA",
+      "instagram": "@akihiko.rst",
       "imageAlt": "Akihiko Nishimura",
       "bio1": "Born in Hokkaido. Started badminton at age 8, honing his competitive skills at Aomori Yamada High School and Chuo University, two of Japan's top badminton powerhouses. Reached the singles quarterfinals at both the Inter-High and the National High School Select Tournament.",
       "bio2": "As a professional, he competed independently — without joining a corporate team — making four appearances at the All Japan Badminton Championships, the nation's premier tournament, and facing Japan's top players.",
@@ -266,9 +266,9 @@
       "achievements": {
         "a1": {
           "year": "2026",
-          "tournament": "JPA Japan Ranking Top Players",
-          "event": "Vietnam Delegation",
-          "result": "National Team"
+          "tournament": "Pickleball D-Joy Tour 2026",
+          "event": "JPA Japan National Team",
+          "result": "Selected as JPA Japan Ranking Top Player"
         },
         "a2": {
           "year": "2025",
@@ -317,8 +317,8 @@
     "players": {
       "title": "PBT Contract Players",
       "description": "THE PICKLE BANG THEORY contracts with pickleball players active both domestically and internationally, supporting them with training and practice at our facility. Through collaborative event appearances and social media outreach, we promote the growth of pickleball.",
-      "playerName": "Taro Yamada",
-      "playerIg": "@taro_yamada_pb",
+      "playerName": "Yuta Yoshida",
+      "playerIg": "@yuta_yoshida_pickleball",
       "playerBio": "Former tennis player. Transitioned to pickleball in 2024, with multiple top finishes in domestic tournaments. Known for his aggressive playing style.",
       "comingSoon": "Coming Soon",
       "carousel": {

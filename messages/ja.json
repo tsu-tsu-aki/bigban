@@ -132,7 +132,7 @@
       "airConditioning": "空調完備",
       "vendingMachine": "自動販売機",
       "rentalEquipment": "レンタル用具あり",
-      "unmannedCheckin": "無人チェックイン対応予定",
+      "unmannedCheckin": "無人チェックイン対応",
       "showCourt": "ショーコート1面に変更可能",
       "preparing": "準備中"
     },
@@ -207,6 +207,7 @@
     "founderNameEn": "AKIHIKO NISHIMURA",
     "founderBio1": "クロスミントン世界チャンピオン。2023年にピックルボールと出会う。",
     "founderBio2": "選手活動及びJPA TOP TOUR大会ディレクター、施設プロデュースと活動の幅を広げる。",
+    "founderInstagram": "@akihiko.rst",
     "readMore": "詳しく見る",
     "founderImageAlt": "西村昭彦"
   },
@@ -251,15 +252,14 @@
       "description2": "他にもピックルボールを中心としたイベントの企画・実行や公式大会の企画・運営、選手マネジメントなど行っています。また、代表含め、メンバーたちも競技と向き合うプレーヤーであります。",
       "labelCompanyName": "会社名",
       "labelCeo": "代表取締役",
-      "labelAddress": "所在地",
       "labelBusiness": "事業内容",
       "valueCeo": "西村昭彦",
-      "valueAddress": "東京都品川区",
       "valueBusiness": "スポーツ施設運営 / スポーツイベント / 大会運営 / スポーツ用品の企画・販売"
     },
     "founder": {
       "name": "西村昭彦",
       "nameEn": "AKIHIKO NISHIMURA",
+      "instagram": "@akihiko.rst",
       "imageAlt": "西村昭彦",
       "bio1": "北海道出身。8歳でバドミントンを始め、青森山田高校、中央大学と日本有数のバドミントン強豪校で競技経験を積む。青森山田高校時代にはインターハイおよび全国高校選抜大会でシングルスベスト8を記録。",
       "bio2": "社会人では実業団チームに所属せず個人として活動し国内最高峰大会である全日本総合バドミントン選手権に4度出場し、日本トップ選手らと対戦を重ねる。",
@@ -268,9 +268,9 @@
       "achievements": {
         "a1": {
           "year": "2026",
-          "tournament": "JPA 日本ランキング上位者",
-          "event": "ベトナム派遣",
-          "result": "代表メンバー"
+          "tournament": "Pickleball D-Joy Tour 2026",
+          "event": "JPA日本代表",
+          "result": "JPA日本ランキング上位者として選抜"
         },
         "a2": {
           "year": "2025",
@@ -319,8 +319,8 @@
     "players": {
       "title": "PBT契約選手",
       "description": "THE PICKLE BANG THEORYは、国内外で活躍するピックルボール選手と契約し、施設でのトレーニングや練習など選手をサポートいたします。また、協働によるイベント出演やソーシャルメディアでの発信を通して、ピックルボールを盛り上げます。",
-      "playerName": "山田 太郎",
-      "playerIg": "@taro_yamada_pb",
+      "playerName": "吉田 裕太",
+      "playerIg": "@yuta_yoshida_pickleball",
       "playerBio": "元テニスプレーヤー。2024年よりピックルボールに転向し、国内大会で多数入賞。攻撃的なプレースタイルが持ち味。",
       "comingSoon": "Coming Soon",
       "carousel": {
