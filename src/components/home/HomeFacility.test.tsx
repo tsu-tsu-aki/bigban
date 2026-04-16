@@ -35,7 +35,9 @@ vi.mock("embla-carousel-react", () => ({
   default: () => [vi.fn(), returnApi],
 }));
 
-const mockAutoplayFactory = vi.fn(() => ({}));
+const { mockAutoplayFactory } = vi.hoisted(() => ({
+  mockAutoplayFactory: vi.fn(() => ({})),
+}));
 vi.mock("embla-carousel-autoplay", () => ({
   default: mockAutoplayFactory,
 }));
