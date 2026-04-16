@@ -140,7 +140,7 @@ export default function HomeFacility() {
             <div className="flex">
               {FACILITY_IMAGES.map((image, i) => (
                 <div
-                  key={image.src}
+                  key={image.altKey}
                   role="group"
                   aria-roledescription="slide"
                   aria-label={`${i + 1} / ${FACILITY_IMAGES.length}`}
@@ -184,7 +184,7 @@ export default function HomeFacility() {
           <div className="flex justify-center gap-3 mt-6">
             {FACILITY_IMAGES.map((image, i) => (
               <button
-                key={image.src}
+                key={image.altKey}
                 type="button"
                 onClick={() => handleScrollTo(i)}
                 aria-label={t("carousel.showImage", { index: i + 1, alt: t(`images.${image.altKey}`) })}
