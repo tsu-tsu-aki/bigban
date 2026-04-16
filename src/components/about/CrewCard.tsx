@@ -49,17 +49,17 @@ export default function CrewCard({ member }: CrewCardProps) {
           </div>
         )}
       </div>
-      <div className="p-4 text-center">
-        <p className="text-text-light text-sm font-semibold">{member.name}</p>
+      <div className="p-3 sm:p-4 text-center">
+        <p className="text-text-light text-xs sm:text-sm font-semibold leading-tight">{member.name}</p>
         {member.ig && (
           <a
             href={`https://www.instagram.com/${member.ig.replace(/^@/, "")}/`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-text-gray text-xs mt-1 hover:text-accent motion-safe:transition-colors"
+            className="inline-flex items-center gap-1 text-text-gray text-[10px] sm:text-xs mt-1 hover:text-accent motion-safe:transition-colors truncate max-w-full"
           >
-            <InstagramIcon className="w-3.5 h-3.5" />
-            <span>{member.ig}</span>
+            <InstagramIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+            <span className="truncate">{member.ig}</span>
           </a>
         )}
       </div>
