@@ -20,6 +20,7 @@ vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => {
     const { fill, priority, ...rest } = props;
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         {...rest}
         data-fill={fill ? "true" : undefined}
