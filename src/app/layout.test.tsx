@@ -32,4 +32,13 @@ describe("globals.css", () => {
   it("body に font-feature-settings: \"palt\" が設定されている", () => {
     expect(cssContent).toMatch(/font-feature-settings:\s*"palt"/);
   });
+
+  it("--safe-top CSS変数が safe-area-inset-top で定義されている", () => {
+    expect(cssContent).toContain("--safe-top");
+    expect(cssContent).toMatch(/safe-area-inset-top/);
+  });
+
+  it(".safe-area-top ユーティリティクラスが定義されている", () => {
+    expect(cssContent).toMatch(/\.safe-area-top/);
+  });
 });

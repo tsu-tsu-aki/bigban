@@ -64,9 +64,9 @@ describe("HomeHero", () => {
     expect(img).toBeInTheDocument();
   });
 
-  it("ヘッダー分のパディングが設定されている", () => {
+  it("ヘッダー分のパディングにsafe-area対応が含まれている", () => {
     const { container } = renderWithProvider(<HomeHero />);
     const section = container.querySelector("section");
-    expect(section?.className).toContain("pt-[100px]");
+    expect(section?.className).toContain("pt-[calc(60px+var(--safe-top))]");
   });
 });

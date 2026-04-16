@@ -13,6 +13,10 @@
 }
 
 @layer base {
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+  }
+
   html {
     scroll-behavior: smooth;
     background-color: var(--color-deep-black);
@@ -35,6 +39,11 @@
     background-color: var(--color-accent);
     color: var(--color-deep-black);
   }
+}
+
+/* Safe area padding for iOS Safari notch */
+.safe-area-top {
+  padding-top: var(--safe-top);
 }
 
 /* Grain overlay */

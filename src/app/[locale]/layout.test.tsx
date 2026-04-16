@@ -95,6 +95,17 @@ describe("LocaleLayout", () => {
   });
 });
 
+describe("viewport", () => {
+  it("exports viewport with viewportFit cover for iOS Safari safe area", async () => {
+    const { viewport } = await import("./layout");
+
+    expect(viewport).toBeDefined();
+    expect(viewport).toEqual(
+      expect.objectContaining({ viewportFit: "cover" })
+    );
+  });
+});
+
 describe("generateMetadata", () => {
   it("returns metadata with ja locale", async () => {
     const { generateMetadata } = await import("./layout");

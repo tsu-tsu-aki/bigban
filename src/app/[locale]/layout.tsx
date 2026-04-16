@@ -12,7 +12,7 @@ import {
 } from "@/lib/structured-data";
 import "../globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -32,6 +32,10 @@ const notoSansJP = Noto_Sans_JP({
   display: "swap",
   preload: false,
 });
+
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

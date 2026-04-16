@@ -263,6 +263,20 @@ describe("HomeNavigation", () => {
     expect(reserveInDialog?.textContent).toBe("RESERVE");
   });
 
+  it("ヘッダー内部にsafe-area-topのパディングが適用されている", () => {
+    renderWithIntl(<HomeNavigation />);
+    const header = screen.getByRole("banner");
+    const innerDiv = header.querySelector("div");
+    expect(innerDiv?.className).toContain("safe-area-top");
+  });
+
+  it("モバイルメニューの閉じるボタンにsafe-area考慮のtop位置が設定されている", () => {
+    renderWithIntl(<HomeNavigation />);
+    fireEvent.click(screen.getByLabelText("メニューを開く"));
+    const closeButton = screen.getByLabelText("メニューを閉じる");
+    expect(closeButton.className).toContain("top-[calc(1.5rem+var(--safe-top))]");
+  });
+
   it("英語ロケールでaria-labelが英語になる", () => {
     renderWithIntl(<HomeNavigation />, "en");
     const nav = screen.getByRole("navigation", { name: "Main Navigation" });

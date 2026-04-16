@@ -89,7 +89,7 @@ export default function HomeNavigation() {
         isNavVisible ? "translate-y-0" : "translate-y-0 md:-translate-y-full"
       }`}
     >
-      <div className="backdrop-blur-md bg-deep-black/80">
+      <div className="backdrop-blur-md bg-deep-black/80 safe-area-top">
         <div className="mx-auto flex items-center justify-between px-6 py-4 max-w-7xl">
           {/* Logo */}
           <Link href="/" onClick={handleLogoClick}>
@@ -171,7 +171,7 @@ export default function HomeNavigation() {
           <button
             aria-label={t("closeMenu")}
             onClick={handleCloseMenu}
-            className="absolute top-6 right-6 text-text-light"
+            className="absolute top-[calc(1.5rem+var(--safe-top))] right-6 text-text-light"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
