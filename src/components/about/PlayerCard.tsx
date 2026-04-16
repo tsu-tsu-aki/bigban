@@ -46,7 +46,7 @@ export default function PlayerCard({ player }: PlayerCardProps) {
           </div>
         )}
       </div>
-      <div className="p-6 text-center">
+      <div className="p-6">
         <p className="text-text-light text-lg @lg:text-xl font-semibold mb-1">
           {player.name}
         </p>
@@ -55,14 +55,14 @@ export default function PlayerCard({ player }: PlayerCardProps) {
             href={`https://www.instagram.com/${player.ig.replace(/^@/, "")}/`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 text-text-light/90 text-sm @lg:text-base mb-3 hover:text-accent transition-colors"
+            className="inline-flex items-center gap-1.5 text-text-light/90 text-sm @lg:text-base mb-3 hover:text-accent transition-colors"
           >
             <InstagramIcon className="w-4 h-4 @lg:w-[18px] @lg:h-[18px]" />
             <span>{player.ig}</span>
           </a>
         )}
         {player.bio && (
-          <p className="text-text-light/90 text-sm @lg:text-base leading-relaxed">
+          <p className="text-text-light/90 text-sm @lg:text-base leading-relaxed whitespace-pre-line">
             {player.bio}
           </p>
         )}

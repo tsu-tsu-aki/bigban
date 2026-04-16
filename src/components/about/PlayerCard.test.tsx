@@ -119,4 +119,17 @@ describe("PlayerCard", () => {
     const card = container.firstChild as HTMLElement;
     expect(card.className).toContain("h-full");
   });
+
+  it("bio要素に whitespace-pre-line が適用されている", () => {
+    const { container } = renderCard(activePlayer);
+    const bio = container.querySelector("p.whitespace-pre-line");
+    expect(bio).toBeInTheDocument();
+    expect(bio?.textContent).toBe(activePlayer.bio);
+  });
+
+  it("コンテンツラッパーに text-center がない (左揃え)", () => {
+    const { container } = renderCard(activePlayer);
+    const wrapper = container.querySelector(".p-6");
+    expect(wrapper?.className).not.toContain("text-center");
+  });
 });
