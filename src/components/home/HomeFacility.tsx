@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
@@ -29,8 +29,10 @@ const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 export default function HomeFacility() {
   const t = useTranslations("HomeFacility");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(carouselRef, { once: false });
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({ delay: 5000, stopOnInteraction: true, stopOnMouseEnter: true }),
+    Autoplay({ delay: 5000, stopOnInteraction: true, stopOnMouseEnter: true, playOnInit: false }),
   ]);
 
   useEffect(() => {
@@ -44,6 +46,17 @@ export default function HomeFacility() {
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const autoplay = emblaApi.plugins()?.autoplay;
+    if (!autoplay) return;
+    if (isInView) {
+      autoplay.play();
+    } else {
+      autoplay.stop();
+    }
+  }, [emblaApi, isInView]);
 
   const handleScrollTo = useCallback(
     (index: number) => {
@@ -128,6 +141,7 @@ export default function HomeFacility() {
 
         {/* Facility Image Carousel — モバイルで edge-to-edge 表示するため、親 (mx-auto max-w-7xl px-6) の左右パディング(1.5rem × 2 = 3rem) を負マージンで打ち消す */}
         <motion.div
+          ref={carouselRef}
           className="relative mb-16 w-[calc(100%+3rem)] sm:w-full -mx-6 sm:mx-0"
           aria-roledescription="carousel"
           aria-label={t("carousel.regionLabel")}
