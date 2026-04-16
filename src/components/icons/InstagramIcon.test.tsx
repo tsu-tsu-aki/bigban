@@ -15,10 +15,14 @@ describe("InstagramIcon", () => {
     expect(svg?.getAttribute("aria-hidden")).toBe("true");
   });
 
-  it("currentColorでstrokeを描画する", () => {
+  it("ブランドグラデーションでfillを描画する", () => {
     const { container } = render(<InstagramIcon />);
     const svg = container.querySelector("svg");
-    expect(svg?.getAttribute("stroke")).toBe("currentColor");
+    expect(svg?.getAttribute("fill")).toContain("url(#instagram-brand-gradient)");
+    const gradient = container.querySelector("linearGradient");
+    expect(gradient).toBeInTheDocument();
+    const stops = container.querySelectorAll("stop");
+    expect(stops.length).toBeGreaterThanOrEqual(3);
   });
 
   it("classNameを受け取って適用する", () => {
