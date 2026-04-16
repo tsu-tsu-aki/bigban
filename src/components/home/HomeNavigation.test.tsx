@@ -108,14 +108,16 @@ describe("HomeNavigation", () => {
     expect(mockPush).not.toHaveBeenCalled();
   });
 
-  it("非選択の言語ボタンに hover:text-accent が適用されている", () => {
+  // JSDOMではCSSホバー状態をシミュレートできないため、className直接チェックで代替
+  it("非選択の言語ボタンに hover:text-accent と cursor-pointer が適用されている", () => {
     renderWithIntl(<HomeNavigation />);
     const enButtons = screen.getAllByRole("button", { name: "EN" });
     expect(enButtons[0].className).toContain("hover:text-accent");
-    expect(enButtons[0].className).toContain("cursor-default");
+    expect(enButtons[0].className).toContain("motion-safe:transition-colors");
+    expect(enButtons[0].className).toContain("cursor-pointer");
   });
 
-  it("選択中の言語ボタンに hover:text-accent が適用されていない", () => {
+  it("選択中の言語ボタンに hover:text-accent が適用されず cursor-default である", () => {
     renderWithIntl(<HomeNavigation />);
     const jpButtons = screen.getAllByRole("button", { name: "JP" });
     expect(jpButtons[0].className).not.toContain("hover:text-accent");
