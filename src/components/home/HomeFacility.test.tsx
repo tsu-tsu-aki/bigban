@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
+import { setMockUseInView } from "../../../__mocks__/framer-motion";
 import jaMessages from "../../../messages/ja.json";
 import HomeFacility from "./HomeFacility";
 
@@ -11,6 +12,9 @@ const mockSelectedScrollSnap = vi.fn(() => 0);
 const mockOn = vi.fn();
 const mockOff = vi.fn();
 
+const mockAutoplayPlay = vi.fn();
+const mockAutoplayStop = vi.fn();
+
 const mockEmblaApi = {
   scrollTo: mockScrollTo,
   scrollPrev: mockScrollPrev,
@@ -18,6 +22,12 @@ const mockEmblaApi = {
   selectedScrollSnap: mockSelectedScrollSnap,
   on: mockOn,
   off: mockOff,
+  plugins: () => ({
+    autoplay: {
+      play: mockAutoplayPlay,
+      stop: mockAutoplayStop,
+    },
+  }),
 };
 
 let returnApi: typeof mockEmblaApi | null = mockEmblaApi;
@@ -35,6 +45,11 @@ describe("HomeFacility", () => {
     vi.clearAllMocks();
     mockSelectedScrollSnap.mockReturnValue(0);
     returnApi = mockEmblaApi;
+    setMockUseInView(false);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('セクションID "facility" を持つ', () => {
@@ -240,5 +255,36 @@ describe("HomeFacility", () => {
       </NextIntlClientProvider>
     );
     expect(mockOn).not.toHaveBeenCalled();
+  });
+
+  it("ビューポートに入った時にAutoplayを開始する", () => {
+    setMockUseInView(true);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(mockAutoplayPlay).toHaveBeenCalled();
+  });
+
+  it("ビューポートから出た時にAutoplayを停止する", () => {
+    setMockUseInView(false);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(mockAutoplayStop).toHaveBeenCalled();
+  });
+
+  it("emblaApiがnullの時にAutoplay制御でエラーにならない", () => {
+    returnApi = null;
+    setMockUseInView(true);
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(mockAutoplayPlay).not.toHaveBeenCalled();
   });
 });

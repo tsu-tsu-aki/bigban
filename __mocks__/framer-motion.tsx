@@ -55,8 +55,14 @@ function useTransform(_value: unknown, _input: unknown, output: unknown[]) {
   return output[0];
 }
 
+let _useInViewReturn = false;
+
 function useInView() {
-  return false;
+  return _useInViewReturn;
+}
+
+function setMockUseInView(value: boolean) {
+  _useInViewReturn = value;
 }
 
 function useMotionValue(initial: unknown) {
@@ -67,4 +73,4 @@ function useMotionValue(initial: unknown) {
   };
 }
 
-export { motion, AnimatePresence, useScroll, useTransform, useInView, useMotionValue };
+export { motion, AnimatePresence, useScroll, useTransform, useInView, useMotionValue, setMockUseInView };
