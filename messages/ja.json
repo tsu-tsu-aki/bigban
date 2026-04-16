@@ -333,7 +333,19 @@
     "crew": {
       "title": "PBTクルー",
       "description": "THE PICKLE BANG THEORYを支え、操縦しているクルーたちを紹介ｼﾏｽ",
-      "comingSoon": "Coming Soon"
+      "comingSoon": "Coming Soon",
+      "yasuko": {
+        "name": "勝間田靖子 / Yasuko the Pickleballer",
+        "ig": "@yasuko_the_pickleballer"
+      },
+      "misuzu": {
+        "name": "河野 みすず / Misuzu Kouno",
+        "ig": "@racketsports_osuzu"
+      },
+      "akihiro": {
+        "name": "堤 暁寛 / Akihiro Tsutsumi",
+        "ig": "@atmmbd"
+      }
     },
     "news": {
       "title": "ニュース",

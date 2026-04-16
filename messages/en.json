@@ -331,7 +331,19 @@
     "crew": {
       "title": "PBT Crew",
       "description": "Meet the crew members who support and steer THE PICKLE BANG THEORY.",
-      "comingSoon": "Coming Soon"
+      "comingSoon": "Coming Soon",
+      "yasuko": {
+        "name": "Yasuko the Pickleballer",
+        "ig": "@yasuko_the_pickleballer"
+      },
+      "misuzu": {
+        "name": "Misuzu Kouno",
+        "ig": "@racketsports_osuzu"
+      },
+      "akihiro": {
+        "name": "Akihiro Tsutsumi",
+        "ig": "@atmmbd"
+      }
     },
     "news": {
       "title": "News",
