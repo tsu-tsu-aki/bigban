@@ -29,7 +29,7 @@ export default function HomeNavigation() {
   const router = useRouter();
   const activeSection = useActiveSection(SECTION_IDS);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isOpen: isCrowdfundingOpen, openPopup, closePopup } = useCrowdfundingPopup();
+  const { isOpen: isCrowdfundingOpen, closePopup } = useCrowdfundingPopup();
 
   const handleLogoClick = useCallback(
     (e: React.MouseEvent) => {
