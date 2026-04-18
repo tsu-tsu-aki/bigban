@@ -3,7 +3,6 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL } from "@/constants/site";
 import { notFound } from "next/navigation";
-import { headers } from "next/headers";
 import { Orbitron, Inter, Noto_Sans_JP } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import StructuredData from "@/components/StructuredData";
@@ -11,7 +10,6 @@ import {
   buildSportsActivityLocation,
   buildOrganization,
 } from "@/lib/structured-data";
-import { isIOSSafari } from "@/lib/detectBrowser";
 import "../globals.css";
 
 import type { Metadata } from "next";
@@ -79,22 +77,19 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
   const messages = await getMessages();
-  const requestHeaders = await headers();
-  const iosSafari = isIOSSafari(requestHeaders.get("user-agent"));
+
+  const browserDetectScript = `try{var u=navigator.userAgent,iOS=/iPhone|iPad|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),safari=/Safari\\//.test(u),other=/CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser|DuckDuckGo|GSA/.test(u);if(iOS&&safari&&!other)document.documentElement.setAttribute('data-browser','ios-safari')}catch(e){}`;
+  const introScript = `try{var p=location.pathname;if((p==='/'||/^\\/[a-z]{2}\\/?$/.test(p))&&sessionStorage.getItem('bigban-intro-played')!=='true'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-pending')}}catch(e){}`;
 
   return (
     <html
       lang={locale}
       className={`${orbitron.variable} ${inter.variable} ${notoSansJP.variable}`}
-      data-browser={iosSafari ? "ios-safari" : undefined}
       suppressHydrationWarning
     >
       <body className="grain-overlay">
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var p=location.pathname;if((p==='/'||/^\\/[a-z]{2}\\/?$/.test(p))&&sessionStorage.getItem('bigban-intro-played')!=='true'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-pending')}}catch(e){}`,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: browserDetectScript }} />
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
         <StructuredData
           data={[
             buildSportsActivityLocation(locale),
