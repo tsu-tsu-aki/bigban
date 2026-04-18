@@ -1,5 +1,8 @@
 export { buildSportsActivityLocation } from "./sportsActivityLocation";
-export type { SportsActivityLocationSchema } from "./sportsActivityLocation";
+export type {
+  SportsActivityLocationSchema,
+  LocationFeatureSpecification,
+} from "./sportsActivityLocation";
 
 export { buildOrganization } from "./organization";
 export type { OrganizationSchema } from "./organization";
@@ -10,3 +13,9 @@ export type {
   BreadcrumbListItem,
   BreadcrumbListSchema,
 } from "./breadcrumb";
+
+export { buildWebSite } from "./website";
+export type { WebSiteSchema } from "./website";
+
+export { buildServices } from "./service";
+export type { ServiceSchema } from "./service";

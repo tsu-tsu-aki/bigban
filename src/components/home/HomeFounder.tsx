@@ -46,6 +46,7 @@ export default function HomeFounder() {
         src="/images/home-nishimura.jpg"
         alt=""
         fill
+        sizes="100vw"
         className="object-cover"
       />
       {/* Semi-transparent overlay */}

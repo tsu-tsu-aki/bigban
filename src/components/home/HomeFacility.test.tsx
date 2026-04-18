@@ -1,8 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
+import { setMockUseInView } from "../../../__mocks__/framer-motion";
 import jaMessages from "../../../messages/ja.json";
 import HomeFacility from "./HomeFacility";
+
+const { mockAutoplay } = vi.hoisted(() => ({ mockAutoplay: vi.fn() }));
 
 const mockScrollTo = vi.fn();
 const mockScrollPrev = vi.fn();
@@ -10,6 +13,8 @@ const mockScrollNext = vi.fn();
 const mockSelectedScrollSnap = vi.fn(() => 0);
 const mockOn = vi.fn();
 const mockOff = vi.fn();
+const mockPlay = vi.fn();
+const mockStop = vi.fn();
 
 const mockEmblaApi = {
   scrollTo: mockScrollTo,
@@ -18,6 +23,9 @@ const mockEmblaApi = {
   selectedScrollSnap: mockSelectedScrollSnap,
   on: mockOn,
   off: mockOff,
+  plugins: () => ({
+    autoplay: { play: mockPlay, stop: mockStop },
+  }),
 };
 
 let returnApi: typeof mockEmblaApi | null = mockEmblaApi;
@@ -27,7 +35,10 @@ vi.mock("embla-carousel-react", () => ({
 }));
 
 vi.mock("embla-carousel-autoplay", () => ({
-  default: () => ({}),
+  default: (opts: unknown) => {
+    mockAutoplay(opts);
+    return { name: "autoplay" };
+  },
 }));
 
 describe("HomeFacility", () => {
@@ -35,6 +46,7 @@ describe("HomeFacility", () => {
     vi.clearAllMocks();
     mockSelectedScrollSnap.mockReturnValue(0);
     returnApi = mockEmblaApi;
+    setMockUseInView(false);
   });
 
   it('セクションID "facility" を持つ', () => {
@@ -240,5 +252,70 @@ describe("HomeFacility", () => {
       </NextIntlClientProvider>
     );
     expect(mockOn).not.toHaveBeenCalled();
+  });
+
+  it("AutoplayにplayOnInit: falseを渡す", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(mockAutoplay).toHaveBeenCalledWith(
+      expect.objectContaining({ playOnInit: false })
+    );
+  });
+
+  it("ビューポートに入った時にautoplay.play()を呼ぶ", () => {
+    setMockUseInView(false);
+    const { rerender } = render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(mockPlay).not.toHaveBeenCalled();
+
+    setMockUseInView(true);
+    rerender(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(mockPlay).toHaveBeenCalled();
+  });
+
+  it("ビューポートから出た時にautoplay.stop()を呼ぶ", () => {
+    setMockUseInView(true);
+    const { rerender } = render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    mockStop.mockClear();
+
+    setMockUseInView(false);
+    rerender(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(mockStop).toHaveBeenCalled();
+  });
+
+  it("emblaApiがnullの時はautoplayを操作しない", () => {
+    returnApi = null;
+    setMockUseInView(false);
+    const { rerender } = render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    setMockUseInView(true);
+    rerender(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(mockPlay).not.toHaveBeenCalled();
+    expect(mockStop).not.toHaveBeenCalled();
   });
 });

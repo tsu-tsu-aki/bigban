@@ -14,6 +14,12 @@ export interface OrganizationSchema {
     addressLocality: string;
     streetAddress: string;
   };
+  knowsAbout: string[];
+  areaServed: {
+    "@type": "Country";
+    name: string;
+  };
+  sameAs: string[];
 }
 
 export function buildOrganization(): OrganizationSchema {
@@ -34,5 +40,16 @@ export function buildOrganization(): OrganizationSchema {
       addressLocality: "品川区",
       streetAddress: "二葉1-4-2",
     },
+    knowsAbout: [
+      "Pickleball",
+      "Crossminton",
+      "スポーツ施設運営",
+      "スポーツイベント企画",
+    ],
+    areaServed: {
+      "@type": "Country",
+      name: "Japan",
+    },
+    sameAs: ["https://rstagency.com"],
   };
 }

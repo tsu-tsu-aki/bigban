@@ -72,6 +72,7 @@ export default function HomeServices() {
                 src={service.imageSrc}
                 alt={service.imageAlt}
                 fill
+                sizes="(min-width: 1024px) 60vw, 100vw"
                 className="object-cover"
               />
             </motion.div>
