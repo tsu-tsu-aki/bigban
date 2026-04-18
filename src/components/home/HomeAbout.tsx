@@ -24,6 +24,7 @@ export default function HomeAbout() {
         src="/images/home-nishimura.jpg"
         alt=""
         fill
+        sizes="100vw"
         className="object-cover"
       />
       <div className="absolute inset-0 bg-black/65" />
@@ -64,6 +65,7 @@ export default function HomeAbout() {
                 src="/images/home-nishimura.jpg"
                 alt={t("founderImageAlt")}
                 fill
+                sizes="(min-width: 1024px) 40vw, (min-width: 640px) 24rem, 100vw"
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

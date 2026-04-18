@@ -27,6 +27,7 @@ export default function HomeHero() {
           src="/images/hero.jpg"
           alt={t("heroImageAlt")}
           fill
+          sizes="100vw"
           className="object-cover"
           priority
         />

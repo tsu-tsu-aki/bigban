@@ -109,6 +109,7 @@ export default function CrowdfundingPopup({
                 src="/images/crowdfunding.avif"
                 alt={t("imageAlt")}
                 fill
+                sizes="(min-width: 640px) 32rem, 100vw"
                 className="object-cover"
               />
             </div>

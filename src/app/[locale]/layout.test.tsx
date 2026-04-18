@@ -123,7 +123,7 @@ describe("generateMetadata", () => {
     });
 
     expect(metadata.openGraph).toBeDefined();
-    expect(metadata.twitter).toEqual({ card: "summary_large_image" });
+    expect(metadata.twitter).toMatchObject({ card: "summary_large_image" });
     expect(mockGetTranslations).toHaveBeenCalledWith({
       locale: "ja",
       namespace: "Metadata",
@@ -138,10 +138,66 @@ describe("generateMetadata", () => {
     });
 
     expect(metadata.openGraph).toBeDefined();
-    expect(metadata.twitter).toEqual({ card: "summary_large_image" });
+    expect(metadata.twitter).toMatchObject({ card: "summary_large_image" });
     expect(mockGetTranslations).toHaveBeenCalledWith({
       locale: "en",
       namespace: "Metadata",
     });
+  });
+
+  it("robots.googleBotでリッチスニペット最大化設定を返す", async () => {
+    const { generateMetadata } = await import("./layout");
+
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+
+    expect(metadata.robots).toMatchObject({
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    });
+  });
+
+  it("GOOGLE_SITE_VERIFICATION env varが設定されている時にverificationに反映する", async () => {
+    vi.stubEnv("GOOGLE_SITE_VERIFICATION", "test-verification-token");
+    vi.resetModules();
+    const { generateMetadata } = await import("./layout");
+
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+
+    expect(metadata.verification).toEqual({
+      google: "test-verification-token",
+    });
+    vi.unstubAllEnvs();
+  });
+
+  it("GOOGLE_SITE_VERIFICATION未設定ならverificationを含めない", async () => {
+    vi.stubEnv("GOOGLE_SITE_VERIFICATION", "");
+    vi.resetModules();
+    const { generateMetadata } = await import("./layout");
+
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+
+    expect(metadata.verification).toBeUndefined();
+    vi.unstubAllEnvs();
+  });
+});
+
+describe("viewport", () => {
+  it("themeColorに背景色のディープブラックを設定する", async () => {
+    const { viewport } = await import("./layout");
+
+    expect(viewport.themeColor).toBe("#0A0A0A");
   });
 });
