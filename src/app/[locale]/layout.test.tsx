@@ -35,6 +35,14 @@ vi.mock("next/navigation", () => ({
   notFound: vi.fn(),
 }));
 
+const mockHeadersGet = vi.fn<(name: string) => string | null>();
+
+vi.mock("next/headers", () => ({
+  headers: vi.fn().mockResolvedValue({
+    get: (name: string) => mockHeadersGet(name),
+  }),
+}));
+
 vi.mock("../../globals.css", () => ({}));
 
 import { setRequestLocale } from "next-intl/server";
@@ -43,6 +51,7 @@ import { notFound } from "next/navigation";
 describe("LocaleLayout", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockHeadersGet.mockReturnValue(null);
   });
 
   it("renders children with ja locale", async () => {
@@ -57,6 +66,34 @@ describe("LocaleLayout", () => {
 
     expect(screen.getByText("test content")).toBeInTheDocument();
     expect(setRequestLocale).toHaveBeenCalledWith("ja");
+  });
+
+  it("sets data-browser='ios-safari' on <html> when UA is iOS Safari", async () => {
+    mockHeadersGet.mockReturnValue(
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
+    );
+    const { default: LocaleLayout } = await import("./layout");
+
+    const element = (await LocaleLayout({
+      children: <p>ios content</p>,
+      params: Promise.resolve({ locale: "ja" }),
+    })) as React.ReactElement<{ "data-browser"?: string }>;
+
+    expect(element.props["data-browser"]).toBe("ios-safari");
+  });
+
+  it("omits data-browser on <html> for non-iOS-Safari UA", async () => {
+    mockHeadersGet.mockReturnValue(
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    );
+    const { default: LocaleLayout } = await import("./layout");
+
+    const element = (await LocaleLayout({
+      children: <p>chrome content</p>,
+      params: Promise.resolve({ locale: "ja" }),
+    })) as React.ReactElement<{ "data-browser"?: string }>;
+
+    expect(element.props["data-browser"]).toBeUndefined();
   });
 
   it("renders children with en locale", async () => {
