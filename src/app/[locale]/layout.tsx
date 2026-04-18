@@ -78,6 +78,9 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages();
 
+  const browserDetectScript = `try{var u=navigator.userAgent,iOS=/iPhone|iPad|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),safari=/Safari\\//.test(u),other=/CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser|DuckDuckGo|GSA/.test(u);if(iOS&&safari&&!other)document.documentElement.setAttribute('data-browser','ios-safari')}catch(e){}`;
+  const introScript = `try{var p=location.pathname;if((p==='/'||/^\\/[a-z]{2}\\/?$/.test(p))&&sessionStorage.getItem('bigban-intro-played')!=='true'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-pending')}}catch(e){}`;
+
   return (
     <html
       lang={locale}
@@ -85,11 +88,8 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <body className="grain-overlay">
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var p=location.pathname;if((p==='/'||/^\\/[a-z]{2}\\/?$/.test(p))&&sessionStorage.getItem('bigban-intro-played')!=='true'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-pending')}}catch(e){}`,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: browserDetectScript }} />
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
         <StructuredData
           data={[
             buildSportsActivityLocation(locale),

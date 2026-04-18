@@ -59,6 +59,25 @@ describe("LocaleLayout", () => {
     expect(setRequestLocale).toHaveBeenCalledWith("ja");
   });
 
+  it("inlines a browser-detection script that sets data-browser for iOS Safari", async () => {
+    const { default: LocaleLayout } = await import("./layout");
+
+    const { container } = render(
+      await LocaleLayout({
+        children: <p>content</p>,
+        params: Promise.resolve({ locale: "ja" }),
+      })
+    );
+
+    const scripts = container.querySelectorAll("script");
+    const detectScript = Array.from(scripts).find((s) =>
+      s.innerHTML.includes("ios-safari")
+    );
+    expect(detectScript).toBeTruthy();
+    expect(detectScript?.innerHTML).toContain("navigator.userAgent");
+    expect(detectScript?.innerHTML).toContain("maxTouchPoints");
+  });
+
   it("renders children with en locale", async () => {
     const { default: LocaleLayout } = await import("./layout");
 
