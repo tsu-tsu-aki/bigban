@@ -12,7 +12,7 @@ import {
 } from "@/lib/structured-data";
 import "../globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -59,6 +59,11 @@ export async function generateMetadata({
     },
   };
 }
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  viewportFit: "cover",
+};
 
 interface LocaleLayoutProps {
   children: React.ReactNode;

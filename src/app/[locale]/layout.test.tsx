@@ -125,4 +125,13 @@ describe("generateMetadata", () => {
       namespace: "Metadata",
     });
   });
+
+  it("exports viewport for iPhone safe area handling", async () => {
+    const { viewport } = await import("./layout");
+
+    expect(viewport).toMatchObject({
+      themeColor: "#000000",
+      viewportFit: "cover",
+    });
+  });
 });
