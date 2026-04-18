@@ -9,6 +9,7 @@ import StructuredData from "@/components/StructuredData";
 import {
   buildSportsActivityLocation,
   buildOrganization,
+  buildWebSite,
 } from "@/lib/structured-data";
 import "../globals.css";
 
@@ -92,6 +93,7 @@ export default async function LocaleLayout({
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
         <StructuredData
           data={[
+            buildWebSite(),
             buildSportsActivityLocation(locale),
             buildOrganization(),
           ]}

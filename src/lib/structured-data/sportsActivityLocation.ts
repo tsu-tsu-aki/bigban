@@ -1,5 +1,11 @@
 import { SITE_URL, RESERVE_URL } from "@/constants/site";
 
+export interface LocationFeatureSpecification {
+  "@type": "LocationFeatureSpecification";
+  name: string;
+  value: boolean;
+}
+
 export interface SportsActivityLocationSchema {
   "@context": "https://schema.org";
   "@type": "SportsActivityLocation";
@@ -37,7 +43,22 @@ export interface SportsActivityLocationSchema {
     "@type": "ReserveAction";
     target: string;
   };
+  amenityFeature: LocationFeatureSpecification[];
+  hasMap: string;
+  paymentAccepted: string;
+  currenciesAccepted: string;
 }
+
+const AMENITY_NAMES = [
+  "空調完備",
+  "男女別更衣室",
+  "レンタル用具",
+  "無人チェックイン",
+  "自動販売機",
+] as const;
+
+const LATITUDE = 35.7239695;
+const LONGITUDE = 139.9317222;
 
 export function buildSportsActivityLocation(
   _locale: string
@@ -61,8 +82,8 @@ export function buildSportsActivityLocation(
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: 35.7239695,
-      longitude: 139.9317222,
+      latitude: LATITUDE,
+      longitude: LONGITUDE,
     },
     telephone: "+81-90-5523-3879",
     email: "hello@rstagency.com",
@@ -89,5 +110,13 @@ export function buildSportsActivityLocation(
       "@type": "ReserveAction",
       target: RESERVE_URL,
     },
+    amenityFeature: AMENITY_NAMES.map((name) => ({
+      "@type": "LocationFeatureSpecification",
+      name,
+      value: true,
+    })),
+    hasMap: `https://www.google.com/maps?q=${LATITUDE},${LONGITUDE}`,
+    paymentAccepted: "Cash, Credit Card",
+    currenciesAccepted: "JPY",
   };
 }

@@ -1,0 +1,82 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+
+const PROD_URL = "https://www.thepicklebang.com";
+
+describe("buildServices", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", PROD_URL);
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("HomeServicesの5サービスすべてを返す", async () => {
+    const { buildServices } = await import("./service");
+    const services = buildServices();
+    expect(services).toHaveLength(5);
+  });
+
+  it("各サービスが@contextとServiceを含む", async () => {
+    const { buildServices } = await import("./service");
+    const services = buildServices();
+    services.forEach((service) => {
+      expect(service["@context"]).toBe("https://schema.org");
+      expect(service["@type"]).toBe("Service");
+    });
+  });
+
+  it("各サービスがname・description・serviceTypeを含む", async () => {
+    const { buildServices } = await import("./service");
+    const services = buildServices();
+    services.forEach((service) => {
+      expect(service.name.length).toBeGreaterThan(0);
+      expect(service.description.length).toBeGreaterThan(0);
+      expect(service.serviceType.length).toBeGreaterThan(0);
+    });
+  });
+
+  it("providerで施設（@id=#facility）と連結する", async () => {
+    const { buildServices } = await import("./service");
+    const services = buildServices();
+    services.forEach((service) => {
+      expect(service.provider).toEqual({
+        "@id": `${PROD_URL}/#facility`,
+      });
+    });
+  });
+
+  it("areaServedで市川市を指す", async () => {
+    const { buildServices } = await import("./service");
+    const services = buildServices();
+    services.forEach((service) => {
+      expect(service.areaServed).toEqual({
+        "@type": "AdministrativeArea",
+        name: "千葉県市川市",
+      });
+    });
+  });
+
+  it("コートレンタルサービスを含む", async () => {
+    const { buildServices } = await import("./service");
+    const services = buildServices();
+    const rental = services.find((s) => s.name === "コートレンタル");
+    expect(rental).toBeDefined();
+    expect(rental?.serviceType).toBe("コートレンタル");
+  });
+
+  it("レッスンサービスを含む", async () => {
+    const { buildServices } = await import("./service");
+    const services = buildServices();
+    const lesson = services.find((s) => s.name.includes("レッスン"));
+    expect(lesson).toBeDefined();
+  });
+
+  it("大会・リーグサービスを含む", async () => {
+    const { buildServices } = await import("./service");
+    const services = buildServices();
+    const tournament = services.find((s) => s.name.includes("大会"));
+    expect(tournament).toBeDefined();
+  });
+});
