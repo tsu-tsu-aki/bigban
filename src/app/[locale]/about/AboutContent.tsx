@@ -136,11 +136,11 @@ export default function AboutContent() {
     "w-full border-b border-text-gray/40 bg-transparent py-3 text-text-light placeholder:text-text-gray/60 focus:border-accent focus:outline-none transition-colors";
 
   return (
-    <main className="bg-deep-black min-h-screen">
+    <main className="site-header-offset bg-deep-black min-h-screen">
       <HomeNavigation />
 
       {/* Hero */}
-      <section className="pt-28 pb-12 lg:pt-32 lg:pb-16">
+      <section className="pb-12 lg:pb-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <motion.div
             className="text-center"

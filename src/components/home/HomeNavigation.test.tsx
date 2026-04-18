@@ -186,51 +186,17 @@ describe("HomeNavigation", () => {
     const header = screen.getByRole("banner");
     expect(header).toBeInTheDocument();
     expect(header.className).toContain("fixed");
+    expect(header.className).toContain("site-header-shell");
   });
 
-  it("スクロールダウンでナビが非表示になる", () => {
-    renderWithIntl(<HomeNavigation />);
-    const header = screen.getByRole("banner");
-
-    expect(header.className).toContain("translate-y-0");
-
-    Object.defineProperty(window, "scrollY", { value: 200, writable: true });
-    fireEvent.scroll(window);
-    expect(header.className).toContain("-translate-y-full");
-  });
-
-  it("スクロールアップでナビが再表示される", () => {
+  it("スクロールしてもヘッダーは表示されたまま", () => {
     renderWithIntl(<HomeNavigation />);
     const header = screen.getByRole("banner");
 
     Object.defineProperty(window, "scrollY", { value: 200, writable: true });
     fireEvent.scroll(window);
-    expect(header.className).toContain("-translate-y-full");
-
-    Object.defineProperty(window, "scrollY", { value: 100, writable: true });
-    fireEvent.scroll(window);
-    expect(header.className).toContain("translate-y-0");
-  });
-
-  it("スクロール位置が100px未満ではナビが表示される", () => {
-    renderWithIntl(<HomeNavigation />);
-    const header = screen.getByRole("banner");
-
-    Object.defineProperty(window, "scrollY", { value: 50, writable: true });
-    fireEvent.scroll(window);
-    expect(header.className).toContain("translate-y-0");
-  });
-
-  it("スクロールダウン時もモバイルでは常にtranslate-y-0を保持する (iOS Safari バグ回避)", () => {
-    renderWithIntl(<HomeNavigation />);
-    const header = screen.getByRole("banner");
-
-    Object.defineProperty(window, "scrollY", { value: 200, writable: true });
-    fireEvent.scroll(window);
-
-    expect(header.className).toContain("translate-y-0");
-    expect(header.className).toContain("md:-translate-y-full");
-    expect(header.className).not.toMatch(/(?<!md:)(?<!:)-translate-y-full/);
+    expect(header.className).not.toContain("translate-y-0");
+    expect(header.className).not.toContain("-translate-y-full");
   });
 
   it("ホームでロゴクリックするとページ最上部にスクロールする", () => {
