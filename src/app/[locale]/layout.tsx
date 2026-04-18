@@ -3,6 +3,7 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL } from "@/constants/site";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { Orbitron, Inter, Noto_Sans_JP } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import StructuredData from "@/components/StructuredData";
@@ -10,6 +11,7 @@ import {
   buildSportsActivityLocation,
   buildOrganization,
 } from "@/lib/structured-data";
+import { isIOSSafari } from "@/lib/detectBrowser";
 import "../globals.css";
 
 import type { Metadata } from "next";
@@ -77,11 +79,14 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
   const messages = await getMessages();
+  const requestHeaders = await headers();
+  const iosSafari = isIOSSafari(requestHeaders.get("user-agent"));
 
   return (
     <html
       lang={locale}
       className={`${orbitron.variable} ${inter.variable} ${notoSansJP.variable}`}
+      data-browser={iosSafari ? "ios-safari" : undefined}
       suppressHydrationWarning
     >
       <body className="grain-overlay">

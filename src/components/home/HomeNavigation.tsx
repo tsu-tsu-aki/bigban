@@ -89,7 +89,7 @@ export default function HomeNavigation() {
         isNavVisible ? "translate-y-0" : "translate-y-0 md:-translate-y-full"
       }`}
     >
-      <div className="backdrop-blur-md bg-deep-black/80">
+      <div className="site-header-bg backdrop-blur-md bg-deep-black/80">
         <div className="mx-auto flex items-center justify-between px-6 py-4 max-w-7xl">
           {/* Logo */}
           <Link href="/" onClick={handleLogoClick}>
