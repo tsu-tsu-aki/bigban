@@ -1,9 +1,14 @@
 import { SITE_URL } from "@/constants/site";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

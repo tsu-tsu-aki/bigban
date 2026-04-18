@@ -20,9 +20,9 @@ export default function HomeHero() {
   ];
 
   return (
-    <section className="relative bg-deep-black overflow-hidden pt-[60px] md:pt-[100px]">
+    <section className="site-header-offset relative bg-deep-black overflow-hidden">
       {/* Full-width 16:9 background image */}
-      <div className="relative aspect-[16/9] min-h-[calc(100vh-100px)] w-full">
+      <div className="relative aspect-[16/9] min-h-[calc(100vh-var(--site-header-offset))] w-full">
         <Image
           src="/images/hero.jpg"
           alt={t("heroImageAlt")}

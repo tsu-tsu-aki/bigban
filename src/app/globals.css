@@ -7,6 +7,9 @@
   --color-text-dark: #E6E6E6;
   --color-text-light: #E6E6E6;
   --color-text-gray: #8A8A8A;
+  --site-header-safe-top: env(safe-area-inset-top, 0px);
+  --site-header-height: 56px;
+  --site-header-offset: calc(var(--site-header-safe-top) + var(--site-header-height));
 
   --font-serif: "Orbitron", "Inter", sans-serif;
   --font-sans: "Inter", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
@@ -35,6 +38,21 @@
     background-color: var(--color-accent);
     color: var(--color-deep-black);
   }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --site-header-height: 72px;
+    --site-header-offset: calc(var(--site-header-safe-top) + var(--site-header-height));
+  }
+}
+
+.site-header-shell {
+  padding-top: var(--site-header-safe-top);
+}
+
+.site-header-offset {
+  padding-top: var(--site-header-offset);
 }
 
 /* Grain overlay */

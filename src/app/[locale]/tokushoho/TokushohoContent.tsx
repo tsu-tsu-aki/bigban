@@ -35,7 +35,7 @@ export default function TokushohoContent() {
   return (
     <>
       <HomeNavigation />
-      <main className="min-h-screen bg-deep-black text-text-light pt-24 lg:pt-28">
+      <main className="site-header-offset min-h-screen bg-deep-black text-text-light">
         <div className="mx-auto max-w-3xl px-6 lg:px-12 py-16 lg:py-20">
           <h1 className="text-2xl lg:text-3xl font-bold tracking-wide mb-12">
             {t("heading")}

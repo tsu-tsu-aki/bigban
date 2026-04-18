@@ -17,6 +17,15 @@ describe("RootLayout", () => {
 
     expect(screen.getByText("test child")).toBeInTheDocument();
   });
+
+  it("theme-color 用の viewport export が設定されている", async () => {
+    const { viewport } = await import("./layout");
+
+    expect(viewport).toMatchObject({
+      themeColor: "#000000",
+      viewportFit: "cover",
+    });
+  });
 });
 
 describe("globals.css", () => {
@@ -31,5 +40,11 @@ describe("globals.css", () => {
 
   it("body に font-feature-settings: \"palt\" が設定されている", () => {
     expect(cssContent).toMatch(/font-feature-settings:\s*"palt"/);
+  });
+
+  it("site header 用の safe area 変数と utility が定義されている", () => {
+    expect(cssContent).toMatch(/--site-header-safe-top:\s*env\(safe-area-inset-top,\s*0px\)/);
+    expect(cssContent).toMatch(/\.site-header-shell/);
+    expect(cssContent).toMatch(/\.site-header-offset/);
   });
 });
