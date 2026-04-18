@@ -158,4 +158,45 @@ describe("buildSportsActivityLocation", () => {
 
     expect(ja["@id"]).toBe(en["@id"]);
   });
+
+  it("amenityFeatureに主要設備を含む", async () => {
+    const { buildSportsActivityLocation } = await import(
+      "./sportsActivityLocation"
+    );
+    const schema = buildSportsActivityLocation("ja");
+
+    expect(Array.isArray(schema.amenityFeature)).toBe(true);
+    expect(schema.amenityFeature.length).toBeGreaterThanOrEqual(4);
+    schema.amenityFeature.forEach((feature) => {
+      expect(feature["@type"]).toBe("LocationFeatureSpecification");
+      expect(typeof feature.name).toBe("string");
+      expect(feature.value).toBe(true);
+    });
+    const names = schema.amenityFeature.map((f) => f.name);
+    expect(names).toContain("空調完備");
+    expect(names).toContain("男女別更衣室");
+    expect(names).toContain("レンタル用具");
+    expect(names).toContain("無人チェックイン");
+  });
+
+  it("hasMapにGoogle Maps URLを含む", async () => {
+    const { buildSportsActivityLocation } = await import(
+      "./sportsActivityLocation"
+    );
+    const schema = buildSportsActivityLocation("ja");
+
+    expect(schema.hasMap).toMatch(/^https:\/\/www\.google\.com\/maps/);
+    expect(schema.hasMap).toContain("35.7239695");
+    expect(schema.hasMap).toContain("139.9317222");
+  });
+
+  it("paymentAcceptedとcurrenciesAcceptedを含む", async () => {
+    const { buildSportsActivityLocation } = await import(
+      "./sportsActivityLocation"
+    );
+    const schema = buildSportsActivityLocation("ja");
+
+    expect(schema.paymentAccepted).toBe("Cash, Credit Card");
+    expect(schema.currenciesAccepted).toBe("JPY");
+  });
 });

@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SITE_URL } from "@/constants/site";
 import { parseKeywords } from "@/lib/og-utils";
+import StructuredData from "@/components/StructuredData";
+import { buildServices } from "@/lib/structured-data";
 import HomeIntro from "@/components/home/HomeIntro";
 import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeHero from "@/components/home/HomeHero";
@@ -54,6 +56,7 @@ export default async function Home({ params }: HomePageProps) {
 
   return (
     <HomeIntro>
+      <StructuredData data={buildServices()} />
       <main>
         <HomeNavigation />
         <HomeHero />
