@@ -163,6 +163,7 @@ export default function HomeFacility() {
                     src={image.src}
                     alt={t(`images.${image.altKey}`)}
                     fill
+                    sizes="(min-width: 1280px) 1216px, 100vw"
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-deep-black via-deep-black/30 to-transparent hidden sm:block" />

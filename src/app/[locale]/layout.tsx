@@ -13,7 +13,11 @@ import {
 } from "@/lib/structured-data";
 import "../globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+
+export const viewport: Viewport = {
+  themeColor: "#0A0A0A",
+};
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -47,6 +51,7 @@ export async function generateMetadata({
 }: MetadataProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -58,6 +63,20 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    },
+    ...(googleVerification
+      ? { verification: { google: googleVerification } }
+      : {}),
   };
 }
 
