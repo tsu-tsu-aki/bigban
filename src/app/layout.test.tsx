@@ -23,6 +23,7 @@ describe("RootLayout", () => {
 
     expect(viewport).toMatchObject({
       themeColor: "#000000",
+      viewportFit: "cover",
     });
   });
 });
