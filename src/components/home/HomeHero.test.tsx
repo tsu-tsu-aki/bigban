@@ -44,6 +44,13 @@ describe("HomeHero", () => {
     ).toBeInTheDocument();
   });
 
+  it("ブランド名（英語＋日本語）を表示する", () => {
+    renderWithProvider(<HomeHero />);
+    expect(
+      screen.getByText(/THE PICKLE BANG THEORY.*ザ ピックルバン セオリー/)
+    ).toBeInTheDocument();
+  });
+
   it("CTAボタン（RESERVE A COURT）を表示する", () => {
     renderWithProvider(<HomeHero />);
     const cta = screen.getByRole("link", { name: /RESERVE A COURT/ });

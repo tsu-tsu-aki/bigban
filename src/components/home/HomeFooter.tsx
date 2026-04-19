@@ -15,7 +15,7 @@ export default function HomeFooter() {
 
       <div className="mx-auto max-w-7xl px-6 lg:px-12 py-16 lg:py-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-          {/* Left: Logo */}
+          {/* Left: Logo + Brand display */}
           <div>
             <Image
               src="/logos/yoko-neon.png"
@@ -24,6 +24,9 @@ export default function HomeFooter() {
               height={32}
               className="h-8 w-auto"
             />
+            <p className="mt-3 text-xs tracking-[0.2em] text-text-gray">
+              {tFooter("brandJa")}
+            </p>
           </div>
 
           {/* Center: Nav links */}

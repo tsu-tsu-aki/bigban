@@ -92,7 +92,8 @@
     "tagline": "FROM A SMALL DINK TO A BIG MOVEMENT",
     "cta": "RESERVE A COURT",
     "scroll": "SCROLL",
-    "heroImageAlt": "Pickleball player in action"
+    "heroImageAlt": "Pickleball player in action",
+    "brandJa": "THE PICKLE BANG THEORY ／ ザ ピックルバン セオリー"
   },
   "HomeConcept": {
     "title": "CONCEPT",
@@ -102,7 +103,8 @@
     "poetry2": "One small dink.",
     "description1": "These small moments accumulate into great energy, creating a new sports culture.",
     "description2": "THE PICKLE BANG THEORY aims to be the place where the \"Big Bang of Pickleball\" is born.",
-    "catchcopy": "From a small dink to a big movement."
+    "catchcopy": "From a small dink to a big movement.",
+    "titleJa": "Concept"
   },
   "HomeFacility": {
     "title": "FACILITY",
@@ -160,7 +162,8 @@
     "decoturf": {
       "title": "DecoTurf is a hard court surface used at the world's largest pickleball tournaments, tennis Grand Slams, and the Olympics. It delivers consistent bounce and outstanding durability for a world-class playing environment.",
       "description": "At THE PICKLE BANG THEORY, we adopted DecoTurf in pursuit of an environment where players can seriously improve. We provide an authentic playing environment focused on skill development and competitive advancement."
-    }
+    },
+    "titleJa": "Facility & Equipment"
   },
   "HomeServices": {
     "title": "SERVICES",
@@ -189,7 +192,8 @@
       "titleJa": "Events",
       "titleEn": "EVENTS",
       "description": "Convert to a single show court for professional spectating events. Also available as a venue for cross-industry collaborations and promotional events."
-    }
+    },
+    "titleJa": "Services & Plans"
   },
   "HomePricing": {
     "title": "PRICING",
@@ -208,7 +212,8 @@
     "rentalPaddleNote": "Rental paddles available for events and private bookings only",
     "privateFacilityNote": "For full facility private bookings including training area and lounge, or corporate use, please",
     "contactUs": "contact us",
-    "pleaseContact": "."
+    "pleaseContact": ".",
+    "titleJa": "Pricing Plans"
   },
   "HomeAbout": {
     "title": "ABOUT US",
@@ -218,8 +223,9 @@
     "founderBio1": "Crossminton World Champion. Discovered pickleball in 2023.",
     "founderBio2": "Expanding his scope of activity as a player, JPA TOP TOUR tournament director, and facility producer.",
     "founderInstagram": "@akihiko.rst",
-    "readMore": "Learn More",
-    "founderImageAlt": "Portrait of founder Akihiko Nishimura"
+    "readMore": "Read More",
+    "founderImageAlt": "Portrait of founder Akihiko Nishimura",
+    "titleJa": "About the Company & Founder"
   },
   "HomeAccess": {
     "mapTitle": "THE PICKLE BANG THEORY Location",
@@ -249,7 +255,8 @@
   "HomeFooter": {
     "copyright": "© 2026 RST Agency Inc.",
     "tokushoho": "Specified Commercial Transactions Act",
-    "address": "2-16-6 6F, Yawata, Ichikawa City, Chiba 272-0021"
+    "address": "2-16-6 6F, Yawata, Ichikawa City, Chiba 272-0021",
+    "brandJa": "THE PICKLE BANG THEORY ／ ザ ピックルバン セオリー"
   },
   "About": {
     "photoPlaceholder": "Photo",

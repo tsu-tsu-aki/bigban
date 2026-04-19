@@ -38,6 +38,9 @@ export default function HomePricing() {
           <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-black tracking-[0.15em]">
             {t("title")}
           </h2>
+          <p className="mt-3 text-xs sm:text-sm tracking-[0.25em] text-text-gray">
+            {t("titleJa")}
+          </p>
           <div className="mx-auto mt-4 w-14 h-[3px] bg-accent" />
         </motion.div>
 

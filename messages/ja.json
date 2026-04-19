@@ -103,7 +103,8 @@
     "tagline": "FROM A SMALL DINK TO A BIG MOVEMENT",
     "cta": "RESERVE A COURT",
     "scroll": "SCROLL",
-    "heroImageAlt": "ピックルボールをプレーする選手のアクションショット"
+    "heroImageAlt": "ピックルボールをプレーする選手のアクションショット",
+    "brandJa": "THE PICKLE BANG THEORY ／ ザ ピックルバン セオリー"
   },
   "HomeConcept": {
     "title": "CONCEPT",
@@ -113,7 +114,8 @@
     "poetry2": "1つの小さなディンク。",
     "description1": "その積み重ねが、やがて大きなエネルギーとなり、新しいスポーツ文化を生み出していく。",
     "description2": "THE PICKLE BANG THEORYは、“ピックルボールのビッグバン”が生まれる場所を目指しています。",
-    "catchcopy": "小さなディンクから、大きなムーブメントへ。"
+    "catchcopy": "小さなディンクから、大きなムーブメントへ。",
+    "titleJa": "コンセプト"
   },
   "HomeFacility": {
     "title": "FACILITY",
@@ -171,7 +173,8 @@
     "decoturf": {
       "title": "DecoTurf（デコターフ）は、世界最大級のピックルボール大会やテニスのグランドスラム、オリンピックでも採用されているハードコートサーフェス。安定したバウンドと高い耐久性により、世界基準のプレー環境を提供します。",
       "description": "THE PICKLE BANG THEORYでは、プレイヤーが「本気で上達できる環境」を追求し、このDecoTurf（デコターフ）を採用。技術向上・競技力向上にフォーカスした本格的なプレー環境を提供します。"
-    }
+    },
+    "titleJa": "施設・設備"
   },
   "HomeServices": {
     "title": "SERVICES",
@@ -200,7 +203,8 @@
       "titleJa": "イベント",
       "titleEn": "EVENTS",
       "description": "1面ショーコートへのレイアウト変更で本格的な観戦イベントを実現。異業種コラボレーションやプロモーションイベントの会場としても。"
-    }
+    },
+    "titleJa": "サービス・プラン"
   },
   "HomePricing": {
     "title": "PRICING",
@@ -219,7 +223,8 @@
     "rentalPaddleNote": "イベント利用もしくは貸切のみレンタルパドルあり",
     "privateFacilityNote": "トレーニングエリアやラウンジスペースを含む施設全ての貸切をご希望、法人利用ご希望の場合は",
     "contactUs": "お問い合わせ",
-    "pleaseContact": "ください。"
+    "pleaseContact": "ください。",
+    "titleJa": "料金プラン"
   },
   "HomeAbout": {
     "title": "ABOUT US",
@@ -230,7 +235,8 @@
     "founderBio2": "選手活動及びJPA TOP TOUR大会ディレクター、施設プロデュースと活動の幅を広げる。",
     "founderInstagram": "@akihiko.rst",
     "readMore": "詳しく見る",
-    "founderImageAlt": "創業者 西村昭彦のポートレート"
+    "founderImageAlt": "創業者 西村昭彦のポートレート",
+    "titleJa": "運営会社・代表について"
   },
   "HomeAccess": {
     "mapTitle": "THE PICKLE BANG THEORY 所在地",
@@ -260,7 +266,8 @@
   "HomeFooter": {
     "copyright": "© 2026 RST Agency Inc.",
     "tokushoho": "特定商取引法に基づく表記",
-    "address": "〒272-0021 千葉県市川市八幡2-16-6 6階"
+    "address": "〒272-0021 千葉県市川市八幡2-16-6 6階",
+    "brandJa": "THE PICKLE BANG THEORY ／ ザ ピックルバン セオリー"
   },
   "About": {
     "photoPlaceholder": "Photo",
