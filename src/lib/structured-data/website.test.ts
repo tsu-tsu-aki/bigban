@@ -39,4 +39,12 @@ describe("buildWebSite", () => {
       "@id": `${PROD_URL}/#organization`,
     });
   });
+
+  it("alternateNameに日本語施設名を含む", async () => {
+    const { buildWebSite } = await import("./website");
+    const schema = buildWebSite();
+
+    expect(Array.isArray(schema.alternateName)).toBe(true);
+    expect(schema.alternateName).toContain("ザ ピックルバン セオリー");
+  });
 });

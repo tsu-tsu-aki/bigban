@@ -5,8 +5,10 @@ export interface OrganizationSchema {
   "@type": "Organization";
   "@id": string;
   name: string;
+  alternateName: string[];
   url: string;
-  founder: { "@type": "Person"; name: string };
+  founder: { "@id": string };
+  member: Array<{ "@id": string }>;
   address: {
     "@type": "PostalAddress";
     addressCountry: string;
@@ -28,11 +30,17 @@ export function buildOrganization(): OrganizationSchema {
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
     name: "RST Agency株式会社",
+    alternateName: [
+      "RST Agency",
+      "Racket Sports Tokyo",
+      "アール・エス・ティ・エージェンシー",
+    ],
     url: "https://rstagency.com",
-    founder: {
-      "@type": "Person",
-      name: "西村昭彦",
-    },
+    founder: { "@id": `${SITE_URL}/#person-nishimura` },
+    member: [
+      { "@id": `${SITE_URL}/#person-nishimura` },
+      { "@id": `${SITE_URL}/#person-yoshida` },
+    ],
     address: {
       "@type": "PostalAddress",
       addressCountry: "JP",

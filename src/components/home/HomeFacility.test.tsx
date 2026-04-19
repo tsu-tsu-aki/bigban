@@ -131,6 +131,15 @@ describe("HomeFacility", () => {
     expect(screen.getByText("FACILITY")).toBeInTheDocument();
   });
 
+  it("日本語サブタイトル「施設・設備」を表示する", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFacility />
+      </NextIntlClientProvider>
+    );
+    expect(screen.getByText("施設・設備")).toBeInTheDocument();
+  });
+
   it("bg-deep-black 背景クラスを持つ", () => {
     render(
       <NextIntlClientProvider locale="ja" messages={jaMessages}>

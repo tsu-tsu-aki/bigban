@@ -33,6 +33,15 @@ describe("HomeAbout", () => {
     expect(screen.getByText("ABOUT US")).toBeInTheDocument();
   });
 
+  it("日本語サブタイトル「運営会社・代表について」を表示する", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeAbout />
+      </NextIntlClientProvider>
+    );
+    expect(screen.getByText("運営会社・代表について")).toBeInTheDocument();
+  });
+
   it("西村昭彦の名前を表示する", () => {
     render(
       <NextIntlClientProvider locale="ja" messages={jaMessages}>

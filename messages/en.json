@@ -5,34 +5,46 @@
       "description": "Premium indoor pickleball facility by a crossminton world champion. 1 min from Motoyawata Station, open 24/7. A premium space for all skill levels.",
       "keywords": [
         "pickleball",
-        "Motoyawata",
-        "1 min from Motoyawata Station",
-        "Ichikawa",
-        "indoor",
-        "24/7",
         "pickleball court",
-        "Tokyo pickleball",
+        "pickleball facility",
+        "indoor pickleball",
+        "Motoyawata pickleball",
+        "1 min from Motoyawata Station",
+        "Ichikawa pickleball",
         "Chiba pickleball",
-        "beginner",
-        "advanced",
-        "lessons",
-        "school",
-        "private rental"
+        "Tokyo pickleball",
+        "24 hour pickleball",
+        "pickleball private rental",
+        "pickleball lessons",
+        "pickleball school",
+        "pickleball beginner",
+        "pickleball advanced",
+        "DecoTurf",
+        "THE PICKLE BANG THEORY",
+        "Akihiko Nishimura",
+        "Yuta Yoshida",
+        "crossminton world champion",
+        "Pickleball X Championship"
       ]
     },
     "about": {
       "title": "ABOUT US · PICKLE BANG THEORY",
       "description": "About RST Agency Inc., the team behind THE PICKLE BANG THEORY. Company overview, founder message, players and crew.",
       "keywords": [
-        "pickleball",
-        "RST Agency",
-        "crossminton world champion",
         "Akihiko Nishimura",
+        "Yuta Yoshida",
+        "crossminton world champion",
         "pickleball players",
-        "coaching",
-        "Motoyawata",
-        "Ichikawa",
-        "about"
+        "RST Agency",
+        "Racket Sports Tokyo",
+        "THE PICKLE BANG THEORY",
+        "pickleball",
+        "pickleball facility",
+        "pickleball coaching",
+        "Motoyawata pickleball",
+        "Ichikawa pickleball",
+        "about",
+        "Pickleball X Championship"
       ]
     },
     "tokushoho": {
@@ -80,7 +92,8 @@
     "tagline": "FROM A SMALL DINK TO A BIG MOVEMENT",
     "cta": "RESERVE A COURT",
     "scroll": "SCROLL",
-    "heroImageAlt": "Player mid-swing"
+    "heroImageAlt": "Pickleball player in action",
+    "brandJa": "THE PICKLE BANG THEORY ／ ザ ピックルバン セオリー"
   },
   "HomeConcept": {
     "title": "CONCEPT",
@@ -90,7 +103,8 @@
     "poetry2": "One small dink.",
     "description1": "These small moments accumulate into great energy, creating a new sports culture.",
     "description2": "THE PICKLE BANG THEORY aims to be the place where the \"Big Bang of Pickleball\" is born.",
-    "catchcopy": "From a small dink to a big movement."
+    "catchcopy": "From a small dink to a big movement.",
+    "titleJa": "Concept"
   },
   "HomeFacility": {
     "title": "FACILITY",
@@ -135,9 +149,9 @@
       "preparing": "Coming Soon"
     },
     "images": {
-      "court": "Overhead view of pro-spec pickleball court",
-      "training": "Training Area",
-      "lounge": "Lounge Space"
+      "court": "Aerial view of pro-spec DecoTurf pickleball court",
+      "training": "On-site training area",
+      "lounge": "Lounge space inside the facility"
     },
     "carousel": {
       "regionLabel": "Facility images carousel",
@@ -148,7 +162,8 @@
     "decoturf": {
       "title": "DecoTurf is a hard court surface used at the world's largest pickleball tournaments, tennis Grand Slams, and the Olympics. It delivers consistent bounce and outstanding durability for a world-class playing environment.",
       "description": "At THE PICKLE BANG THEORY, we adopted DecoTurf in pursuit of an environment where players can seriously improve. We provide an authentic playing environment focused on skill development and competitive advancement."
-    }
+    },
+    "titleJa": "Facility & Equipment"
   },
   "HomeServices": {
     "title": "SERVICES",
@@ -177,7 +192,8 @@
       "titleJa": "Events",
       "titleEn": "EVENTS",
       "description": "Convert to a single show court for professional spectating events. Also available as a venue for cross-industry collaborations and promotional events."
-    }
+    },
+    "titleJa": "Services & Plans"
   },
   "HomePricing": {
     "title": "PRICING",
@@ -196,7 +212,8 @@
     "rentalPaddleNote": "Rental paddles available for events and private bookings only",
     "privateFacilityNote": "For full facility private bookings including training area and lounge, or corporate use, please",
     "contactUs": "contact us",
-    "pleaseContact": "."
+    "pleaseContact": ".",
+    "titleJa": "Pricing Plans"
   },
   "HomeAbout": {
     "title": "ABOUT US",
@@ -206,8 +223,9 @@
     "founderBio1": "Crossminton World Champion. Discovered pickleball in 2023.",
     "founderBio2": "Expanding his scope of activity as a player, JPA TOP TOUR tournament director, and facility producer.",
     "founderInstagram": "@akihiko.rst",
-    "readMore": "Learn More",
-    "founderImageAlt": "Akihiko Nishimura"
+    "readMore": "Read More",
+    "founderImageAlt": "Portrait of founder Akihiko Nishimura",
+    "titleJa": "About the Company & Founder"
   },
   "HomeAccess": {
     "mapTitle": "THE PICKLE BANG THEORY Location",
@@ -237,7 +255,8 @@
   "HomeFooter": {
     "copyright": "© 2026 RST Agency Inc.",
     "tokushoho": "Specified Commercial Transactions Act",
-    "address": "2-16-6 6F, Yawata, Ichikawa City, Chiba 272-0021"
+    "address": "2-16-6 6F, Yawata, Ichikawa City, Chiba 272-0021",
+    "brandJa": "THE PICKLE BANG THEORY ／ ザ ピックルバン セオリー"
   },
   "About": {
     "photoPlaceholder": "Photo",
@@ -258,7 +277,7 @@
       "name": "Akihiko Nishimura",
       "nameEn": "AKIHIKO NISHIMURA",
       "instagram": "@akihiko.rst",
-      "imageAlt": "Akihiko Nishimura",
+      "imageAlt": "Portrait of Akihiko Nishimura",
       "bio1": "Born in Hokkaido. Started badminton at age 8, honing his competitive skills at Aomori Yamada High School and Chuo University, two of Japan's top badminton powerhouses. Reached the singles quarterfinals at both the Inter-High and the National High School Select Tournament.",
       "bio2": "As a professional, he competed independently — without joining a corporate team — making four appearances at the All Japan Badminton Championships, the nation's premier tournament, and facing Japan's top players.",
       "bio3": "In 2015, he transitioned to crossminton, recording six titles including four consecutive mixed doubles and two consecutive singles titles at the World Championships. Named World's Best Player.",

@@ -5,35 +5,56 @@
       "description": "クロスミントン世界王者が手がけるプレミアムインドアピックルボール施設。本八幡駅徒歩1分、24時間営業。初心者から上級者まで楽しめるプレミアム空間。",
       "keywords": [
         "ピックルボール",
-        "本八幡",
-        "本八幡駅徒歩1分",
-        "市川市",
-        "インドア",
-        "24時間",
         "ピックルボールコート",
         "ピックルボール施設",
-        "東京 ピックルボール",
+        "インドアピックルボール",
+        "本八幡 ピックルボール",
+        "本八幡駅 ピックルボール",
+        "本八幡駅徒歩1分",
+        "市川市 ピックルボール",
         "千葉 ピックルボール",
-        "初心者",
-        "上級者",
-        "レッスン",
-        "スクール",
-        "貸切"
+        "千葉県 ピックルボール",
+        "東京 ピックルボール",
+        "ピックルボール 24時間",
+        "ピックルボール 貸切",
+        "ピックルボール レッスン",
+        "ピックルボール スクール",
+        "ピックルボール 初心者",
+        "ピックルボール 上級者",
+        "DecoTurf",
+        "THE PICKLE BANG THEORY",
+        "ザ ピックルバン セオリー",
+        "ピックルバンセオリー",
+        "西村昭彦",
+        "吉田裕太",
+        "Akihiko Nishimura",
+        "Yuta Yoshida",
+        "クロスミントン世界王者",
+        "Pickleball X Championship"
       ]
     },
     "about": {
       "title": "ABOUT US|THE PICKLE BANG THEORY",
       "description": "THE PICKLE BANG THEORYを運営するRST Agency株式会社の会社概要、代表挨拶、選手・スタッフ紹介。",
       "keywords": [
-        "ピックルボール",
-        "RST Agency",
-        "クロスミントン世界王者",
         "西村昭彦",
+        "吉田裕太",
+        "Akihiko Nishimura",
+        "Yuta Yoshida",
+        "クロスミントン世界王者",
         "ピックルボール選手",
-        "コーチング",
-        "本八幡",
-        "市川市",
-        "会社概要"
+        "RST Agency",
+        "RST Agency株式会社",
+        "Racket Sports Tokyo",
+        "THE PICKLE BANG THEORY",
+        "ザ ピックルバン セオリー",
+        "ピックルボール",
+        "ピックルボール施設",
+        "ピックルボール コーチング",
+        "本八幡 ピックルボール",
+        "市川市 ピックルボール",
+        "会社概要",
+        "Pickleball X Championship"
       ]
     },
     "tokushoho": {
@@ -82,7 +103,8 @@
     "tagline": "FROM A SMALL DINK TO A BIG MOVEMENT",
     "cta": "RESERVE A COURT",
     "scroll": "SCROLL",
-    "heroImageAlt": "Player mid-swing"
+    "heroImageAlt": "ピックルボールをプレーする選手のアクションショット",
+    "brandJa": "THE PICKLE BANG THEORY ／ ザ ピックルバン セオリー"
   },
   "HomeConcept": {
     "title": "CONCEPT",
@@ -92,7 +114,8 @@
     "poetry2": "1つの小さなディンク。",
     "description1": "その積み重ねが、やがて大きなエネルギーとなり、新しいスポーツ文化を生み出していく。",
     "description2": "THE PICKLE BANG THEORYは、“ピックルボールのビッグバン”が生まれる場所を目指しています。",
-    "catchcopy": "小さなディンクから、大きなムーブメントへ。"
+    "catchcopy": "小さなディンクから、大きなムーブメントへ。",
+    "titleJa": "コンセプト"
   },
   "HomeFacility": {
     "title": "FACILITY",
@@ -137,9 +160,9 @@
       "preparing": "準備中"
     },
     "images": {
-      "court": "プロ仕様ピクルボールコートの俯瞰",
-      "training": "トレーニングエリア",
-      "lounge": "ラウンジスペース"
+      "court": "プロ仕様DecoTurfピックルボールコートの俯瞰",
+      "training": "併設トレーニングエリア",
+      "lounge": "施設内のラウンジスペース"
     },
     "carousel": {
       "regionLabel": "施設画像カルーセル",
@@ -150,7 +173,8 @@
     "decoturf": {
       "title": "DecoTurf（デコターフ）は、世界最大級のピックルボール大会やテニスのグランドスラム、オリンピックでも採用されているハードコートサーフェス。安定したバウンドと高い耐久性により、世界基準のプレー環境を提供します。",
       "description": "THE PICKLE BANG THEORYでは、プレイヤーが「本気で上達できる環境」を追求し、このDecoTurf（デコターフ）を採用。技術向上・競技力向上にフォーカスした本格的なプレー環境を提供します。"
-    }
+    },
+    "titleJa": "施設・設備"
   },
   "HomeServices": {
     "title": "SERVICES",
@@ -179,7 +203,8 @@
       "titleJa": "イベント",
       "titleEn": "EVENTS",
       "description": "1面ショーコートへのレイアウト変更で本格的な観戦イベントを実現。異業種コラボレーションやプロモーションイベントの会場としても。"
-    }
+    },
+    "titleJa": "サービス・プラン"
   },
   "HomePricing": {
     "title": "PRICING",
@@ -198,7 +223,8 @@
     "rentalPaddleNote": "イベント利用もしくは貸切のみレンタルパドルあり",
     "privateFacilityNote": "トレーニングエリアやラウンジスペースを含む施設全ての貸切をご希望、法人利用ご希望の場合は",
     "contactUs": "お問い合わせ",
-    "pleaseContact": "ください。"
+    "pleaseContact": "ください。",
+    "titleJa": "料金プラン"
   },
   "HomeAbout": {
     "title": "ABOUT US",
@@ -209,7 +235,8 @@
     "founderBio2": "選手活動及びJPA TOP TOUR大会ディレクター、施設プロデュースと活動の幅を広げる。",
     "founderInstagram": "@akihiko.rst",
     "readMore": "詳しく見る",
-    "founderImageAlt": "西村昭彦"
+    "founderImageAlt": "創業者 西村昭彦のポートレート",
+    "titleJa": "運営会社・代表について"
   },
   "HomeAccess": {
     "mapTitle": "THE PICKLE BANG THEORY 所在地",
@@ -239,7 +266,8 @@
   "HomeFooter": {
     "copyright": "© 2026 RST Agency Inc.",
     "tokushoho": "特定商取引法に基づく表記",
-    "address": "〒272-0021 千葉県市川市八幡2-16-6 6階"
+    "address": "〒272-0021 千葉県市川市八幡2-16-6 6階",
+    "brandJa": "THE PICKLE BANG THEORY ／ ザ ピックルバン セオリー"
   },
   "About": {
     "photoPlaceholder": "Photo",
@@ -260,7 +288,7 @@
       "name": "西村昭彦",
       "nameEn": "AKIHIKO NISHIMURA",
       "instagram": "@akihiko.rst",
-      "imageAlt": "西村昭彦",
+      "imageAlt": "西村昭彦のポートレート",
       "bio1": "北海道出身。8歳でバドミントンを始め、青森山田高校、中央大学と日本有数のバドミントン強豪校で競技経験を積む。青森山田高校時代にはインターハイおよび全国高校選抜大会でシングルスベスト8を記録。",
       "bio2": "社会人では実業団チームに所属せず個人として活動し国内最高峰大会である全日本総合バドミントン選手権に4度出場し、日本トップ選手らと対戦を重ねる。",
       "bio3": "2015年にクロスミントンへ転向し、世界選手権ミックスダブルス4連覇、シングルス2連覇を含む通算6度の優勝を記録。世界最優秀選手賞を受賞。",

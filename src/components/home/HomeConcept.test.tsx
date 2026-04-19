@@ -24,6 +24,15 @@ describe("HomeConcept", () => {
     expect(screen.getByText("CONCEPT")).toBeInTheDocument();
   });
 
+  it("日本語サブタイトル「コンセプト」を表示する", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeConcept />
+      </NextIntlClientProvider>
+    );
+    expect(screen.getByText("コンセプト")).toBeInTheDocument();
+  });
+
   it("リードコピーを表示する", () => {
     render(
       <NextIntlClientProvider locale="ja" messages={jaMessages}>

@@ -77,6 +77,16 @@ export default function HomeHero() {
               {t("tagline")}
             </motion.p>
 
+            {/* Japanese brand display (SEO) */}
+            <motion.p
+              className="mt-2 text-xs tracking-[0.25em] text-text-gray/70"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1.3, ease: EASE }}
+            >
+              {t("brandJa")}
+            </motion.p>
+
             {/* CTA */}
             <motion.div
               className="mt-6"
