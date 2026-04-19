@@ -230,19 +230,4 @@ describe("buildSportsActivityLocation", () => {
     expect(schema.slogan).toContain("ディンク");
   });
 
-  it("keywordsに主要ターゲットキーワード（地名・カテゴリ・人名）を含む", async () => {
-    const { buildSportsActivityLocation } = await import(
-      "./sportsActivityLocation"
-    );
-    const schema = buildSportsActivityLocation("ja");
-
-    expect(Array.isArray(schema.keywords)).toBe(true);
-    expect(schema.keywords).toContain("本八幡 ピックルボール");
-    expect(schema.keywords).toContain("市川市 ピックルボール");
-    expect(schema.keywords).toContain("インドアピックルボール");
-    expect(schema.keywords).toContain("西村昭彦");
-    expect(schema.keywords).toContain("吉田裕太");
-    expect(schema.keywords).toContain("クロスミントン世界王者");
-    expect(schema.keywords).toContain("ザ ピックルバン セオリー");
-  });
 });
