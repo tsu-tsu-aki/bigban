@@ -6,6 +6,7 @@ export interface WebSiteSchema {
   "@id": string;
   url: string;
   name: string;
+  alternateName: string[];
   inLanguage: string[];
   publisher: { "@id": string };
 }
@@ -17,6 +18,11 @@ export function buildWebSite(): WebSiteSchema {
     "@id": `${SITE_URL}/#website`,
     url: SITE_URL,
     name: "THE PICKLE BANG THEORY",
+    alternateName: [
+      "ザ ピックルバン セオリー",
+      "ピックルバンセオリー",
+      "ピクルバン",
+    ],
     inLanguage: ["ja-JP", "en-US"],
     publisher: { "@id": `${SITE_URL}/#organization` },
   };

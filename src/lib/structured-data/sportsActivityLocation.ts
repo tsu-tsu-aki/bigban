@@ -47,6 +47,10 @@ export interface SportsActivityLocationSchema {
   hasMap: string;
   paymentAccepted: string;
   currenciesAccepted: string;
+  alternateName: string[];
+  description: string;
+  slogan: string;
+  keywords: string[];
 }
 
 const AMENITY_NAMES = [
@@ -59,6 +63,38 @@ const AMENITY_NAMES = [
 
 const LATITUDE = 35.7239695;
 const LONGITUDE = 139.9317222;
+
+const ALTERNATE_NAMES = [
+  "ザ ピックルバン セオリー",
+  "ピックルバンセオリー",
+  "ピクルバン",
+] as const;
+
+const DESCRIPTION =
+  "千葉県市川市 本八幡駅徒歩1分、24時間営業のプレミアムインドアピックルボール施設。クロスミントン世界王者 西村昭彦がプロデュース。DecoTurfハードコート3面、トレーニングエリア併設、無人チェックインで6:00〜23:00まで利用可能。レッスン、大会、リーグ、イベント会場としても利用可能。";
+
+const SLOGAN = "小さなディンクから、大きなムーブメントへ。";
+
+const KEYWORDS = [
+  "ピックルボール",
+  "本八幡 ピックルボール",
+  "市川市 ピックルボール",
+  "千葉 ピックルボール",
+  "インドアピックルボール",
+  "ピックルボール 24時間",
+  "ピックルボール 本八幡駅",
+  "ピックルボールコート",
+  "ピックルボール施設",
+  "ピックルボール 貸切",
+  "ピックルボール レッスン",
+  "ピックルボール 初心者",
+  "ザ ピックルバン セオリー",
+  "THE PICKLE BANG THEORY",
+  "西村昭彦",
+  "吉田裕太",
+  "クロスミントン世界王者",
+  "DecoTurf",
+] as const;
 
 export function buildSportsActivityLocation(
   _locale: string
@@ -118,5 +154,9 @@ export function buildSportsActivityLocation(
     hasMap: `https://www.google.com/maps?q=${LATITUDE},${LONGITUDE}`,
     paymentAccepted: "Cash, Credit Card",
     currenciesAccepted: "JPY",
+    alternateName: [...ALTERNATE_NAMES],
+    description: DESCRIPTION,
+    slogan: SLOGAN,
+    keywords: [...KEYWORDS],
   };
 }

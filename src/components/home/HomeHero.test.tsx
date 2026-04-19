@@ -60,7 +60,7 @@ describe("HomeHero", () => {
 
   it("ヒーロー写真を表示する", () => {
     renderWithProvider(<HomeHero />);
-    const img = screen.getByAltText("Player mid-swing");
+    const img = screen.getByAltText(/ピックルボールをプレーする選手/);
     expect(img).toBeInTheDocument();
   });
 

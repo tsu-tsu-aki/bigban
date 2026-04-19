@@ -29,13 +29,12 @@ describe("buildOrganization", () => {
     expect(schema.url).toBe("https://rstagency.com");
   });
 
-  it("founderに西村昭彦を含む", async () => {
+  it("founderをPerson schemaの@idで参照する", async () => {
     const { buildOrganization } = await import("./organization");
     const schema = buildOrganization();
 
     expect(schema.founder).toEqual({
-      "@type": "Person",
-      name: "西村昭彦",
+      "@id": `${PROD_URL}/#person-nishimura`,
     });
   });
 
@@ -77,5 +76,27 @@ describe("buildOrganization", () => {
 
     expect(Array.isArray(schema.sameAs)).toBe(true);
     expect(schema.sameAs).toContain("https://rstagency.com");
+  });
+
+  it("alternateNameにブランド表記ゆれを含む", async () => {
+    const { buildOrganization } = await import("./organization");
+    const schema = buildOrganization();
+
+    expect(Array.isArray(schema.alternateName)).toBe(true);
+    expect(schema.alternateName).toContain("RST Agency");
+    expect(schema.alternateName).toContain("Racket Sports Tokyo");
+  });
+
+  it("memberに所属する人物を@id参照で含む", async () => {
+    const { buildOrganization } = await import("./organization");
+    const schema = buildOrganization();
+
+    expect(Array.isArray(schema.member)).toBe(true);
+    expect(schema.member).toContainEqual({
+      "@id": `${PROD_URL}/#person-nishimura`,
+    });
+    expect(schema.member).toContainEqual({
+      "@id": `${PROD_URL}/#person-yoshida`,
+    });
   });
 });

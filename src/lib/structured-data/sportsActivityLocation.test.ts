@@ -199,4 +199,51 @@ describe("buildSportsActivityLocation", () => {
     expect(schema.paymentAccepted).toBe("Cash, Credit Card");
     expect(schema.currenciesAccepted).toBe("JPY");
   });
+
+  it("alternateNameに日本語施設名とカナ表記ゆれを含む", async () => {
+    const { buildSportsActivityLocation } = await import(
+      "./sportsActivityLocation"
+    );
+    const schema = buildSportsActivityLocation("ja");
+
+    expect(Array.isArray(schema.alternateName)).toBe(true);
+    expect(schema.alternateName).toContain("ザ ピックルバン セオリー");
+    expect(schema.alternateName).toContain("ピックルバンセオリー");
+    expect(schema.alternateName).toContain("ピクルバン");
+  });
+
+  it("descriptionに立地とサービス概要を含む", async () => {
+    const { buildSportsActivityLocation } = await import(
+      "./sportsActivityLocation"
+    );
+    const schema = buildSportsActivityLocation("ja");
+
+    expect(schema.description).toContain("本八幡");
+    expect(schema.description).toContain("ピックルボール");
+  });
+
+  it("sloganにキャッチコピーを含む", async () => {
+    const { buildSportsActivityLocation } = await import(
+      "./sportsActivityLocation"
+    );
+    const schema = buildSportsActivityLocation("ja");
+
+    expect(schema.slogan).toContain("ディンク");
+  });
+
+  it("keywordsに主要ターゲットキーワード（地名・カテゴリ・人名）を含む", async () => {
+    const { buildSportsActivityLocation } = await import(
+      "./sportsActivityLocation"
+    );
+    const schema = buildSportsActivityLocation("ja");
+
+    expect(Array.isArray(schema.keywords)).toBe(true);
+    expect(schema.keywords).toContain("本八幡 ピックルボール");
+    expect(schema.keywords).toContain("市川市 ピックルボール");
+    expect(schema.keywords).toContain("インドアピックルボール");
+    expect(schema.keywords).toContain("西村昭彦");
+    expect(schema.keywords).toContain("吉田裕太");
+    expect(schema.keywords).toContain("クロスミントン世界王者");
+    expect(schema.keywords).toContain("ザ ピックルバン セオリー");
+  });
 });
