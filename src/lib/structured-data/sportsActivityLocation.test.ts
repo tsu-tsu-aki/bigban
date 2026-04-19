@@ -209,7 +209,6 @@ describe("buildSportsActivityLocation", () => {
     expect(Array.isArray(schema.alternateName)).toBe(true);
     expect(schema.alternateName).toContain("ザ ピックルバン セオリー");
     expect(schema.alternateName).toContain("ピックルバンセオリー");
-    expect(schema.alternateName).toContain("ピクルバン");
   });
 
   it("descriptionに立地とサービス概要を含む", async () => {

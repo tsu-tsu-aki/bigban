@@ -67,7 +67,6 @@ const LONGITUDE = 139.9317222;
 const ALTERNATE_NAMES = [
   "ザ ピックルバン セオリー",
   "ピックルバンセオリー",
-  "ピクルバン",
 ] as const;
 
 const DESCRIPTION =

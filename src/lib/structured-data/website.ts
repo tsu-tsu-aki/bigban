@@ -21,7 +21,6 @@ export function buildWebSite(): WebSiteSchema {
     alternateName: [
       "ザ ピックルバン セオリー",
       "ピックルバンセオリー",
-      "ピクルバン",
     ],
     inLanguage: ["ja-JP", "en-US"],
     publisher: { "@id": `${SITE_URL}/#organization` },
