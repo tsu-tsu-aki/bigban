@@ -199,4 +199,35 @@ describe("buildSportsActivityLocation", () => {
     expect(schema.paymentAccepted).toBe("Cash, Credit Card");
     expect(schema.currenciesAccepted).toBe("JPY");
   });
+
+  it("alternateNameに日本語施設名とカナ表記ゆれを含む", async () => {
+    const { buildSportsActivityLocation } = await import(
+      "./sportsActivityLocation"
+    );
+    const schema = buildSportsActivityLocation("ja");
+
+    expect(Array.isArray(schema.alternateName)).toBe(true);
+    expect(schema.alternateName).toContain("ザ ピックルバン セオリー");
+    expect(schema.alternateName).toContain("ピックルバンセオリー");
+  });
+
+  it("descriptionに立地とサービス概要を含む", async () => {
+    const { buildSportsActivityLocation } = await import(
+      "./sportsActivityLocation"
+    );
+    const schema = buildSportsActivityLocation("ja");
+
+    expect(schema.description).toContain("本八幡");
+    expect(schema.description).toContain("ピックルボール");
+  });
+
+  it("sloganにキャッチコピーを含む", async () => {
+    const { buildSportsActivityLocation } = await import(
+      "./sportsActivityLocation"
+    );
+    const schema = buildSportsActivityLocation("ja");
+
+    expect(schema.slogan).toContain("ディンク");
+  });
+
 });

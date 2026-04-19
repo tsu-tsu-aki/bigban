@@ -10,6 +10,8 @@ import {
   buildSportsActivityLocation,
   buildOrganization,
   buildWebSite,
+  buildPersonNishimura,
+  buildPersonYoshida,
 } from "@/lib/structured-data";
 import "../globals.css";
 
@@ -115,6 +117,8 @@ export default async function LocaleLayout({
             buildWebSite(),
             buildSportsActivityLocation(locale),
             buildOrganization(),
+            buildPersonNishimura(),
+            buildPersonYoshida(),
           ]}
         />
         <NextIntlClientProvider messages={messages}>
