@@ -109,6 +109,23 @@ describe("HomeServices", () => {
     expect(reserveButtons).toHaveLength(1);
   });
 
+  it("イベントにVIEW EVENTSボタン（テニスベアへのリンク）を表示する", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
+    const ctaButton = screen.getByText("VIEW EVENTS");
+    expect(ctaButton).toBeInTheDocument();
+    const link = ctaButton.closest("a");
+    expect(link).toHaveAttribute(
+      "href",
+      "https://www.tennisbear.net/user/148195/organized-event"
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
   it("data-service-row属性で背景色が交互になる（奇数:bg-deep-black, 偶数:bg-off-white）", () => {
     render(
       <NextIntlClientProvider locale="ja" messages={jaMessages}>
