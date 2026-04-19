@@ -3,7 +3,11 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
+import {
+  RESERVE_URL,
+  TENNISBEAR_EVENTS_URL,
+  EXTERNAL_LINK_PROPS,
+} from "@/constants/site";
 
 interface ServiceConfig {
   number: string;
@@ -13,14 +17,15 @@ interface ServiceConfig {
   imageSrc: string;
   imageAlt: string;
   hasCta: boolean;
+  ctaUrl?: string;
 }
 
 const SERVICES: ServiceConfig[] = [
-  { number: "01", key: "service01", isReversed: false, isDark: true, imageSrc: "/images/rental.jpg", imageAlt: "Court rental", hasCta: true },
+  { number: "01", key: "service01", isReversed: false, isDark: true, imageSrc: "/images/rental.jpg", imageAlt: "Court rental", hasCta: true, ctaUrl: RESERVE_URL },
   { number: "02", key: "service02", isReversed: true, isDark: false, imageSrc: "/images/lesson.jpg", imageAlt: "Lessons & clinics", hasCta: false },
   { number: "03", key: "service03", isReversed: false, isDark: true, imageSrc: "/images/training.jpg", imageAlt: "Training program", hasCta: false },
   { number: "04", key: "service04", isReversed: true, isDark: false, imageSrc: "/images/tournament.jpg", imageAlt: "Tournaments & leagues", hasCta: false },
-  { number: "05", key: "service05", isReversed: false, isDark: true, imageSrc: "/images/event.jpg", imageAlt: "Events", hasCta: false },
+  { number: "05", key: "service05", isReversed: false, isDark: true, imageSrc: "/images/event.jpg", imageAlt: "Events", hasCta: true, ctaUrl: TENNISBEAR_EVENTS_URL },
 ];
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
@@ -100,9 +105,9 @@ export default function HomeServices() {
               <p className="text-base leading-relaxed">
                 {t(`${service.key}.description`)}
               </p>
-              {service.hasCta && (
+              {service.hasCta && service.ctaUrl && (
                 <a
-                  href={RESERVE_URL}
+                  href={service.ctaUrl}
                   {...EXTERNAL_LINK_PROPS}
                   className="inline-block mt-6 bg-accent text-deep-black px-8 py-3 text-xs font-bold uppercase tracking-widest hover:bg-accent/90 transition-colors"
                 >

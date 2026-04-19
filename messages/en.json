@@ -190,7 +190,8 @@
     "service05": {
       "titleJa": "Events",
       "titleEn": "EVENTS",
-      "description": "Convert to a single show court for professional spectating events. Also available as a venue for cross-industry collaborations and promotional events."
+      "description": "Convert to a single show court for professional spectating events. Also available as a venue for cross-industry collaborations and promotional events.",
+      "cta": "VIEW EVENTS"
     },
     "titleJa": "Services & Plans"
   },
