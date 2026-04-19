@@ -78,6 +78,23 @@ describe("LocaleLayout", () => {
     expect(detectScript?.innerHTML).toContain("maxTouchPoints");
   });
 
+  it("excludes Instagram in-app browser from iOS Safari detection", async () => {
+    const { default: LocaleLayout } = await import("./layout");
+
+    const { container } = render(
+      await LocaleLayout({
+        children: <p>content</p>,
+        params: Promise.resolve({ locale: "ja" }),
+      })
+    );
+
+    const scripts = container.querySelectorAll("script");
+    const detectScript = Array.from(scripts).find((s) =>
+      s.innerHTML.includes("ios-safari")
+    );
+    expect(detectScript?.innerHTML).toContain("Instagram");
+  });
+
   it("renders children with en locale", async () => {
     const { default: LocaleLayout } = await import("./layout");
 
