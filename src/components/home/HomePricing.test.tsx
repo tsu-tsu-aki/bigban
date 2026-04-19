@@ -32,6 +32,15 @@ describe("HomePricing", () => {
     expect(screen.getByText("PRICING")).toBeInTheDocument();
   });
 
+  it("日本語サブタイトル「料金プラン」を表示する", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomePricing />
+      </NextIntlClientProvider>
+    );
+    expect(screen.getByText("料金プラン")).toBeInTheDocument();
+  });
+
   it("OPEN記念価格バナーを表示する", () => {
     render(
       <NextIntlClientProvider locale="ja" messages={jaMessages}>

@@ -24,6 +24,15 @@ describe("HomeServices", () => {
     expect(screen.getByText("SERVICES")).toBeInTheDocument();
   });
 
+  it("日本語サブタイトル「サービス・プラン」を表示する", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeServices />
+      </NextIntlClientProvider>
+    );
+    expect(screen.getByText("サービス・プラン")).toBeInTheDocument();
+  });
+
   it("5つのサービス番号（01〜05）を表示する", () => {
     render(
       <NextIntlClientProvider locale="ja" messages={jaMessages}>

@@ -46,6 +46,17 @@ describe("HomeFooter", () => {
     ).toBeInTheDocument();
   });
 
+  it("ブランド名（英語＋日本語）を表示する", () => {
+    render(
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <HomeFooter />
+      </NextIntlClientProvider>
+    );
+    expect(
+      screen.getByText(/THE PICKLE BANG THEORY.*ザ ピックルバン セオリー/)
+    ).toBeInTheDocument();
+  });
+
   it("6つのナビリンクを表示する", () => {
     render(
       <NextIntlClientProvider locale="ja" messages={jaMessages}>
