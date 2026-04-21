@@ -105,8 +105,8 @@ describe("AboutPage", () => {
     renderWithIntl(<AboutPage />);
     expect(screen.getByText("PBTクルー")).toBeInTheDocument();
     expect(screen.getByText("勝間田靖子 / Yasuko the Pickleballer")).toBeInTheDocument();
-    expect(screen.getByText("河野 みすず / Misuzu Kouno")).toBeInTheDocument();
-    expect(screen.getByText("堤 暁寛 / Akihiro Tsutsumi")).toBeInTheDocument();
+    expect(screen.getByText("おすず / Osuzu")).toBeInTheDocument();
+    expect(screen.getByText("つつ / Tsutsu")).toBeInTheDocument();
     const igLink = screen.getByRole("link", {
       name: /@yasuko_the_pickleballer/,
     });
