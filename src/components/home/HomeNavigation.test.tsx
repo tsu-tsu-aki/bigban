@@ -196,7 +196,7 @@ describe("HomeNavigation", () => {
 
     Object.defineProperty(window, "scrollY", { value: 200, writable: true });
     fireEvent.scroll(window);
-    expect(header.className).toContain("-translate-y-full");
+    expect(header.className).toMatch(/md:-translate-y-\[calc\(100%\+var\(--promo-banner-h\)\)\]/);
   });
 
   it("スクロールアップでナビが再表示される", () => {
@@ -205,7 +205,7 @@ describe("HomeNavigation", () => {
 
     Object.defineProperty(window, "scrollY", { value: 200, writable: true });
     fireEvent.scroll(window);
-    expect(header.className).toContain("-translate-y-full");
+    expect(header.className).toMatch(/md:-translate-y-\[calc\(100%\+var\(--promo-banner-h\)\)\]/);
 
     Object.defineProperty(window, "scrollY", { value: 100, writable: true });
     fireEvent.scroll(window);
@@ -229,8 +229,8 @@ describe("HomeNavigation", () => {
     fireEvent.scroll(window);
 
     expect(header.className).toContain("translate-y-0");
-    expect(header.className).toContain("md:-translate-y-full");
-    expect(header.className).not.toMatch(/(?<!md:)(?<!:)-translate-y-full/);
+    expect(header.className).toMatch(/md:-translate-y-\[calc\(100%\+var\(--promo-banner-h\)\)\]/);
+    expect(header.className).not.toMatch(/(?<!md:)(?<!:)-translate-y-\[/);
   });
 
   it("ホームでロゴクリックするとページ最上部にスクロールする", () => {
