@@ -13,6 +13,10 @@
 }
 
 @layer base {
+  :root {
+    --promo-banner-h: 2rem;
+  }
+
   html {
     scroll-behavior: smooth;
     background-color: var(--color-deep-black);

@@ -20,7 +20,7 @@ export default function HomeHero() {
   ];
 
   return (
-    <section className="relative bg-deep-black overflow-hidden pt-[60px] md:pt-[100px]">
+    <section className="relative bg-deep-black overflow-hidden pt-[calc(60px+var(--promo-banner-h))] md:pt-[calc(100px+var(--promo-banner-h))]">
       {/* Full-width 16:9 background image */}
       <div className="relative aspect-[16/9] min-h-[calc(100vh-100px)] w-full">
         <Image
