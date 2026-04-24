@@ -9,6 +9,7 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 import { useCrowdfundingPopup } from "@/hooks/useCrowdfundingPopup";
 import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 import CrowdfundingPopup from "./CrowdfundingPopup";
+import PromoBanner from "./PromoBanner";
 
 const SECTION_IDS = ["concept", "facility", "services", "pricing", "about", "access"];
 
@@ -84,9 +85,10 @@ export default function HomeNavigation() {
 
   return (
     <>
+    <PromoBanner />
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
-        isNavVisible ? "translate-y-0" : "translate-y-0 md:-translate-y-full"
+      className={`fixed top-[var(--promo-banner-h)] left-0 w-full z-50 transition-transform duration-300 ${
+        isNavVisible ? "translate-y-0" : "translate-y-0 md:-translate-y-[calc(100%+var(--promo-banner-h))]"
       }`}
     >
       <div className="site-header-bg backdrop-blur-md bg-deep-black/80">

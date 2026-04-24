@@ -85,6 +85,10 @@
     "openMenu": "Open Menu",
     "closeMenu": "Close Menu"
   },
+  "PromoBanner": {
+    "text": "🈹\uFE0F 30% OFF CAMPAIGN【PBTOPEN30】(until 5/31)",
+    "ariaLabel": "30% off court campaign. Go to reservation page"
+  },
   "HomeHero": {
     "headline1": "The Big Bang",
     "headline2": "of Pickleball",

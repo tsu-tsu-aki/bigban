@@ -140,7 +140,7 @@ export default function AboutContent() {
       <HomeNavigation />
 
       {/* Hero */}
-      <section className="pt-28 pb-12 lg:pt-32 lg:pb-16">
+      <section className="pt-[calc(7rem+var(--promo-banner-h))] pb-12 lg:pt-[calc(8rem+var(--promo-banner-h))] lg:pb-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <motion.div
             className="text-center"

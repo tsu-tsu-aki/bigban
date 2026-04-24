@@ -35,6 +35,16 @@ vi.mock("next/navigation", () => ({
   notFound: vi.fn(),
 }));
 
+vi.mock("@/components/PreHydrationScripts", async () => {
+  const actual = await vi.importActual<
+    typeof import("@/components/PreHydrationScripts")
+  >("@/components/PreHydrationScripts");
+  return {
+    ...actual,
+    default: () => null,
+  };
+});
+
 vi.mock("../../globals.css", () => ({}));
 
 import { setRequestLocale } from "next-intl/server";
@@ -59,40 +69,22 @@ describe("LocaleLayout", () => {
     expect(setRequestLocale).toHaveBeenCalledWith("ja");
   });
 
-  it("inlines a browser-detection script that sets data-browser for iOS Safari", async () => {
-    const { default: LocaleLayout } = await import("./layout");
-
-    const { container } = render(
-      await LocaleLayout({
-        children: <p>content</p>,
-        params: Promise.resolve({ locale: "ja" }),
-      })
+  it("exposes a browser-detection script that sets data-browser for iOS Safari", async () => {
+    const { browserDetectScript } = await import(
+      "@/components/PreHydrationScripts"
     );
 
-    const scripts = container.querySelectorAll("script");
-    const detectScript = Array.from(scripts).find((s) =>
-      s.innerHTML.includes("ios-safari")
-    );
-    expect(detectScript).toBeTruthy();
-    expect(detectScript?.innerHTML).toContain("navigator.userAgent");
-    expect(detectScript?.innerHTML).toContain("maxTouchPoints");
+    expect(browserDetectScript).toContain("ios-safari");
+    expect(browserDetectScript).toContain("navigator.userAgent");
+    expect(browserDetectScript).toContain("maxTouchPoints");
   });
 
   it("excludes Instagram in-app browser from iOS Safari detection", async () => {
-    const { default: LocaleLayout } = await import("./layout");
-
-    const { container } = render(
-      await LocaleLayout({
-        children: <p>content</p>,
-        params: Promise.resolve({ locale: "ja" }),
-      })
+    const { browserDetectScript } = await import(
+      "@/components/PreHydrationScripts"
     );
 
-    const scripts = container.querySelectorAll("script");
-    const detectScript = Array.from(scripts).find((s) =>
-      s.innerHTML.includes("ios-safari")
-    );
-    expect(detectScript?.innerHTML).toContain("Instagram");
+    expect(browserDetectScript).toContain("Instagram");
   });
 
   it("renders children with en locale", async () => {
