@@ -21,7 +21,7 @@ interface ServiceConfig {
 }
 
 const SERVICES: ServiceConfig[] = [
-  { number: "01", key: "service01", isReversed: false, isDark: true, imageSrc: "/images/rental.jpg", imageAlt: "Court rental", hasCta: true, ctaUrl: RESERVE_URL },
+  { number: "01", key: "service01", isReversed: false, isDark: true, imageSrc: "/images/rental.webp", imageAlt: "Court rental", hasCta: true, ctaUrl: RESERVE_URL },
   { number: "02", key: "service02", isReversed: true, isDark: false, imageSrc: "/images/lesson.jpg", imageAlt: "Lessons & clinics", hasCta: false },
   { number: "03", key: "service03", isReversed: false, isDark: true, imageSrc: "/images/training.jpg", imageAlt: "Training program", hasCta: false },
   { number: "04", key: "service04", isReversed: true, isDark: false, imageSrc: "/images/tournament.jpg", imageAlt: "Tournaments & leagues", hasCta: false },
