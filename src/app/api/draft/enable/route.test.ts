@@ -1,0 +1,148 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+
+const enableMock = vi.fn();
+const cookieSetMock = vi.fn();
+const getNewsDetailMock = vi.fn();
+const redirectMock = vi.fn();
+
+vi.mock("next/headers", () => ({
+  draftMode: async () => ({ enable: enableMock }),
+  cookies: async () => ({ set: cookieSetMock }),
+}));
+vi.mock("next/navigation", () => ({
+  redirect: (url: string) => {
+    redirectMock(url);
+    throw new Error(`NEXT_REDIRECT:${url}`);
+  },
+}));
+vi.mock("@/lib/microcms/queries", () => ({
+  getNewsDetail: (args: unknown) => getNewsDetailMock(args),
+}));
+
+function makeReq(url: string) {
+  return new Request(url);
+}
+
+describe("/api/draft/enable GET", () => {
+  beforeEach(() => {
+    enableMock.mockClear();
+    cookieSetMock.mockClear();
+    getNewsDetailMock.mockReset();
+    redirectMock.mockClear();
+    vi.stubEnv("MICROCMS_DRAFT_SECRET", "ds3cret");
+    vi.stubEnv("MICROCMS_DRAFT_ALLOWED_ORIGINS", "");
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("secret不一致401", async () => {
+    const { GET } = await import("./route");
+    const res = await GET(
+      makeReq(
+        "http://localhost/api/draft/enable?secret=bad&slug=a&draftKey=d",
+      ),
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it("slug/draftKey欠落401", async () => {
+    const { GET } = await import("./route");
+    const res = await GET(
+      makeReq("http://localhost/api/draft/enable?secret=ds3cret"),
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it("不正locale401", async () => {
+    const { GET } = await import("./route");
+    const res = await GET(
+      makeReq(
+        "http://localhost/api/draft/enable?secret=ds3cret&slug=a&draftKey=d&locale=xx",
+      ),
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it("不正slug形式401 (大文字)", async () => {
+    const { GET } = await import("./route");
+    const res = await GET(
+      makeReq(
+        "http://localhost/api/draft/enable?secret=ds3cret&slug=Bad-Slug&draftKey=d",
+      ),
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it("slug存在しない401", async () => {
+    getNewsDetailMock.mockResolvedValue(null);
+    const { GET } = await import("./route");
+    const res = await GET(
+      makeReq(
+        "http://localhost/api/draft/enable?secret=ds3cret&slug=a&draftKey=d",
+      ),
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it("正常系: enable+cookie+redirect", async () => {
+    getNewsDetailMock.mockResolvedValue({ slug: "a" });
+    const { GET } = await import("./route");
+    await expect(
+      GET(
+        makeReq(
+          "http://localhost/api/draft/enable?secret=ds3cret&slug=a&draftKey=dk&locale=ja",
+        ),
+      ),
+    ).rejects.toThrow(/NEXT_REDIRECT/);
+    expect(enableMock).toHaveBeenCalled();
+    expect(cookieSetMock).toHaveBeenCalledWith(
+      "microcms_draft_key",
+      "dk",
+      expect.objectContaining({
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: 1800,
+      }),
+    );
+    expect(redirectMock).toHaveBeenCalledWith("/news/a");
+  });
+
+  it("locale=enはprefix付きパスへredirect", async () => {
+    getNewsDetailMock.mockResolvedValue({ slug: "a" });
+    const { GET } = await import("./route");
+    await expect(
+      GET(
+        makeReq(
+          "http://localhost/api/draft/enable?secret=ds3cret&slug=a&draftKey=dk&locale=en",
+        ),
+      ),
+    ).rejects.toThrow(/NEXT_REDIRECT/);
+    expect(redirectMock).toHaveBeenCalledWith("/en/news/a");
+  });
+
+  it("locale未指定はja", async () => {
+    getNewsDetailMock.mockResolvedValue({ slug: "a" });
+    const { GET } = await import("./route");
+    await expect(
+      GET(
+        makeReq(
+          "http://localhost/api/draft/enable?secret=ds3cret&slug=a&draftKey=dk",
+        ),
+      ),
+    ).rejects.toThrow(/NEXT_REDIRECT/);
+    expect(redirectMock).toHaveBeenCalledWith("/news/a");
+  });
+
+  it("MICROCMS_DRAFT_ALLOWED_ORIGINS 設定時、Origin不一致で401", async () => {
+    vi.stubEnv("MICROCMS_DRAFT_ALLOWED_ORIGINS", "https://app.microcms.io");
+    const req = new Request(
+      "http://localhost/api/draft/enable?secret=ds3cret&slug=a&draftKey=dk",
+      { headers: { Origin: "https://evil.example.com" } },
+    );
+    const { GET } = await import("./route");
+    const res = await GET(req);
+    expect(res.status).toBe(401);
+  });
+});
