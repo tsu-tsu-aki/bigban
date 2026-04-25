@@ -6,26 +6,31 @@ describe("sitemap", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", PROD_URL);
+    vi.doMock("@/lib/microcms/queries", () => ({
+      getNewsSlugs: async () => [],
+    }));
   });
 
   afterEach(() => {
     vi.unstubAllEnvs();
+    vi.doUnmock("@/lib/microcms/queries");
   });
 
-  it("想定3ページ（/, /about, /tokushoho）を含む", async () => {
+  it("静的ページ3つ + ニュース一覧1つ = 4エントリ（slugなし時）", async () => {
     const { default: sitemap } = await import("./sitemap");
-    const entries = sitemap();
+    const entries = await sitemap();
 
-    expect(entries).toHaveLength(3);
+    expect(entries).toHaveLength(4);
     const urls = entries.map((e) => e.url);
     expect(urls).toContain(`${PROD_URL}`);
     expect(urls).toContain(`${PROD_URL}/about`);
     expect(urls).toContain(`${PROD_URL}/tokushoho`);
+    expect(urls).toContain(`${PROD_URL}/news`);
   });
 
   it("/teaser / /facility / /services は sitemap に含まれない", async () => {
     const { default: sitemap } = await import("./sitemap");
-    const entries = sitemap();
+    const entries = await sitemap();
 
     const urls = entries.map((e) => e.url);
     expect(urls.some((u) => u.includes("/teaser"))).toBe(false);
@@ -33,11 +38,18 @@ describe("sitemap", () => {
     expect(urls.some((u) => u.includes("/services"))).toBe(false);
   });
 
-  it("各エントリに ja/en/x-default の alternates.languages が設定される", async () => {
+  it("静的エントリに ja/en/x-default の alternates.languages が設定される", async () => {
     const { default: sitemap } = await import("./sitemap");
-    const entries = sitemap();
+    const entries = await sitemap();
 
-    for (const entry of entries) {
+    const staticEntries = entries.filter(
+      (e) =>
+        e.url === PROD_URL ||
+        e.url === `${PROD_URL}/about` ||
+        e.url === `${PROD_URL}/tokushoho` ||
+        e.url === `${PROD_URL}/news`,
+    );
+    for (const entry of staticEntries) {
       expect(entry.alternates?.languages).toBeDefined();
       expect(entry.alternates?.languages?.ja).toBeDefined();
       expect(entry.alternates?.languages?.en).toBeDefined();
@@ -45,9 +57,9 @@ describe("sitemap", () => {
     }
   });
 
-  it("ja URL は prefix なし（localePrefix: as-needed に従う）", async () => {
+  it("ja URL は prefix なし", async () => {
     const { default: sitemap } = await import("./sitemap");
-    const entries = sitemap();
+    const entries = await sitemap();
 
     const home = entries.find((e) => e.url === PROD_URL);
     expect(home?.alternates?.languages?.ja).toBe(PROD_URL);
@@ -58,7 +70,7 @@ describe("sitemap", () => {
 
   it("en URL は /en prefix 付き", async () => {
     const { default: sitemap } = await import("./sitemap");
-    const entries = sitemap();
+    const entries = await sitemap();
 
     const home = entries.find((e) => e.url === PROD_URL);
     expect(home?.alternates?.languages?.en).toBe(`${PROD_URL}/en`);
@@ -69,11 +81,14 @@ describe("sitemap", () => {
 
   it("x-default は ja URL と一致する", async () => {
     const { default: sitemap } = await import("./sitemap");
-    const entries = sitemap();
+    const entries = await sitemap();
 
-    for (const entry of entries) {
+    const staticEntries = entries.filter(
+      (e) => e.alternates?.languages?.["x-default"],
+    );
+    for (const entry of staticEntries) {
       expect(entry.alternates?.languages?.["x-default"]).toBe(
-        entry.alternates?.languages?.ja
+        entry.alternates?.languages?.ja,
       );
     }
   });
@@ -81,7 +96,7 @@ describe("sitemap", () => {
   it("priority と changeFrequency が SITEMAP_ROUTES と一致する", async () => {
     const { default: sitemap } = await import("./sitemap");
     const { SITEMAP_ROUTES } = await import("@/constants/routes");
-    const entries = sitemap();
+    const entries = await sitemap();
 
     for (const route of SITEMAP_ROUTES) {
       const expectedUrl =
@@ -92,12 +107,44 @@ describe("sitemap", () => {
     }
   });
 
-  it("lastModified は設定しない（ビルド毎に値が変わる誤った鮮度シグナル回避）", async () => {
+  it("lastModified は設定しない", async () => {
     const { default: sitemap } = await import("./sitemap");
-    const entries = sitemap();
+    const entries = await sitemap();
 
     for (const entry of entries) {
       expect(entry.lastModified).toBeUndefined();
     }
+  });
+});
+
+describe("news sitemap entries", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", PROD_URL);
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("ニュース一覧 /news を含む", async () => {
+    vi.doMock("@/lib/microcms/queries", () => ({
+      getNewsSlugs: async () => [],
+    }));
+    const { default: sitemap } = await import("./sitemap");
+    const entries = await sitemap();
+    expect(entries.map((e) => e.url)).toContain(`${PROD_URL}/news`);
+  });
+
+  it("ニュース詳細をslugごとに含む", async () => {
+    vi.doMock("@/lib/microcms/queries", () => ({
+      getNewsSlugs: async () => [
+        { locale: "ja", slug: "s1" },
+        { locale: "en", slug: "s2" },
+      ],
+    }));
+    const { default: sitemap } = await import("./sitemap");
+    const urls = (await sitemap()).map((e) => e.url);
+    expect(urls).toContain(`${PROD_URL}/news/s1`);
+    expect(urls).toContain(`${PROD_URL}/en/news/s2`);
   });
 });
