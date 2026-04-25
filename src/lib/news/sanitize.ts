@@ -71,14 +71,14 @@ export const STRICT_HTML_CONFIG = {
   ALLOWED_URI_REGEXP,
   FORBID_TAGS: COMMON_FORBID_TAGS,
   FORBID_ATTR: COMMON_FORBID_ATTR,
-} as const;
+};
 
 export const RICH_EDITOR_CONFIG = {
   ALLOWED_ATTR: COMMON_ALLOWED_ATTR,
   ALLOWED_URI_REGEXP,
   FORBID_TAGS: COMMON_FORBID_TAGS,
   FORBID_ATTR: COMMON_FORBID_ATTR,
-} as const;
+};
 
 DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
   if (data.attrName === "src" && (node as Element).tagName === "IMG") {
@@ -131,7 +131,7 @@ export function sanitizeNewsHtml(
   config: typeof STRICT_HTML_CONFIG | typeof RICH_EDITOR_CONFIG,
   options: SanitizeOptions = {},
 ): string {
-  let result = DOMPurify.sanitize(html, config);
+  let result = DOMPurify.sanitize(html, config) as unknown as string;
 
   if (config === STRICT_HTML_CONFIG) {
     result = filterClasses(result, STRICT_ALLOWED_CLASSES);

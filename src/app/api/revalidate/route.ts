@@ -74,12 +74,12 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const tags: string[] = ["news"];
-  revalidateTag("news");
+  revalidateTag("news", "default");
   if (parsed.data.id) {
     const jaTag = `news-${parsed.data.id}-ja`;
     const enTag = `news-${parsed.data.id}-en`;
-    revalidateTag(jaTag);
-    revalidateTag(enTag);
+    revalidateTag(jaTag, "default");
+    revalidateTag(enTag, "default");
     tags.push(jaTag, enTag);
   }
 

@@ -300,7 +300,7 @@ describe("AboutContent 05 NEWS (CMS integration)", () => {
       updatedAt: "2026-04-01T00:00:00.000Z",
       publishedAt: "2026-04-01T00:00:00.000Z",
       locale: "ja" as const,
-      category: ["notice"] as const,
+      category: ["notice"] as ("notice" | "media" | "event" | "campaign")[],
       excerpt: `抜粋${i}`,
       displayMode: "html" as const,
       bodyHtml: "<p>本文</p>",
