@@ -281,3 +281,47 @@ describe("AboutPage", () => {
     });
   });
 });
+
+describe("AboutContent 05 NEWS (CMS integration)", () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  it("flag ON+3件で NewsItem 表示 (続きを読む + すべてのニュースを見る)", async () => {
+    vi.doMock("@/config/featureFlags", () => ({
+      isCmsNewsEnabled: () => true,
+    }));
+    const { default: AboutContentReloaded } = await import("./AboutContent");
+    const items = Array.from({ length: 3 }, (_, i) => ({
+      id: `n${i}`,
+      slug: `s${i}`,
+      title: `ニュース${i}`,
+      createdAt: "2026-04-01T00:00:00.000Z",
+      updatedAt: "2026-04-01T00:00:00.000Z",
+      publishedAt: "2026-04-01T00:00:00.000Z",
+      locale: "ja" as const,
+      category: ["notice"] as const,
+      excerpt: `抜粋${i}`,
+      displayMode: "html" as const,
+      bodyHtml: "<p>本文</p>",
+      body: "",
+    }));
+    renderWithIntl(<AboutContentReloaded newsItems={items} locale="ja" />);
+    expect(screen.getByText("ニュース0")).toBeInTheDocument();
+    expect(screen.getByText("ニュース2")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /すべてのニュース/ }),
+    ).toHaveAttribute("href", "/news");
+  });
+
+  it("flag OFF (newsItems=[]) は旧ハードコード表示", async () => {
+    vi.doMock("@/config/featureFlags", () => ({
+      isCmsNewsEnabled: () => false,
+    }));
+    const { default: AboutContentReloaded } = await import("./AboutContent");
+    renderWithIntl(<AboutContentReloaded newsItems={[]} locale="ja" />);
+    expect(
+      screen.getByText(/クラウドファンディング/),
+    ).toBeInTheDocument();
+  });
+});

@@ -1,11 +1,16 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+
+import StructuredData from "@/components/StructuredData";
+import { isCmsNewsEnabled } from "@/config/featureFlags";
+import { ABOUT_NEWS_LIMIT } from "@/constants/news";
 import { SITE_URL } from "@/constants/site";
 import { parseKeywords } from "@/lib/og-utils";
-import AboutContent from "./AboutContent";
-import StructuredData from "@/components/StructuredData";
+import { getNewsList } from "@/lib/microcms/queries";
 import { buildBreadcrumb } from "@/lib/structured-data";
+import type { NewsItem } from "@/lib/microcms/schema";
 
-import type { Metadata } from "next";
+import AboutContent from "./AboutContent";
 
 interface AboutPageProps {
   params: Promise<{ locale: string }>;
@@ -45,12 +50,26 @@ export default async function AboutPage({ params }: AboutPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  let newsItems: NewsItem[] = [];
+  if (isCmsNewsEnabled()) {
+    try {
+      const list = await getNewsList({
+        locale: locale as "ja" | "en",
+        limit: ABOUT_NEWS_LIMIT,
+        offset: 0,
+      });
+      newsItems = list.contents;
+    } catch {
+      newsItems = [];
+    }
+  }
+
   return (
     <>
       <StructuredData
         data={buildBreadcrumb(locale, [{ name: "About", path: "/about" }])}
       />
-      <AboutContent />
+      <AboutContent newsItems={newsItems} locale={locale as "ja" | "en"} />
     </>
   );
 }

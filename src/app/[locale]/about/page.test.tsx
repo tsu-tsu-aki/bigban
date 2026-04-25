@@ -13,6 +13,17 @@ vi.mock("@/components/StructuredData", () => ({ default: () => null }));
 vi.mock("@/lib/structured-data", () => ({
   buildBreadcrumb: vi.fn().mockReturnValue({}),
 }));
+vi.mock("@/config/featureFlags", () => ({
+  isCmsNewsEnabled: () => false,
+}));
+vi.mock("@/lib/microcms/queries", () => ({
+  getNewsList: vi.fn().mockResolvedValue({
+    contents: [],
+    totalCount: 0,
+    offset: 0,
+    limit: 12,
+  }),
+}));
 
 describe("About generateMetadata", () => {
   beforeEach(() => {
