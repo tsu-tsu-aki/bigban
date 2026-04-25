@@ -8,7 +8,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
 const FACILITY_IMAGES = [
-  { src: "/images/facility.jpg", altKey: "court" as const },
+  { src: "/images/facility.webp", altKey: "court" as const },
   { src: "/images/comingsoon.jpg", altKey: "training" as const },
   { src: "/images/comingsoon.jpg", altKey: "lounge" as const },
 ];
@@ -169,7 +169,6 @@ export default function HomeFacility() {
                     sizes="(min-width: 1280px) 1216px, 100vw"
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-deep-black via-deep-black/30 to-transparent hidden sm:block" />
                 </div>
               ))}
             </div>
