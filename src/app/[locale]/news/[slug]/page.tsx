@@ -29,7 +29,13 @@ function buildNewsUrl(locale: Locale, slug: string): string {
 }
 
 export async function generateStaticParams() {
-  return getNewsSlugs();
+  try {
+    return await getNewsSlugs();
+  } catch {
+    // microCMS 未設定/未到達時はビルド時の事前生成を空にする
+    // (ランタイム fetch で 404 を返す)
+    return [];
+  }
 }
 
 export async function generateMetadata({

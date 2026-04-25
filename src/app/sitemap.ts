@@ -41,7 +41,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const slugs = await getNewsSlugs();
+  let slugs: Awaited<ReturnType<typeof getNewsSlugs>> = [];
+  try {
+    slugs = await getNewsSlugs();
+  } catch {
+    // microCMS 未設定/未到達時はサイトマップにニュース詳細を含めない
+    slugs = [];
+  }
   const newsDetails: MetadataRoute.Sitemap = slugs.map(
     ({ locale, slug }) => ({
       url:
