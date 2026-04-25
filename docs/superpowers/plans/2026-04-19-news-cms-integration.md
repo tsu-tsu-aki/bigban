@@ -12,32 +12,190 @@
 
 ---
 
-## 設計変更履歴（2026-04-25 追補）
+## 設計変更履歴（v2 — 2026-04-25 大幅改訂）
 
-ja/en は **両言語必須ではなく片方のみでも運用可** に方針変更。実装上の差分は以下の通り（各タスク内で対応）：
+> **重要**: 本セクションは v1 (片言語可方針のみ) を**置き換え**ます。設計書改訂 (commits `0f43538`, `6e0be60`) で以下の変更を反映済み。実装着手時は **設計書を一次ソース**として、本計画書のタスクで矛盾するコード例・テスト例は本セクションのデルタに従って読み替えてください。
 
-1. **`lib/microcms/queries.ts` に `hasNewsInLocale` 追加**
-   - シグネチャ: `hasNewsInLocale({ slug, locale }: { slug: string; locale: Locale }): Promise<boolean>`
-   - 実装: `getList` を `filters=slug[equals]${slug}[and]locale[equals]${locale}&limit=1&fields=id` で叩いて `totalCount > 0` を返す
-   - キャッシュタグ: `['news', \`news-${slug}-${locale}\`]`（既存と同じタグ群を再利用）
-   - テストケース: 存在時 `true` / 不在時 `false` / network error 伝播
-2. **詳細ページ `src/app/[locale]/news/[slug]/page.tsx` の修正**
-   - `generateMetadata` 内で対向言語の存在チェックを実施し、結果に応じて `alternates.languages` を条件付き出力
-     - 存在 → `{ ja: ..., en: ..., 'x-default': jaUrl(または存在する方) }`
-     - 不在 → `alternates.canonical` のみ設定、`languages` は出力しない
-   - 詳細ページ Server Component で対向言語存在フラグを取得し、Navigation/LanguageSwitcher 側へ渡す（手段は後述）
-3. **言語切替UI（既存 `HomeNavigation` の `handleSwitchLocale` 相当ロジックの拡張）**
-   - ニュース詳細ページのみ用に **`NewsLanguageSwitcher.tsx` を新規追加**（既存 Navigation には触らない）
-   - props: `{ slug: string; currentLocale: Locale; hasOtherLocale: boolean }`
-   - 動作:
-     - `hasOtherLocale === true` → 対向言語の `/[other]/news/[slug]` へ `router.push`
-     - `hasOtherLocale === false` → 対向言語の `/[other]/news` へフォールバック、`aria-label` で「この記事は{現在言語}のみ公開（一覧へ移動）」を補足
-   - テストケース: 両ケースの遷移先・aria-label 検証 + `whoseRequest` キーボード操作
-4. **`generateStaticParams` は変更不要**: 既に `getNewsSlugs()` が各 `{locale, slug}` を個別に返すので、片言語のみの記事も自動的に当該ロケールのみ静的生成され、対向ロケールのアクセスは自然に `notFound()`
-5. **`sitemap.ts` は変更不要**: 既にレコード単位（locale別）でURL出力、対向言語が無いレコードは当該言語のURLのみ出力される
-6. **設計書 `7.5 SEO` セクションの方針** を反映した `alternates` 条件分岐ロジックを必ず実装し、テストで検証する
+### A. 設計デルタ一覧（Q1〜Q12 + プロチームレビュー指摘）
 
-タスク内のファイル列挙・テストケース表に上記の追加項目を反映してから実装すること。
+#### A-1. microCMS スキーマ刷新（設計書 §4.1）
+| 追加 | 概要 |
+|---|---|
+| `bodyHtml` | テキストエリア。**AI 生成HTMLの主軸**。Server Component で厳格サニタイズ |
+| `displayMode` | セレクト `html`/`rich` 必須・デフォルトなし |
+| `excerpt` | テキスト 160字必須。description/OGP/JSON-LD の供給源 |
+| `body` (既存) | リッチエディタ → **保険用**に降格 |
+
+→ 影響: Task 4, 6, 7, 12, 13, 17, 19, 20, 22
+
+#### A-2. 多言語片言語可（v1 範囲）
+- 各記事は ja/en どちらか1件で運用可、両方揃えてもOK
+- 対向言語不在時は `notFound()`、`NewsLanguageSwitcher` は対向言語一覧へフォールバック
+- `alternates.languages` は対向言語存在時のみ出力
+- `getSlugLocaleMap()` でビルド時 hreflang fetch を集約メモ化（チームレビュー H7）
+
+→ 影響: Task 6, 19 + 新タスク (NewsLanguageSwitcher)
+
+#### A-3. Next.js 16 Cache Components 採用（設計書 §3.2, §7.3.2, §14-1）
+- 旧来の `fetch` の `next: { tags }` から **`'use cache'` + `cacheTag()` + `cacheLife()`** に全面移行
+- `revalidateTag` は引き続き有効でこれらのタグを無効化
+- `next.config.ts` に `experimental.cacheComponents: true`（Next.js 16 安定化に応じて削除可）
+- `'use cache'` 関数内では `setRequestLocale` 等の dynamic API は **呼べない** → page.tsx 最上位で呼び出し、データ層は引数で `locale` を受ける
+
+→ 影響: Task 5, 6, 18, 19, 21
+
+#### A-4. ページネーション方針変更（設計書 §5, §6.2）
+- 「もっと見る」クライアント追加ロード方式 **廃止** (SEOインデックス不可、Cache Components 利点喪失)
+- **`/news?page=N&category=X` のサーバーサイドページネーション + `<Link>` ナビゲーション**に変更
+- `<NewsPagination>` Server Component を新設（前後ボタン + 番号リンク、`rel="prev"/"next"`、`aria-current="page"`）
+
+→ 影響: **Task 11 廃止**, **Task 15 (LoadMoreButton) 廃止**, **新タスク `NewsPagination`**, Task 18
+
+#### A-5. サニタイズ二段構え（設計書 §3.2.1, §14-3）
+- 新ファイル `src/lib/news/sanitize.ts` に `STRICT_HTML_CONFIG` (`displayMode='html'`) と `RICH_EDITOR_CONFIG` (`displayMode='rich'`) を定義
+- 共通禁止: `script, iframe, style, base, link, object, embed, form` タグ + `style, on*, formaction` 属性
+- `addHook('afterSanitizeAttributes')` で `<a>` に `target="_blank"` + `rel="noopener noreferrer"` 強制
+- `addHook('uponSanitizeAttribute')` で `<img src>` を `images.microcms-assets.io` ホスト限定
+- 許可属性に `class` を含める（カスタムクラス保持）
+- **Server Component 限定**（クライアントバンドル30KB混入防止、`"use client"` 禁止）
+
+→ 影響: **新タスク (Task 12-pre) `lib/news/sanitize.ts`**, Task 12 リネーム
+
+#### A-6. Webhook強化（設計書 §7.3.1）
+- 署名検証は **`crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))`** で定長比較
+- microCMS の `x-microcms-signature` は `HMAC-SHA256(body, secret).digest('hex')` の **prefix 無し hex 文字列**
+- bodyは `await request.text()` で raw 取得（HMAC計算用）
+- **冪等性チェック**: 同一 `(id, type, signature)` を Vercel KV (or Upstash Redis) で 5 分保持、既出はスキップ (リプレイ攻撃対策)
+- `revalidateTag('news')` + `revalidateTag(\`news-${id}-ja\`)` + `news-${id}-en` (locale確定不能のため両方発火)
+- 認証失敗は `{ error: 'Unauthorized' }` 汎用メッセージのみ
+
+→ 影響: Task 8
+
+#### A-7. Draft Mode強化（設計書 §7.1）
+- 順序検証: **Origin ヘッダ → secret (timingSafeEqual) → slug 形式 (`^[a-z0-9-]+$`) → locale enum → 実在チェック → enable → Cookie → リダイレクト**
+- Origin 許可リスト環境変数 `MICROCMS_DRAFT_ALLOWED_ORIGINS` を追加
+- Cookie: `HttpOnly + SameSite=None + Secure + maxAge: 1800`、ローカル開発時は `SameSite=lax` に切替
+- リダイレクト先は構築URL `/news/${slug}` (ja) / `/en/news/${slug}` (en) のみ、クエリ由来は禁止
+
+→ 影響: Task 9, Task 10 (Origin 検証追加)
+
+#### A-8. Feature Flag リネーム（設計書 §8）
+- `NEXT_PUBLIC_USE_CMS_NEWS` → **`USE_CMS_NEWS`** (サーバ専用)
+- 理由: クライアントバンドル露出防止、機能存在の情報漏洩防止
+- フラグ値は build-time inline、変更後は再デプロイ必須
+
+→ 影響: Task 2 (全リファレンス), 影響箇所すべて
+
+#### A-9. 画像方針変更（設計書 §7.4）
+- Vercel Image Optimization は使わない、**imgix に最適化を委譲**
+- `next/image` は `unoptimized` プロパティで利用、または `<img>` で imgix URL 直接指定
+- `images.remotePatterns` は **パスプレフィックスで絞り**: `{ hostname: 'images.microcms-assets.io', pathname: '/assets/<service-id>/**' }`
+- `sizes` 属性必須:
+  - カード: `sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"`
+  - 詳細アイキャッチ: `sizes="(max-width: 768px) 100vw, (max-width: 1280px) 85vw, 1200px"`
+- 本文中画像 (AI HTML 内) はサニタイズで microCMS ホスト強制
+
+→ 影響: Task 13, 19, 23
+
+#### A-10. excerpt の取り扱い（設計書 §4.1, §7.5）
+- description / OGP / JSON-LD は **`excerpt` フィールド (160字必須) から**
+- 本文機械抽出 (HTMLタグ除去 + 先頭120字切出) は **廃止**
+- Task 7 (抜粋ユーティリティ) は意味的に変更: 「`excerpt` フィールドを安全にプレーンテキストとして取り出す薄いラッパ」または不要
+
+→ 影響: Task 7 (大改装 or 廃止), 17, 19, 22
+
+#### A-11. JSON-LD 必須フィールド追加（設計書 §7.5）
+- `publisher` (`@type=Organization` + `logo.ImageObject`), `mainEntityOfPage` を必須化
+- `description` は `excerpt` から
+- `headline` は 110字以内（AI生成側で担保、サイト側は超過時の警告ログのみ）
+
+→ 影響: Task 17
+
+#### A-12. URL/`localePrefix: 'as-needed'` 整合（設計書 §5）
+- ja は prefix 無し: `/news`, `/news/[slug]`
+- en のみ prefix: `/en/news`, `/en/news/[slug]`
+- About 内アンカー: `/#news` (ja) / `/en/#news` (en)
+- `alternates.languages` 構築時もこの URL 規則を使用
+
+→ 影響: Task 18, 19, 21, 22
+
+#### A-13. 動的 OGP の最適化（設計書 §7.5）
+- アイキャッチがあれば `metadata.openGraph.images` に imgix URL **直接指定**
+- `opengraph-image.tsx` (Task 20) は **アイキャッチ無し記事のフォールバック専用**にスコープ縮小
+
+→ 影響: Task 19 (metadata に直接指定), Task 20 (フォールバック化)
+
+#### A-14. ファイル構成変更（設計書 §9）
+- `lib/microcms/queries.ts` → `queries/{list,detail,slugs}.ts` に分割
+- `RichEditorContent.tsx` → **`NewsBodyRenderer.tsx`** にリネーム (displayMode 両モード対応)
+- `LoadMoreButton.tsx` 廃止
+- `NewsPagination.tsx` 新設 (Server Component)
+- `NewsLanguageSwitcher.tsx` 新設 (Client Component)
+- `lib/news/sanitize.ts` 新設
+
+#### A-15. テスト戦略（設計書 §11）
+- Lighthouse CI 予算: LCP ≤ 2500 / CLS ≤ 0.1 / INP ≤ 200 / Performance ≥ 0.9
+- `setRequestLocale` の検証: E2E でレスポンスヘッダ `x-nextjs-cache: HIT` 等を確認
+- サニタイズテストは両 CONFIG + `<a>` 自動属性付与 + `<img>` ホスト除去
+- `NewsBodyRenderer` テスト: html/rich/フォールバック/両空→`notFound` 4分岐
+
+#### A-16. AI 運用境界（設計書 §17）
+- AI agent → microCMS Management API のフローは **本計画書スコープ外**
+- 別ドキュメント `docs/operations/ai-news-prompt.md` で管理（既に作成済）
+- Web サイト側は契約 (画像ホスト/タグ範囲/displayMode/多言語/excerpt/title字数) を信頼せず常に Zod + サニタイズで境界防御
+
+---
+
+### B. タスク影響度マトリクス
+
+凡例: 🔴 大改装 / 🟠 中規模変更 / 🟡 小規模追加 / ⚫ 削除 / ➕ 新タスク
+
+| Task | Title | 影響 | 主な変更 |
+|---|---|:-:|---|
+| 1 | 依存関係 | 🟠 | + `@vercel/kv` (Webhook冪等性), + `@lhci/cli`, 確認: `isomorphic-dompurify` |
+| 2 | Feature Flag | 🟠 | `NEXT_PUBLIC_USE_CMS_NEWS` → `USE_CMS_NEWS` (全所リネーム) |
+| 3 | ニュース定数 | 🟡 | `NEWS_PAGE_SIZE = 12`, サニタイズホワイトリスト基本値 |
+| 4 | Zod スキーマ | 🔴 | `bodyHtml`, `displayMode`(`z.enum(['html','rich'])`), `excerpt`(`max(160)`) 追加。`body` を任意化 |
+| 5 | fetch クライアント | 🔴 | `'use cache'` + `cacheTag` + `cacheLife({revalidate:3600,expire:86400})` 構造に |
+| 6 | クエリ関数 | 🔴 | `queries/{list,detail,slugs}.ts` に分割 + `getSlugLocaleMap()` 集約メモ化 + `hasNewsInLocale()` (v1からの継続) |
+| 7 | 抜粋ユーティリティ | 🟠 | `excerpt` フィールドを HTML タグ無しプレーンとして返す薄いラッパに変更（旧来の本文機械抽出は廃止） |
+| 8 | /api/revalidate | 🔴 | `timingSafeEqual` + Vercel KV 冪等性 + raw body取得 |
+| 9 | /api/draft/enable | 🔴 | Origin → secret → slug形式 → locale → 実在チェックの多段検証 |
+| 10 | /api/draft/disable | 🟠 | Origin 検証追加, maxAge 1800 で自動失効依存 |
+| 11 | /api/news (load more) | ⚫ | **削除** |
+| 12-pre | lib/news/sanitize.ts | ➕ | 新タスク: 二段構え DOMPurify 設定 + addHook |
+| 12 | RichEditorContent → **NewsBodyRenderer** | 🔴 | リネーム + displayMode 分岐 + フォールバック + サニタイズ呼び分け |
+| 13 | NewsCard | 🟠 | `excerpt` 表示, `unoptimized` + `sizes`, AI HTMLでも見た目崩れない確認 |
+| 14 | CategoryChips | 🟡 | URL同期は維持（`?page=1&category=...`） |
+| 15 | LoadMoreButton | ⚫ | **削除** |
+| 15' | **NewsPagination** | ➕ | 新タスク: 前後/番号リンク、`rel="prev/next"`, `aria-current` |
+| 16 | PreviewBanner | 🟡 | maxAge 1800 で自動失効 |
+| 17 | NewsArticleJsonLd | 🟠 | `publisher`+`logo.ImageObject`, `mainEntityOfPage` 追加, description=excerpt |
+| 18 | 一覧ページ | 🔴 | `?page=N&category=X` 処理 + `'use cache'` + `setRequestLocale` 最上位 + `notFound()` の境界 |
+| 19 | 詳細ページ | 🔴 | `NewsBodyRenderer` 利用 + `NewsLanguageSwitcher` 連携 + `'use cache'` + alternates条件分岐 + metadata.openGraph 直接 |
+| 19-pre | NewsLanguageSwitcher | ➕ | 新タスク: Client Component (router.push 利用) |
+| 20 | 動的OGP画像 | 🟠 | スコープ縮小: アイキャッチ無し記事のフォールバック専用 |
+| 21 | サイトマップ | 🟠 | `'use cache'` + `cacheLife('hours')`, レコード単位URL出力 |
+| 22 | About 05 NEWS | 🟠 | `excerpt` 表示, `cacheTag('news')` 共有, displayMode は意識不要(本文表示しないため) |
+| 23 | next.config.ts | 🟠 | `remotePatterns` パスプレフィックス + `experimental.cacheComponents: true` |
+| 24 | env.example | 🟡 | `USE_CMS_NEWS`, `MICROCMS_DRAFT_ALLOWED_ORIGINS`, `KV_*` 追加 |
+| 25 | 運用マニュアル | 🟡 | AI 運用ガイド (`docs/operations/ai-news-prompt.md`) への参照 |
+| 26 | 全体検証 | 🟠 | Lighthouse CI 予算チェック + setRequestLocale 静的化検証 |
+| 27 | PR作成 | ⚫ ※ | 影響なし |
+
+**新タスク 3件**: `lib/news/sanitize.ts`, `NewsPagination`, `NewsLanguageSwitcher`
+**削除タスク 2件**: Task 11 (`/api/news`), Task 15 (`LoadMoreButton`)
+
+---
+
+### C. 実装着手時のチェックリスト
+
+- [ ] 設計書 §3.2.1 サニタイズマトリクスを `lib/news/sanitize.ts` の Zod スキーマ・テストに転載
+- [ ] 設計書 §6.3.1 フォールバック疑似コードを `NewsBodyRenderer.tsx` テスト 4 分岐に展開
+- [ ] 設計書 §7.1 Draft Mode 検証順序 a〜h を `/api/draft/enable` 実装に対応
+- [ ] 設計書 §7.3.1 Webhook 検証手順 1〜9 を `/api/revalidate` 実装に対応
+- [ ] 設計書 §14-4 `setRequestLocale` の `'use cache'` 内不可制約を全 page.tsx で守る
+- [ ] チームレビュー指摘の CRITICAL 3件 (Cache Components, timingSafeEqual+冪等性, setRequestLocale) は実装直後に検証
 
 ---
 
