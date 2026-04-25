@@ -4,7 +4,7 @@
 
 **Goal:** microCMSをヘッドレスCMSとして導入し、ハードコードされたニュースを非エンジニア投稿可能な運用に置き換える。多言語（ja/en）・予約投稿・プレビュー・SEO構造化データ・サイトマップ対応の新設 `/news` と `/news/[slug]` を追加し、About内「05 NEWS」セクションをCMS連携に差し替える。
 
-**Architecture:** microCMS (Hobby無料) をコンテンツストア、Next.js 16 App Router を配信層とする。`fetch + next: { tags }` の自前クライアント + Zod境界検証。リッチテキストは isomorphic-dompurify でサニタイズ後に出力。画像は microCMS imgix + `next/image`。Webhook `/api/revalidate` で on-demand ISR、Draft Mode + Cookie で `draftKey` 受け渡し。Feature Flag `NEXT_PUBLIC_USE_CMS_NEWS` で段階的ロールバック可能。
+**Architecture:** microCMS (Hobby無料) をコンテンツストア、Next.js 16 App Router を配信層とする。`fetch + next: { tags }` の自前クライアント + Zod境界検証。リッチテキストは isomorphic-dompurify でサニタイズ後に出力。画像は microCMS imgix + `next/image`。Webhook `/api/revalidate` で on-demand ISR、Draft Mode + Cookie で `draftKey` 受け渡し。Feature Flag `USE_CMS_NEWS` で段階的ロールバック可能。
 
 **Tech Stack:** Next.js 16.2 / next-intl 4.9 / TypeScript 5.9 / Tailwind CSS 4 / Vitest 4 / React Testing Library / Zod / isomorphic-dompurify / MSW (新規導入)
 
@@ -80,7 +80,7 @@
 → 影響: Task 9, Task 10 (Origin 検証追加)
 
 #### A-8. Feature Flag リネーム（設計書 §8）
-- `NEXT_PUBLIC_USE_CMS_NEWS` → **`USE_CMS_NEWS`** (サーバ専用)
+- 旧 `NEXT_PUBLIC_USE_CMS_NEWS` → 新 **`USE_CMS_NEWS`** (サーバ専用)
 - 理由: クライアントバンドル露出防止、機能存在の情報漏洩防止
 - フラグ値は build-time inline、変更後は再デプロイ必須
 
@@ -153,7 +153,7 @@
 | Task | Title | 影響 | 主な変更 |
 |---|---|:-:|---|
 | 1 | 依存関係 | 🟠 | + `@vercel/kv` (Webhook冪等性), + `@lhci/cli`, 確認: `isomorphic-dompurify` |
-| 2 | Feature Flag | 🟠 | `NEXT_PUBLIC_USE_CMS_NEWS` → `USE_CMS_NEWS` (全所リネーム) |
+| 2 | Feature Flag | 🟠 | 旧 `NEXT_PUBLIC_USE_CMS_NEWS` → 新 `USE_CMS_NEWS` (全所リネーム、サーバ専用) |
 | 3 | ニュース定数 | 🟡 | `NEWS_PAGE_SIZE = 12`, サニタイズホワイトリスト基本値 |
 | 4 | Zod スキーマ | 🔴 | `bodyHtml`, `displayMode`(`z.enum(['html','rich'])`), `excerpt`(`max(160)`) 追加。`body` を任意化 |
 | 5 | fetch クライアント | 🔴 | `'use cache'` + `cacheTag` + `cacheLife({revalidate:3600,expire:86400})` 構造に |
@@ -293,25 +293,25 @@ describe("isCmsNewsEnabled", () => {
   afterEach(() => { vi.unstubAllEnvs(); });
 
   it("'true' で true", async () => {
-    vi.stubEnv("NEXT_PUBLIC_USE_CMS_NEWS", "true");
+    vi.stubEnv("USE_CMS_NEWS", "true");
     const { isCmsNewsEnabled } = await import("./featureFlags");
     expect(isCmsNewsEnabled()).toBe(true);
   });
 
   it("'false' で false", async () => {
-    vi.stubEnv("NEXT_PUBLIC_USE_CMS_NEWS", "false");
+    vi.stubEnv("USE_CMS_NEWS", "false");
     const { isCmsNewsEnabled } = await import("./featureFlags");
     expect(isCmsNewsEnabled()).toBe(false);
   });
 
   it("未設定で false", async () => {
-    vi.stubEnv("NEXT_PUBLIC_USE_CMS_NEWS", "");
+    vi.stubEnv("USE_CMS_NEWS", "");
     const { isCmsNewsEnabled } = await import("./featureFlags");
     expect(isCmsNewsEnabled()).toBe(false);
   });
 
   it("想定外の値で false", async () => {
-    vi.stubEnv("NEXT_PUBLIC_USE_CMS_NEWS", "yes");
+    vi.stubEnv("USE_CMS_NEWS", "yes");
     const { isCmsNewsEnabled } = await import("./featureFlags");
     expect(isCmsNewsEnabled()).toBe(false);
   });
@@ -329,7 +329,7 @@ Run: `npx vitest run src/config/featureFlags.test.ts`
 
 ```typescript
 export function isCmsNewsEnabled(): boolean {
-  return process.env.NEXT_PUBLIC_USE_CMS_NEWS === "true";
+  return process.env.USE_CMS_NEWS === "true";
 }
 ```
 
@@ -1431,128 +1431,144 @@ git commit -m "feat: プレビュー終了 /api/draft/disable"
 
 ---
 
-## Task 11: /api/news (load more)
+## Task 11: ⚫ DELETED — /api/news (load more) は廃止
 
-**Files:** Create `src/app/api/news/route.ts` + test
+**変更理由 (設計書 §5 末尾、計画書「設計変更履歴 v2」 A-4)**:
+クライアント追加ロード方式は (1) URL状態を保持しないため SEO インデックス不可、(2) Cache Components 利点喪失、(3) `/api/news` Route Handler 増設のトレードオフから不採用。代わりに **`/news?page=N&category=X` のサーバーサイドページネーション** (Task 15') を採用。
+
+このタスクはスキップし、Task 11' に進む。
+
+---
+
+## Task 11': lib/news/sanitize.ts (DOMPurify 二段構え)
+
+**Files:** Create `src/lib/news/sanitize.ts` + test
+
+設計書 §3.2.1 サニタイズマトリクス、§14-3 ハマりポイントに対応する純粋ロジック層。Server Component から呼ばれる前提。
 
 - [ ] **Step 1: テスト**
 
-`src/app/api/news/route.test.ts`:
+`src/lib/news/sanitize.test.ts` で以下のケースを TDD:
 
-```typescript
-import { describe, it, expect, vi } from "vitest";
-import { makeNewsItem, makeNewsList } from "../../../../__mocks__/microcms-fixtures";
+**共通 (両 CONFIG)**:
+- `<script>`, `<iframe>`, `<style>`, `<base>`, `<link>`, `<form>` タグが除去される
+- `style="..."` 属性, `onclick`, `onload`, `onerror` 属性が除去される
+- `javascript:` / `data:` スキームの `<a href>` が除去される
+- `<a>` に `target="_blank"` + `rel="noopener noreferrer"` が自動付与される
+- `<img src>` のホストが `images.microcms-assets.io` 以外の場合は src 属性が除去される
+- `<img>` に `width`/`height` 欠如の場合、デフォルト (1200×675) が付与される + `console.warn` が呼ばれる
+- 記事にアイキャッチ無し想定で本文先頭 `<img>` に `fetchpriority="high"` + `loading="eager"` が付与される (LCP対策)
+- 残りの `<img>` には `loading="lazy"` + `decoding="async"` が付与される
 
-const getNewsListMock = vi.fn();
-vi.mock("@/lib/microcms/queries", () => ({
-  getNewsList: (args: unknown) => getNewsListMock(args),
-}));
-function makeReq(u: string) { return new Request(u); }
+**STRICT_HTML_CONFIG (`displayMode='html'`)**:
+- 許可タグ以外 (`h1`, `section`, `header`, `div` 等) が除去される
+- 許可クラス以外 (例: `text-red-500` のような Tailwind) が除去される
 
-describe("/api/news GET", () => {
-  it("locale/offset を getNewsList に渡す", async () => {
-    getNewsListMock.mockResolvedValue(makeNewsList([makeNewsItem({ slug: "x" })]));
-    const { GET } = await import("./route");
-    const res = await GET(makeReq("http://localhost/api/news?locale=ja&offset=12"));
-    expect(res.status).toBe(200);
-    expect(getNewsListMock).toHaveBeenCalledWith({
-      locale: "ja", limit: 12, offset: 12, category: undefined,
-    });
-    const json = (await res.json()) as { contents: unknown[] };
-    expect(json.contents).toHaveLength(1);
-  });
+**RICH_EDITOR_CONFIG (`displayMode='rich'`)**:
+- microCMS リッチエディタが出力するタグ + `class` 属性が保持される
+- `lead`, `caption` カスタムクラスが保持される
 
-  it("category を渡す", async () => {
-    getNewsListMock.mockResolvedValue(makeNewsList([]));
-    const { GET } = await import("./route");
-    await GET(makeReq("http://localhost/api/news?locale=en&offset=0&category=media"));
-    expect(getNewsListMock).toHaveBeenCalledWith({
-      locale: "en", limit: 12, offset: 0, category: "media",
-    });
-  });
+**DOMPurify バインド失敗時 (フェイルファスト、チームレビュー Sec MEDIUM 対応)**:
+- `DOMPurify.isSupported === false` の時にモジュール初期化で `Error` を throw
 
-  it("不正locale 400", async () => {
-    const { GET } = await import("./route");
-    const res = await GET(makeReq("http://localhost/api/news?locale=fr&offset=0"));
-    expect(res.status).toBe(400);
-  });
-
-  it("不正offset 400", async () => {
-    const { GET } = await import("./route");
-    const res = await GET(makeReq("http://localhost/api/news?locale=ja&offset=abc"));
-    expect(res.status).toBe(400);
-  });
-
-  it("不正category 400", async () => {
-    const { GET } = await import("./route");
-    const res = await GET(makeReq(
-      "http://localhost/api/news?locale=ja&offset=0&category=invalid"));
-    expect(res.status).toBe(400);
-  });
-});
-```
-
-- [ ] **Step 2: 失敗確認**
-
-Run: `npx vitest run src/app/api/news/route.test.ts`
-期待: FAIL
+- [ ] **Step 2: 失敗確認** → FAIL
 
 - [ ] **Step 3: 実装**
 
-`src/app/api/news/route.ts`:
+`src/lib/news/sanitize.ts`:
 
 ```typescript
-import { NextResponse } from "next/server";
+import DOMPurify from 'isomorphic-dompurify';
 
-import { NEWS_CATEGORIES, NEWS_PAGE_SIZE, type NewsCategoryId } from "@/constants/news";
-import { getNewsList } from "@/lib/microcms/queries";
-
-export const runtime = "nodejs";
-
-type Locale = "ja" | "en";
-function isLocale(v: string | null): v is Locale { return v === "ja" || v === "en"; }
-function isCategoryId(v: string): v is NewsCategoryId {
-  return NEWS_CATEGORIES.some((c) => c.id === v);
+if (!DOMPurify.isSupported) {
+  throw new Error('[news/sanitize] DOMPurify JSDOM binding failed; sanitization would silently bypass');
 }
 
-export async function GET(request: Request): Promise<Response> {
-  const url = new URL(request.url);
-  const locale = url.searchParams.get("locale");
-  const offsetRaw = url.searchParams.get("offset");
-  const categoryRaw = url.searchParams.get("category");
+const ALLOWED_IMG_HOST = 'images.microcms-assets.io';
+const COMMON_FORBID_TAGS = ['script', 'iframe', 'style', 'base', 'link', 'object', 'embed', 'form'];
+const COMMON_FORBID_ATTR = ['style', 'formaction', 'onclick', 'onload', 'onerror'];
 
-  if (!isLocale(locale)) {
-    return NextResponse.json({ ok: false, error: "invalid_locale" }, { status: 400 });
+export const STRICT_HTML_CONFIG = {
+  ALLOWED_TAGS: ['h2','h3','h4','p','ul','ol','li','a','img','blockquote','strong','em','code','pre','figure','figcaption','br','hr'],
+  ALLOWED_ATTR: ['href','title','class','src','alt','width','height','cite','target','rel','loading','decoding','fetchpriority'],
+  ALLOWED_URI_REGEXP: /^(?:https:|mailto:|tel:|#)/,
+  ALLOWED_CLASSES: { '*': ['lead','caption'] },  // TBD: 実装時に拡張
+  FORBID_TAGS: COMMON_FORBID_TAGS,
+  FORBID_ATTR: COMMON_FORBID_ATTR,
+};
+
+export const RICH_EDITOR_CONFIG = {
+  ALLOWED_ATTR: ['href','title','class','src','alt','width','height','cite','target','rel','loading','decoding','fetchpriority'],
+  ALLOWED_URI_REGEXP: /^(?:https:|mailto:|tel:|#)/,
+  FORBID_TAGS: COMMON_FORBID_TAGS,
+  FORBID_ATTR: COMMON_FORBID_ATTR,
+};
+
+// addHook は一度だけ登録 (モジュール側で副作用)
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if (node.tagName === 'A' && node.hasAttribute('href')) {
+    node.setAttribute('target', '_blank');
+    node.setAttribute('rel', 'noopener noreferrer');
   }
-  const offset = Number(offsetRaw);
-  if (!Number.isFinite(offset) || offset < 0) {
-    return NextResponse.json({ ok: false, error: "invalid_offset" }, { status: 400 });
-  }
-  let category: NewsCategoryId | undefined;
-  if (categoryRaw) {
-    if (!isCategoryId(categoryRaw)) {
-      return NextResponse.json({ ok: false, error: "invalid_category" }, { status: 400 });
+});
+
+DOMPurify.addHook('uponSanitizeAttribute', (_, data) => {
+  if (data.attrName === 'src' && _.tagName === 'IMG') {
+    try {
+      const u = new URL(data.attrValue);
+      if (u.hostname !== ALLOWED_IMG_HOST) {
+        data.keepAttr = false;
+      }
+    } catch {
+      data.keepAttr = false;
     }
-    category = categoryRaw;
   }
+});
 
-  const list = await getNewsList({
-    locale, limit: NEWS_PAGE_SIZE, offset, category,
-  });
-  return NextResponse.json(list);
+DOMPurify.addHook('afterSanitizeElements', (node) => {
+  if (node.tagName === 'IMG') {
+    if (!node.hasAttribute('width') || !node.hasAttribute('height')) {
+      node.setAttribute('width', '1200');
+      node.setAttribute('height', '675');
+      console.warn('[news/sanitize] <img> missing width/height; default 1200x675 applied');
+    }
+    if (!node.hasAttribute('loading')) node.setAttribute('loading', 'lazy');
+    if (!node.hasAttribute('decoding')) node.setAttribute('decoding', 'async');
+  }
+});
+
+interface SanitizeOptions {
+  isFirstImageLcp?: boolean;  // アイキャッチ無し記事で先頭画像を LCP 候補にする時 true
+}
+
+export function sanitizeNewsHtml(
+  html: string,
+  config: typeof STRICT_HTML_CONFIG | typeof RICH_EDITOR_CONFIG,
+  options: SanitizeOptions = {},
+): string {
+  let result = DOMPurify.sanitize(html, config);
+
+  // 先頭画像のみ priority 付与 (LCP 対策)
+  if (options.isFirstImageLcp) {
+    result = result.replace(
+      /<img([^>]*?)>/,
+      (m, attrs) => {
+        if (/loading="eager"/.test(attrs)) return m;
+        return `<img${attrs} fetchpriority="high" loading="eager">`;
+      },
+    );
+  }
+  return result;
 }
 ```
 
-- [ ] **Step 4: 通過確認**
-
-Run: `npx vitest run src/app/api/news/route.test.ts`
-期待: 5 PASS
+- [ ] **Step 4: 通過確認** → 全 PASS
 
 - [ ] **Step 5: コミット**
 
 ```bash
-git add src/app/api/news/route.ts src/app/api/news/route.test.ts
-git commit -m "feat: 「もっと見る」用 /api/news"
+git add src/lib/news/sanitize.ts src/lib/news/sanitize.test.ts
+git commit -m "feat(news): DOMPurify 二段構えサニタイザ + 画像 LCP/CLS フック"
 ```
 
 ---
@@ -1992,199 +2008,195 @@ git commit -m "feat: CategoryChips (クライアントコンポーネント)"
 
 ---
 
-## Task 15: LoadMoreButton
+## Task 15: ⚫ DELETED — LoadMoreButton は廃止
 
-**Files:** Create `src/components/news/LoadMoreButton.tsx` + test
+**変更理由 (設計書 §6.2、計画書「設計変更履歴 v2」 A-4)**:
+クライアント追加ロード方式を廃止し、サーバーサイドページネーション (Task 15') に変更。
+
+このタスクはスキップし、Task 15' に進む。
+
+---
+
+## Task 15': NewsPagination (サーバーサイドページネーション)
+
+**Files:** Create `src/components/news/NewsPagination.tsx` + test
+
+設計書 §5・§6.2 のサーバーサイドページネーションを実装する **Server Component**。
 
 - [ ] **Step 1: テスト**
 
-`src/components/news/LoadMoreButton.test.tsx`:
+`src/components/news/NewsPagination.test.tsx` で以下を TDD:
+- `currentPage=1`, `totalPages=3` でページ番号 `1 2 3` のリンクが描画される
+- 現在ページ (`1`) には `aria-current="page"` が付く
+- 前ページボタンは `currentPage=1` 時に `disabled` (もしくは非表示)、`currentPage>=2` 時に `rel="prev"` 付与
+- 次ページボタンは `currentPage<totalPages` 時に `rel="next"` 付与、最終ページで `disabled`/非表示
+- `category` プロパティが指定されると全ページリンクのクエリに `?page=N&category=X` が付く
+- locale=ja は prefix無し (`/news?page=2`)、locale=en は `/en/news?page=2`
+- `totalPages=1` の場合はコンポーネント自体が何も描画しない (早期return)
+- 多言語ラベル: ja「前のページ/次のページ」、en「Previous/Next」
 
-```typescript
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { LoadMoreButton } from "./LoadMoreButton";
-import { makeNewsItem, makeNewsList } from "../../../__mocks__/microcms-fixtures";
-
-describe("LoadMoreButton", () => {
-  beforeEach(() => { vi.stubGlobal("fetch", vi.fn()); });
-  afterEach(() => { vi.unstubAllGlobals(); });
-
-  it("初期ボタン描画", () => {
-    render(<LoadMoreButton locale="ja" initialTotal={20} initialCount={12} category={undefined} />);
-    expect(screen.getByRole("button", { name: /もっと見る/ })).toBeInTheDocument();
-  });
-
-  it("locale=en 英語ラベル", () => {
-    render(<LoadMoreButton locale="en" initialTotal={20} initialCount={12} category={undefined} />);
-    expect(screen.getByRole("button", { name: /load more/i })).toBeInTheDocument();
-  });
-
-  it("total到達でボタン非表示+以上です", () => {
-    render(<LoadMoreButton locale="ja" initialTotal={12} initialCount={12} category={undefined} />);
-    expect(screen.queryByRole("button")).toBeNull();
-    expect(screen.getByText("以上です")).toBeInTheDocument();
-  });
-
-  it("クリックで fetch → カード追加", async () => {
-    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-      ok: true,
-      json: async () => makeNewsList([
-        makeNewsItem({ id: "n1", slug: "n1", title: "追加1" }),
-        makeNewsItem({ id: "n2", slug: "n2", title: "追加2" }),
-      ], 20),
-    });
-    render(<LoadMoreButton locale="ja" initialTotal={20} initialCount={12} category={undefined} />);
-    fireEvent.click(screen.getByRole("button"));
-    await waitFor(() => { expect(screen.getByText("追加1")).toBeInTheDocument(); });
-    expect(global.fetch).toHaveBeenCalledWith("/api/news?locale=ja&offset=12");
-  });
-
-  it("category がクエリに付く", async () => {
-    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-      ok: true, json: async () => makeNewsList([], 20),
-    });
-    render(<LoadMoreButton locale="ja" initialTotal={20} initialCount={12} category="media" />);
-    fireEvent.click(screen.getByRole("button"));
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith("/api/news?locale=ja&offset=12&category=media");
-    });
-  });
-
-  it("ロード中disabled", async () => {
-    let resolveFn: (v: unknown) => void = () => {};
-    (global.fetch as ReturnType<typeof vi.fn>).mockReturnValue(
-      new Promise((r) => { resolveFn = r; }),
-    );
-    render(<LoadMoreButton locale="ja" initialTotal={20} initialCount={12} category={undefined} />);
-    fireEvent.click(screen.getByRole("button"));
-    expect(screen.getByRole("button")).toBeDisabled();
-    resolveFn({ ok: true, json: async () => makeNewsList([], 20) });
-    await waitFor(() => expect(screen.queryByText("以上です")).toBeInTheDocument());
-  });
-
-  it("通信失敗でエラー表示", async () => {
-    (global.fetch as ReturnType<typeof vi.fn>).mockRejectedValue(new Error("fail"));
-    render(<LoadMoreButton locale="ja" initialTotal={20} initialCount={12} category={undefined} />);
-    fireEvent.click(screen.getByRole("button"));
-    await waitFor(() => expect(screen.getByText(/読み込みに失敗/)).toBeInTheDocument());
-    expect(screen.getByRole("button")).not.toBeDisabled();
-  });
-
-  it("!ok でもエラー", async () => {
-    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-      ok: false, status: 500,
-    });
-    render(<LoadMoreButton locale="ja" initialTotal={20} initialCount={12} category={undefined} />);
-    fireEvent.click(screen.getByRole("button"));
-    await waitFor(() => expect(screen.getByText(/読み込みに失敗/)).toBeInTheDocument());
-  });
-});
-```
-
-- [ ] **Step 2: 失敗確認**
-
-Run: `npx vitest run src/components/news/LoadMoreButton.test.tsx`
-期待: FAIL
+- [ ] **Step 2: 失敗確認** → FAIL
 
 - [ ] **Step 3: 実装**
 
-`src/components/news/LoadMoreButton.tsx`:
+`src/components/news/NewsPagination.tsx`:
 
 ```typescript
-"use client";
+import Link from 'next/link';
+import type { NewsCategoryId } from '@/constants/news';
 
-import { useState } from "react";
+type Locale = 'ja' | 'en';
 
-import { NewsCard } from "./NewsCard";
-import { NEWS_PAGE_SIZE, type NewsCategoryId } from "@/constants/news";
-import type { NewsItem, NewsList } from "@/lib/microcms/schema";
-
-type Locale = "ja" | "en";
-
-interface LoadMoreButtonProps {
+interface NewsPaginationProps {
+  currentPage: number;
+  totalPages: number;
   locale: Locale;
-  initialTotal: number;
-  initialCount: number;
-  category: NewsCategoryId | undefined;
+  category?: NewsCategoryId;
 }
 
-export function LoadMoreButton({
-  locale, initialTotal, initialCount, category,
-}: LoadMoreButtonProps) {
-  const [items, setItems] = useState<NewsItem[]>([]);
-  const [loaded, setLoaded] = useState(initialCount);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+function buildHref(locale: Locale, page: number, category?: NewsCategoryId): string {
+  const base = locale === 'ja' ? '/news' : '/en/news';
+  const params = new URLSearchParams();
+  if (page !== 1) params.set('page', String(page));
+  if (category) params.set('category', category);
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
+}
 
-  const total = initialTotal;
-  const done = loaded >= total;
+export function NewsPagination({ currentPage, totalPages, locale, category }: NewsPaginationProps) {
+  if (totalPages <= 1) return null;
 
-  async function handleClick() {
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams({ locale, offset: String(loaded) });
-      if (category) params.set("category", category);
-      const res = await fetch(`/api/news?${params.toString()}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json()) as NewsList;
-      setItems((prev) => [...prev, ...data.contents]);
-      setLoaded((prev) => prev + data.contents.length);
-    } catch {
-      setError(locale === "ja"
-        ? "読み込みに失敗しました。もう一度お試しください。"
-        : "Failed to load. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
+  const labels = locale === 'ja'
+    ? { prev: '前のページ', next: '次のページ' }
+    : { prev: 'Previous', next: 'Next' };
+
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const hasPrev = currentPage > 1;
+  const hasNext = currentPage < totalPages;
 
   return (
-    <div className="mt-12">
-      {items.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {items.map((item) => (
-            <NewsCard key={item.id} item={item} locale={locale} />
-          ))}
-        </div>
+    <nav aria-label={locale === 'ja' ? 'ページネーション' : 'Pagination'} className="mt-12 flex justify-center gap-2">
+      {hasPrev && (
+        <Link
+          href={buildHref(locale, currentPage - 1, category)}
+          rel="prev"
+          className="px-4 py-2 border border-accent text-accent text-sm hover:bg-accent hover:text-primary transition-colors"
+        >
+          {labels.prev}
+        </Link>
       )}
-      <div className="text-center">
-        {done ? (
-          <p className="text-text-gray text-sm">
-            {locale === "ja" ? "以上です" : "End of list"}
-          </p>
-        ) : (
-          <button
-            type="button"
-            onClick={handleClick}
-            disabled={loading}
-            className="px-8 py-3 border border-accent text-accent text-sm tracking-wider hover:bg-accent hover:text-primary transition-colors disabled:opacity-50"
-          >
-            {loading
-              ? locale === "ja" ? "読み込み中…" : "Loading…"
-              : locale === "ja"
-                ? `もっと見る (+${Math.min(NEWS_PAGE_SIZE, total - loaded)})`
-                : `Load more (+${Math.min(NEWS_PAGE_SIZE, total - loaded)})`}
-          </button>
-        )}
-        {error && <p className="mt-4 text-sm text-text-light/80">{error}</p>}
-      </div>
-    </div>
+      {pages.map((p) => (
+        <Link
+          key={p}
+          href={buildHref(locale, p, category)}
+          aria-current={p === currentPage ? 'page' : undefined}
+          className={`px-4 py-2 border text-sm transition-colors ${
+            p === currentPage
+              ? 'border-accent bg-accent text-primary'
+              : 'border-text-gray text-text-light hover:border-accent hover:text-accent'
+          }`}
+        >
+          {p}
+        </Link>
+      ))}
+      {hasNext && (
+        <Link
+          href={buildHref(locale, currentPage + 1, category)}
+          rel="next"
+          className="px-4 py-2 border border-accent text-accent text-sm hover:bg-accent hover:text-primary transition-colors"
+        >
+          {labels.next}
+        </Link>
+      )}
+    </nav>
   );
 }
 ```
 
-- [ ] **Step 4: 通過確認**
-
-Run: `npx vitest run src/components/news/LoadMoreButton.test.tsx`
-期待: 8 PASS
+- [ ] **Step 4: 通過確認** → 全 PASS
 
 - [ ] **Step 5: コミット**
 
 ```bash
-git add src/components/news/LoadMoreButton.tsx src/components/news/LoadMoreButton.test.tsx
-git commit -m "feat: LoadMoreButton (クライアント追加ロード)"
+git add src/components/news/NewsPagination.tsx src/components/news/NewsPagination.test.tsx
+git commit -m "feat(news): NewsPagination (サーバーサイドページネーション)"
+```
+
+---
+
+## Task 15'': NewsLanguageSwitcher (詳細ページ専用、Client Component)
+
+**Files:** Create `src/components/news/NewsLanguageSwitcher.tsx` + test
+
+設計書 §6.3.2 の言語切替ボタン。Task 19 (詳細ページ) で使用。
+
+- [ ] **Step 1: テスト**
+
+`src/components/news/NewsLanguageSwitcher.test.tsx`:
+- `hasOtherLocale=true` 時、クリックで対向言語の `/news/[slug]` (or `/en/news/[slug]`) に `router.push`
+- `hasOtherLocale=false` 時、クリックで対向言語の一覧 (`/news` or `/en/news`) にフォールバック
+- `hasOtherLocale=false` 時、`aria-label` に「この記事は日本語のみ公開（英語版一覧へ移動）」相当の補足が含まれる
+- キーボード操作 (Enter/Space) で動作する
+- locale=ja → en ラベル "EN" 表示、locale=en → ja ラベル "JA" 表示
+
+- [ ] **Step 2: 失敗確認** → FAIL
+
+- [ ] **Step 3: 実装**
+
+`src/components/news/NewsLanguageSwitcher.tsx`:
+
+```typescript
+'use client';
+
+import { useRouter } from '@/i18n/navigation';
+import { useCallback } from 'react';
+
+type Locale = 'ja' | 'en';
+
+interface NewsLanguageSwitcherProps {
+  slug: string;
+  currentLocale: Locale;
+  hasOtherLocale: boolean;
+}
+
+export function NewsLanguageSwitcher({ slug, currentLocale, hasOtherLocale }: NewsLanguageSwitcherProps) {
+  const router = useRouter();
+  const targetLocale: Locale = currentLocale === 'ja' ? 'en' : 'ja';
+  const targetLabel = targetLocale.toUpperCase();
+
+  const ariaLabel = hasOtherLocale
+    ? targetLocale === 'en'
+      ? 'View English version'
+      : '日本語版を見る'
+    : currentLocale === 'ja'
+      ? 'この記事は日本語のみ公開（英語版ニュース一覧へ移動）'
+      : 'Article only available in English (move to Japanese news index)';
+
+  const handleClick = useCallback(() => {
+    const target = hasOtherLocale ? `/news/${slug}` : '/news';
+    router.push(target, { locale: targetLocale });
+  }, [hasOtherLocale, slug, router, targetLocale]);
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      aria-label={ariaLabel}
+      className="px-3 py-1 border border-accent text-accent text-xs hover:bg-accent hover:text-primary transition-colors"
+    >
+      {targetLabel}
+    </button>
+  );
+}
+```
+
+- [ ] **Step 4: 通過確認** → 全 PASS
+
+- [ ] **Step 5: コミット**
+
+```bash
+git add src/components/news/NewsLanguageSwitcher.tsx src/components/news/NewsLanguageSwitcher.test.tsx
+git commit -m "feat(news): NewsLanguageSwitcher (詳細ページ言語切替+片言語フォールバック)"
 ```
 
 ---
@@ -3449,7 +3461,7 @@ MICROCMS_WEBHOOK_SECRET=
 MICROCMS_DRAFT_SECRET=
 
 # Feature flags
-NEXT_PUBLIC_USE_CMS_NEWS=false
+USE_CMS_NEWS=false
 ```
 
 - [ ] **Step 2: CLAUDE.md に環境変数セクションを追加**
@@ -3467,7 +3479,7 @@ NEXT_PUBLIC_USE_CMS_NEWS=false
 | `MICROCMS_API_KEY` | ✅ | microCMS read-only API key |
 | `MICROCMS_WEBHOOK_SECRET` | ✅ | Shared secret for /api/revalidate webhook |
 | `MICROCMS_DRAFT_SECRET` | ✅ | Shared secret for /api/draft/enable preview |
-| `NEXT_PUBLIC_USE_CMS_NEWS` | — | `true` to use CMS news, `false` (default) falls back to hardcoded |
+| `USE_CMS_NEWS` | — | `true` to use CMS news, `false` (default) falls back to hardcoded |
 ```
 
 - [ ] **Step 3: コミット**
@@ -3597,12 +3609,45 @@ MICROCMS_SERVICE_DOMAIN=dummy \
 MICROCMS_API_KEY=dummy \
 MICROCMS_WEBHOOK_SECRET=dummy \
 MICROCMS_DRAFT_SECRET=dummy \
-NEXT_PUBLIC_USE_CMS_NEWS=false \
+USE_CMS_NEWS=false \
 NEXT_PUBLIC_SITE_URL=https://www.thepicklebang.com \
 RESEND_API_KEY=dummy \
 npm run build 2>&1 | tail -30
 ```
 期待: Build successful（flag OFFなのでmicroCMS fetchは走らない）
+
+- [ ] **Step 5b: Cache Components 必須フラグ確認**
+
+`next.config.ts` に `experimental.cacheComponents: true` が設定されていることを確認。
+意図的にフラグを外したビルドが **エラーになる** こともテストで保証する (Task 23 完了条件)。
+
+- [ ] **Step 5c: bundle-analyzer によるクライアントバンドル混入チェック (チームレビュー Perf HIGH-2 対応)**
+
+Run:
+```bash
+ANALYZE=true npm run build 2>&1 | tail -50
+```
+または `@next/bundle-analyzer` を一時的に有効化してビルド。
+
+確認項目:
+- `isomorphic-dompurify` がクライアントチャンク (`.next/static/chunks/*`) に **含まれていない**
+- `NewsBodyRenderer.tsx` が Server Component として処理されている (Client チャンクに混入しない)
+- 初期 JS ロードが **200KB gzip 以下** であること
+- Client Component (`CategoryChips`, `NewsLanguageSwitcher`) のみ Client チャンクに含まれる
+
+混入が検出された場合: 対象コンポーネントから誤った `"use client"` ディレクティブまたは Client Component への import を取り除き、Server Component 境界を再確認。
+
+- [ ] **Step 5d: Lighthouse CI 予算 (Vercel Preview デプロイ後)**
+
+Run: `npx lhci autorun` (CI またはローカル `npx lhci collect --url=<preview-url>`)
+
+期待: `lighthouserc.json` の予算チェックが PASS:
+- LCP ≤ 2500ms
+- CLS ≤ 0.1
+- INP ≤ 200ms
+- Performance score ≥ 0.9
+
+`numberOfRuns: 3` の中央値採用 (Fluid Compute コールドスタート対策、チームレビュー Vercel M-4)。
 
 - [ ] **Step 6: 修正が必要なら修正してコミット**
 
@@ -3636,7 +3681,7 @@ gh pr create --base develop --title "feat: ニュースをmicroCMSでCMS化 (一
 - `/news` 一覧ページ + `/news/[slug]` 詳細ページを新設 (日英対応、カテゴリフィルタ、もっと見る)
 - About 05 NEWS セクションをCMS連携化 (最新3件)
 - プレビュー / 予約投稿 / Webhook ISR / JSON-LD / OGP / サイトマップ全対応
-- Feature flag `NEXT_PUBLIC_USE_CMS_NEWS` で段階的ロールアウト可能
+- Feature flag `USE_CMS_NEWS` で段階的ロールアウト可能
 
 設計: `docs/superpowers/specs/2026-04-19-news-cms-integration-design.md`
 計画: `docs/superpowers/plans/2026-04-19-news-cms-integration.md`
@@ -3664,7 +3709,7 @@ EOF
 
 - `messages/ja.json` / `messages/en.json` の旧 `news.*` キー削除
 - About 内 Feature Flag 分岐コード削除
-- `NEXT_PUBLIC_USE_CMS_NEWS` 環境変数削除
+- `USE_CMS_NEWS` 環境変数削除
 
 → 2週間本番安定運用を確認した後に別PRで実施。
 

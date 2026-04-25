@@ -191,6 +191,8 @@ h1 (タイトルが既にあるため), section/article/header/footer (構造は
 - [ ] 許可されていないクラス名
 - [ ] 創作・推測した事実
 - [ ] 110字超のタイトル / 160字超の excerpt
+- [ ] HTML タグや改行を含む `excerpt` (excerpt は必ずプレーンテキスト)
+- [ ] **`<img>` の `width`/`height` 属性欠如** (CLS 0.15-0.3 悪化、CWV 目標逸脱の原因)
 
 ---
 

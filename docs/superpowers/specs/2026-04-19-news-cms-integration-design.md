@@ -153,6 +153,31 @@
 - **前後記事ナビ**: **なし**（今回は見送り）
 - **存在しないロケールへのアクセス**: 対象スラッグが当該ロケールに存在しない場合は `notFound()`（`generateStaticParams` で当該ロケールに存在するスラッグのみ生成するため、自動的に404）
 
+#### 6.3.0 draftMode と Cache Components の分岐パターン (重要)
+
+`'use cache'` 関数の中で `draftMode()` を呼ぶと **dynamic API 違反でビルドエラー**になる。そのため、`page.tsx` の最上位で `draftMode()` を読み、cached/uncached の **二経路に手動分岐**する。
+
+```ts
+// src/app/[locale]/news/[slug]/page.tsx
+import { draftMode } from 'next/headers';
+import { cookies } from 'next/headers';
+import { getNewsDetail } from '@/lib/microcms/queries/detail';            // 'use cache' 関数
+import { getNewsDetailDraft } from '@/lib/microcms/queries/detail';        // 'use cache' 無し関数
+
+export default async function Page({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+  const { locale, slug } = await params;
+  setRequestLocale(locale);                                                // ← 最上位で同期呼出
+  const draft = await draftMode();
+  const item = draft.isEnabled
+    ? await getNewsDetailDraft({ locale, slug, draftKey: (await cookies()).get('draftKey')?.value })
+    : await getNewsDetail({ locale, slug });                               // ← cached
+  if (!item) notFound();
+  // ...
+}
+```
+
+`getNewsDetailDraft` は **`'use cache'` 無し** + `cache: 'no-store'` を fetch に付与する別関数として実装する。
+
 #### 6.3.1 本文表示ロジック（`NewsBodyRenderer.tsx`）
 
 `displayMode` と本文フィールドの組み合わせで分岐。**Server Component で実装**し、サニタイズ後に React の HTML 文字列レンダリング API で出力（クライアントバンドルへの DOMPurify 混入を防止するため `"use client"` 禁止）。
@@ -162,22 +187,38 @@
 - `displayMode='rich'` で `body` 空 → `bodyHtml` にフォールバック、同様にログ警告
 - 両方空 → `notFound()`
 
-**疑似コード**:
+**画像周りの追加処理 (LCP/CLS 対策、チームレビュー Perf HIGH-1)**:
+- DOMPurify `addHook('afterSanitizeElements')` で:
+  - `<img>` の `width`/`height` 欠如時にデフォルト (1200×675) を付与 + `console.warn`
+  - **記事にアイキャッチが無く、本文先頭 `<img>` がある場合**: その先頭画像のみに `fetchpriority="high"` + `loading="eager"` を付与 (LCP 改善)
+  - 残りの `<img>` には `loading="lazy"` + `decoding="async"` を確保
+- `width`/`height` を持つ `<img>` のみアスペクト比が確定し CLS 0 を維持できる
+
+**疑似コード** (サニタイザ選択は **実際にレンダリングする本文の出所** に基づく — チームレビュー M-A 対応):
+
 ```ts
 function pickBody(item: NewsItem) {
-  const selected = item.displayMode === 'html' ? item.bodyHtml : item.body;
+  const primary = item.displayMode === 'html' ? item.bodyHtml : item.body;
   const fallback = item.displayMode === 'html' ? item.body : item.bodyHtml;
-  const chosen = selected?.trim() || fallback?.trim();
-  if (!chosen) return null;
 
-  if (selected !== chosen) {
+  // 採用するソースと「実際にどちらだったか」を対で返す
+  let chosen: string | null = null;
+  let actualMode: 'html' | 'rich';
+  if (primary?.trim()) {
+    chosen = primary;
+    actualMode = item.displayMode;
+  } else if (fallback?.trim()) {
+    chosen = fallback;
+    actualMode = item.displayMode === 'html' ? 'rich' : 'html';
     console.warn(
-      `[news] displayMode=${item.displayMode} but content empty; fell back. slug=${item.slug} locale=${item.locale}`,
+      `[news] displayMode=${item.displayMode} but content empty; fell back to ${actualMode}. slug=${item.slug} locale=${item.locale}`,
     );
+  } else {
+    return null;
   }
 
-  // displayMode に応じてサニタイザ設定を切替
-  return sanitize(chosen, item.displayMode === 'html' ? STRICT_HTML_CONFIG : RICH_EDITOR_CONFIG);
+  // 「実際の出所」基準でサニタイザを選ぶ → リッチエディタHTML に対して STRICT を当てて class を消すような事故を防ぐ
+  return sanitize(chosen, actualMode === 'html' ? STRICT_HTML_CONFIG : RICH_EDITOR_CONFIG);
 }
 ```
 
@@ -254,9 +295,17 @@ function pickBody(item: NewsItem) {
 9. **レート制限 (DoS対策)**: Vercel Functions の同時実行数制限 + 同一IPからの異常頻度受信時はログ警告のみ（本格的な rate limit は KV ベースで TODO）
 
 #### 7.3.2 Cache Components 統合
-- ニュース取得関数 (`getNewsList`, `getNewsDetail`, `getNewsSlugs`) は `'use cache'` ディレクティブを冒頭に置き、`cacheTag(...)` と `cacheLife({ revalidate: 3600, expire: 86400 })` を併用
-- `revalidateTag` は `'use cache'` 関数のタグを無効化する形で連動
-- `next.config.ts` に `experimental.cacheComponents: true`（Next.js 16 安定化に応じて削除可）
+- ニュース取得関数 (`getNewsList`, `getNewsDetail`, `getNewsSlugs`) は `'use cache'` ディレクティブを冒頭に置き、`cacheTag(...)` と `cacheLife(...)` を併用
+- **`cacheLife` 推奨値**: `cacheLife({ stale: 300, revalidate: 3600, expire: 86400 })`
+  - `stale: 300` (5分) — クライアントキャッシュ/SWR の stale-while-revalidate ウィンドウ
+  - `revalidate: 3600` (1時間) — Webhook 失敗時のフォールバック自動再検証間隔
+  - `expire: 86400` (24時間) — 完全失効までの上限
+- **Webhook と cacheLife の関係 (重要)**:
+  - **Webhook 健全時**: `revalidateTag('news')` が支配的で、公開〜表示は数秒以内 (前述 §7.3.1)
+  - **Webhook 失敗時**: `revalidate: 3600` で最大1時間遅延、`expire: 86400` で完全失効が安全網
+  - `expire` 値だけ見て「最大24時間遅延」と誤読しないこと
+- `revalidateTag` は `'use cache'` 関数のタグを無効化する形で連動 (`cacheTag` と紐付く)
+- **`next.config.ts` に `experimental.cacheComponents: true` は Next.js 16.x 系では必須フラグ**: `'use cache'` ディレクティブはこのフラグ下でのみ有効。フラグ無しのビルドはエラーになる。Next.js が stable に移行したリリースで本フラグ削除を検討する
 
 ### 7.4 画像最適化
 
@@ -278,10 +327,24 @@ function pickBody(item: NewsItem) {
 - カード（3列グリッド）: `sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"`
 - 詳細アイキャッチ: `sizes="(max-width: 768px) 100vw, (max-width: 1280px) 85vw, 1200px"`
 
+**LCP / CLS 戦略 (チームレビュー Perf HIGH-1 対応)**:
+
+詳細ページのアイキャッチ有無で LCP 対象が変わる:
+- **アイキャッチあり** → アイキャッチ画像が LCP 候補。`priority` (next/image) または `fetchpriority="high"` (img) 指定
+- **アイキャッチなし** → 本文 HTML の **先頭 `<img>` が LCP 候補**になる。Server Component で `bodyHtml` を解析し、最初の `<img>` に `fetchpriority="high"` + `loading="eager"` を付与する分岐を `NewsBodyRenderer` に組み込む (詳細は §6.3.1)。それ以降の `<img>` は `loading="lazy"` のまま
+
+CLS 防止:
+- AI HTML の `<img>` に `width` / `height` 属性を **必須**化 (`docs/operations/ai-news-prompt.md` で強制)
+- 万一欠落していた場合のフェイル安全:
+  - `NewsBodyRenderer` の DOMPurify `addHook('afterSanitizeElements')` で `<img>` の `width`/`height` 欠如を検出
+  - 欠如時は `width="1200" height="675"` (16:9 デフォルト) を付与 + `console.warn` でログ警告
+  - 設計書 §3.2.1 のサニタイズマトリクスにも反映
+
 **本文中画像 (AI HTML 内)**:
 - AI 運用側で microCMS Management API へアップロード → `images.microcms-assets.io` 配下のURLを `<img src>` に埋め込む規約
-- AI 運用ガイド (`docs/operations/ai-news-prompt.md`) で「画像URLは microCMS アセットのみ」を明文化
+- AI 運用ガイド (`docs/operations/ai-news-prompt.md`) で「画像URLは microCMS アセットのみ」「width/height 必須」を明文化
 - 本サイトでは DOMPurify の `addHook('uponSanitizeAttribute', ...)` で `<img src>` のホスト名を `images.microcms-assets.io` に**強制ホワイトリスト**、それ以外の `src` は属性ごと除去
+- **`<img>` 直接使用は本文中サニタイズ済みHTMLのみに限定** — コンポーネント実装 (NewsCard, 詳細ヘッダ等) では `next/image` (unoptimized) を使う (`remotePatterns` のセキュリティ制限を効かせるため、チームレビュー Sec L 対応)
 
 ### 7.5 SEO
 **メタデータ**
@@ -491,7 +554,7 @@ TDDで以下を順次実装：
   - スマホ実機レイアウト
 
 ### フェーズ5：本番切替（段階的）
-- **5-a**: `develop` → `main` マージ。Production環境変数で `NEXT_PUBLIC_USE_CMS_NEWS=true` に切替。本番Webhook URLをmicroCMS側に登録
+- **5-a**: `develop` → `main` マージ。Production環境変数で `USE_CMS_NEWS=true` に切替。本番Webhook URLをmicroCMS側に登録
 - **5-b**: **2週間安定運用を確認**
 - **5-c**: 旧ハードコード削除 + `messages/*.json` の `news.*` キー削除 + Feature flag コード削除
 
@@ -507,14 +570,14 @@ A4 1枚の運用マニュアル（Markdown）を作成：
 
 | 事象 | 対応 |
 |------|------|
-| CMS連携で不具合発生 | `NEXT_PUBLIC_USE_CMS_NEWS=false` に戻す（Vercel環境変数変更のみ、5-c前ならコード改修不要で即復旧） |
+| CMS連携で不具合発生 | `USE_CMS_NEWS=false` に戻す（Vercel環境変数変更のみ、5-c前ならコード改修不要で即復旧） |
 | microCMS API障害 | ビルド済み静的ページは継続表示、新規更新のみ遅延 |
 | Webhook不達 | microCMS管理画面から手動再送、またはVercelダッシュボードから再デプロイ |
 | セキュリティ事故（secret漏洩） | microCMSのAPI Key / Webhook Secret / Draft Secret をローテーション、Vercel環境変数更新 |
 
 ## 14. 既知のハマりポイント（実装時の注意）
 
-1. **Next.js 16 Cache Components が正式モデル**: 旧来の `fetch` の `next: { tags: [...] }` だけでは関数全体がキャッシュされない（`generateStaticParams` 経由の SSG ルートのみ静的化）。**`'use cache'` ディレクティブ + `cacheTag()` + `cacheLife()` の組み合わせを採用**。`revalidateTag` は引き続き有効でこれらのタグを無効化する。`next.config.ts` に `experimental.cacheComponents: true`（Next.js 16 安定化済みなら不要、要確認）。
+1. **Next.js 16 Cache Components が正式モデル**: 旧来の `fetch` の `next: { tags: [...] }` だけでは関数全体がキャッシュされない（`generateStaticParams` 経由の SSG ルートのみ静的化）。**`'use cache'` ディレクティブ + `cacheTag()` + `cacheLife({ stale, revalidate, expire })` の組み合わせを採用**。`revalidateTag` は引き続き有効でこれらのタグを無効化する。`next.config.ts` に **`experimental.cacheComponents: true` は Next.js 16.x 系では必須フラグ** (`'use cache'` はこのフラグ下でのみ有効、フラグ無しはビルドエラー)。stable 移行リリースで削除検討。
 
 2. **`microcms-js-sdk` は使わない**: axios 内部使用で Cache Components の `cacheTag` と統合できない。自前 fetch ラッパを書く。
 
@@ -538,7 +601,9 @@ A4 1枚の運用マニュアル（Markdown）を作成：
    - `draftMode().enable()` + `draftKey` を別Cookieに保存
    - `SameSite=None; Secure` は本番(HTTPS) と Vercel Preview のみ。**ローカル開発時は `lax` に切替**（HTTP 環境で None だと Cookie が落ちる）
    - `maxAge: 1800`（30分）で自動失効、ブラウザを共有しても他人にプレビュー権限が残らない
-   - `'use cache'` 関数は draftMode 中は**バイパス**する（別経路でデータ取得）
+   - **`'use cache'` 関数の中で `draftMode()` を呼べない** (dynamic API 違反でビルドエラー)。**page.tsx 最上位で `draftMode()` を読み、cached/uncached の二経路に手動分岐**する (詳細パターンは §6.3.0)
+   - 下書き取得用関数 (`getNewsDetailDraft` 等) は **`'use cache'` 無し** + `cache: 'no-store'` で別途実装
+   - プレビューバナーは `draftMode().isEnabled` を Server Component で都度判定して表示/非表示を切り替える (maxAge 失効時はリロード後に自動消える)
 
 6. **Next.js 16 ランタイム**: Node.js がデフォルト。`runtime: 'nodejs'` の明示は不要（むしろ冗長）。Edge Runtime は Vercel 公式が非推奨化、Fluid Compute 前提で Node.js のまま `crypto.timingSafeEqual` 等を使える。
 
