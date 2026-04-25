@@ -1,4 +1,4 @@
-import type { NewsItem } from "@/lib/microcms/schema";
+import { newsItemSchema, type NewsItem } from "@/lib/microcms/schema";
 
 /**
  * microCMS API の **生レスポンス形状** (locale / displayMode が配列) を返す。
@@ -72,4 +72,14 @@ export function makeNewsList(
     offset: 0,
     limit: 12,
   };
+}
+
+/**
+ * Zod transform 済みの `NewsItem` (locale/displayMode が string) を返す。
+ * Server Component / クライアントコンポーネントのテストで NewsItem を直接渡すときに使用。
+ */
+export function makeParsedNewsItem(
+  overrides: NewsItemOverrides = {},
+): NewsItem {
+  return newsItemSchema.parse(makeNewsItem(overrides));
 }
