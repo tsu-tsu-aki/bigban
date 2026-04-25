@@ -12,6 +12,35 @@
 
 ---
 
+## 設計変更履歴（2026-04-25 追補）
+
+ja/en は **両言語必須ではなく片方のみでも運用可** に方針変更。実装上の差分は以下の通り（各タスク内で対応）：
+
+1. **`lib/microcms/queries.ts` に `hasNewsInLocale` 追加**
+   - シグネチャ: `hasNewsInLocale({ slug, locale }: { slug: string; locale: Locale }): Promise<boolean>`
+   - 実装: `getList` を `filters=slug[equals]${slug}[and]locale[equals]${locale}&limit=1&fields=id` で叩いて `totalCount > 0` を返す
+   - キャッシュタグ: `['news', \`news-${slug}-${locale}\`]`（既存と同じタグ群を再利用）
+   - テストケース: 存在時 `true` / 不在時 `false` / network error 伝播
+2. **詳細ページ `src/app/[locale]/news/[slug]/page.tsx` の修正**
+   - `generateMetadata` 内で対向言語の存在チェックを実施し、結果に応じて `alternates.languages` を条件付き出力
+     - 存在 → `{ ja: ..., en: ..., 'x-default': jaUrl(または存在する方) }`
+     - 不在 → `alternates.canonical` のみ設定、`languages` は出力しない
+   - 詳細ページ Server Component で対向言語存在フラグを取得し、Navigation/LanguageSwitcher 側へ渡す（手段は後述）
+3. **言語切替UI（既存 `HomeNavigation` の `handleSwitchLocale` 相当ロジックの拡張）**
+   - ニュース詳細ページのみ用に **`NewsLanguageSwitcher.tsx` を新規追加**（既存 Navigation には触らない）
+   - props: `{ slug: string; currentLocale: Locale; hasOtherLocale: boolean }`
+   - 動作:
+     - `hasOtherLocale === true` → 対向言語の `/[other]/news/[slug]` へ `router.push`
+     - `hasOtherLocale === false` → 対向言語の `/[other]/news` へフォールバック、`aria-label` で「この記事は{現在言語}のみ公開（一覧へ移動）」を補足
+   - テストケース: 両ケースの遷移先・aria-label 検証 + `whoseRequest` キーボード操作
+4. **`generateStaticParams` は変更不要**: 既に `getNewsSlugs()` が各 `{locale, slug}` を個別に返すので、片言語のみの記事も自動的に当該ロケールのみ静的生成され、対向ロケールのアクセスは自然に `notFound()`
+5. **`sitemap.ts` は変更不要**: 既にレコード単位（locale別）でURL出力、対向言語が無いレコードは当該言語のURLのみ出力される
+6. **設計書 `7.5 SEO` セクションの方針** を反映した `alternates` 条件分岐ロジックを必ず実装し、テストで検証する
+
+タスク内のファイル列挙・テストケース表に上記の追加項目を反映してから実装すること。
+
+---
+
 ## 前提条件
 
 - **Worktree**: `/Users/tsutsumi.akihiro/dev/bigban-news-cms`（ブランチ `feature/news-cms-integration`）
