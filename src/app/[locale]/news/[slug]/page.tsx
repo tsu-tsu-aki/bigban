@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 
@@ -13,15 +12,13 @@ import { PreviewBanner } from "@/components/news/PreviewBanner";
 import { isCmsNewsEnabled } from "@/config/featureFlags";
 import { NEWS_CATEGORIES } from "@/constants/news";
 import { EXTERNAL_LINK_PROPS, SITE_URL } from "@/constants/site";
-import { routing } from "@/i18n/routing";
+import { parseLocale, type Locale } from "@/i18n/routing";
 import {
   getNewsByContentId,
   getNewsDetail,
   getNewsSlugs,
 } from "@/lib/microcms/queries";
 import type { NewsItem } from "@/lib/microcms/schema";
-
-type Locale = "ja" | "en";
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -83,13 +80,14 @@ export async function generateMetadata({
   params,
   searchParams,
 }: MetadataProps): Promise<Metadata> {
-  const { locale, slug } = await params;
-  if (!hasLocale(routing.locales, locale)) return {};
+  const { locale: rawLocale, slug } = await params;
+  const locale = parseLocale(rawLocale);
+  if (!locale) return {};
 
   const sp = await searchParams;
-  const previewItem = await readPreviewItem(locale as Locale, slug, sp);
+  const previewItem = await readPreviewItem(locale, slug, sp);
   const item =
-    previewItem ?? (await getNewsDetail({ locale: locale as Locale, slug }));
+    previewItem ?? (await getNewsDetail({ locale, slug }));
   if (!item) return {};
 
   const meta: Metadata = {
@@ -129,14 +127,15 @@ export default async function NewsDetailPage({
 }: PageProps) {
   if (!isCmsNewsEnabled()) notFound();
 
-  const { locale, slug } = await params;
-  if (!hasLocale(routing.locales, locale)) notFound();
+  const { locale: rawLocale, slug } = await params;
+  const locale = parseLocale(rawLocale);
+  if (!locale) notFound();
   setRequestLocale(locale);
 
   const sp = await searchParams;
-  const previewItem = await readPreviewItem(locale as Locale, slug, sp);
+  const previewItem = await readPreviewItem(locale, slug, sp);
   const item =
-    previewItem ?? (await getNewsDetail({ locale: locale as Locale, slug }));
+    previewItem ?? (await getNewsDetail({ locale, slug }));
   if (!item) notFound();
 
   const cat = NEWS_CATEGORIES.find((c) => c.id === item.category[0]);
@@ -146,9 +145,9 @@ export default async function NewsDetailPage({
 
   return (
     <>
-      {previewItem && <PreviewBanner locale={locale as Locale} />}
+      {previewItem && <PreviewBanner locale={locale} />}
       <HomeNavigation />
-      <NewsArticleJsonLd item={item} locale={locale as Locale} />
+      <NewsArticleJsonLd item={item} locale={locale} />
       <main className="min-h-screen bg-deep-black text-text-light pt-[calc(6rem+var(--promo-banner-h))] lg:pt-[calc(7rem+var(--promo-banner-h))] pb-16 lg:pb-24">
         <article className="mx-auto max-w-3xl px-6 lg:px-12 py-8 lg:py-12">
         <Link

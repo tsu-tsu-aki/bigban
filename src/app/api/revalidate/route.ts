@@ -74,6 +74,8 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json({ ok: true, skipped: true });
   }
 
+  // Next.js 16 の revalidateTag は (tag, profile) の 2 引数必須。"default" は
+  // 標準キャッシュプロファイル。https://nextjs.org/docs/app/api-reference/functions/revalidateTag
   const tags: string[] = ["news"];
   revalidateTag("news", "default");
   if (parsed.data.id) {

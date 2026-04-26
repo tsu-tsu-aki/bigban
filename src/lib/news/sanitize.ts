@@ -139,84 +139,110 @@ const SPAN_REGEX = /^[1-9]\d?$/;
 const ISO_DATETIME_REGEX =
   /^\d{4}(-\d{2}(-\d{2}(T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:\d{2})?)?)?)?$/;
 
-DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
-  const tag = (node as Element).tagName;
+// DOMPurify.addHook はモジュール評価のたびに呼ぶと同じ DOMPurify インスタンスに
+// hook が累積する (vi.resetModules や HMR 環境で発生しうる)。
+// DOMPurify オブジェクト上のシンボルキーで「登録済みフラグ」を保持し、冪等にする。
+const HOOKS_REGISTERED = Symbol.for("news-sanitize/hooks-registered");
+type DOMPurifyWithFlag = typeof DOMPurify & {
+  [HOOKS_REGISTERED]?: boolean;
+};
 
-  // <img src> はホスト制限
-  if (data.attrName === "src" && tag === "IMG") {
-    try {
-      const u = new URL(data.attrValue);
-      if (u.hostname !== ALLOWED_IMG_HOST) {
+function registerHooksOnce(): void {
+  const dp = DOMPurify as DOMPurifyWithFlag;
+  /* istanbul ignore next -- @preserve 同一プロセス内で sanitize.ts が複数回 import された時の冪等性ガード (vi.resetModules / HMR 時の累積防止) */
+  if (dp[HOOKS_REGISTERED]) return;
+  dp[HOOKS_REGISTERED] = true;
+
+  DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
+    const tag = (node as Element).tagName;
+
+    // <img src> はホスト制限
+    if (data.attrName === "src" && tag === "IMG") {
+      try {
+        const u = new URL(data.attrValue);
+        if (u.hostname !== ALLOWED_IMG_HOST) {
+          data.keepAttr = false;
+        }
+      } catch {
         data.keepAttr = false;
       }
-    } catch {
-      data.keepAttr = false;
+      return;
     }
-    return;
-  }
 
-  // <a href> は protocol allowlist 検証
-  if (data.attrName === "href" && tag === "A") {
-    if (!ALLOWED_HREF_PROTOCOLS.test(data.attrValue)) {
-      data.keepAttr = false;
+    // <a href> は protocol allowlist 検証
+    if (data.attrName === "href" && tag === "A") {
+      if (!ALLOWED_HREF_PROTOCOLS.test(data.attrValue)) {
+        data.keepAttr = false;
+      }
+      return;
     }
-    return;
-  }
 
-  // <th scope=...> は enum 検証
-  if (data.attrName === "scope") {
-    if (!VALID_SCOPE_VALUES.has(data.attrValue)) {
-      data.keepAttr = false;
+    // <th scope=...> は enum 検証
+    if (data.attrName === "scope") {
+      if (!VALID_SCOPE_VALUES.has(data.attrValue)) {
+        data.keepAttr = false;
+      }
+      return;
     }
-    return;
-  }
 
-  // <td/th colspan|rowspan> は 1-99 のみ (DoS 対策)
-  if (data.attrName === "colspan" || data.attrName === "rowspan") {
-    if (!SPAN_REGEX.test(data.attrValue)) {
-      data.keepAttr = false;
+    // <td/th colspan|rowspan> は 1-99 のみ (DoS 対策)
+    if (data.attrName === "colspan" || data.attrName === "rowspan") {
+      if (!SPAN_REGEX.test(data.attrValue)) {
+        data.keepAttr = false;
+      }
+      return;
     }
-    return;
-  }
 
-  // <time datetime=...> のみ受理し、ISO 8601 形式のみに制限
-  if (data.attrName === "datetime") {
-    if (tag !== "TIME" || !ISO_DATETIME_REGEX.test(data.attrValue)) {
-      data.keepAttr = false;
+    // <time datetime=...> のみ受理し、ISO 8601 形式のみに制限
+    if (data.attrName === "datetime") {
+      if (tag !== "TIME" || !ISO_DATETIME_REGEX.test(data.attrValue)) {
+        data.keepAttr = false;
+      }
+      return;
     }
-    return;
-  }
-});
-
-DOMPurify.addHook("afterSanitizeAttributes", (node) => {
-  const el = node as Element;
-  if (el.tagName === "A" && el.hasAttribute("href")) {
-    el.setAttribute("target", "_blank");
-    el.setAttribute("rel", "noopener noreferrer");
-  }
-  if (el.tagName === "IMG") {
-    if (!el.hasAttribute("width") || !el.hasAttribute("height")) {
-      el.setAttribute("width", "1200");
-      el.setAttribute("height", "675");
-      console.warn(
-        "[news/sanitize] <img> missing width/height; default 1200x675 applied",
-      );
-    }
-    /* istanbul ignore next -- @preserve 入力 HTML に loading 属性が事前に付くケースは運用上稀 */
-    if (!el.hasAttribute("loading")) el.setAttribute("loading", "lazy");
-    /* istanbul ignore next -- @preserve 入力 HTML に decoding 属性が事前に付くケースは運用上稀 */
-    if (!el.hasAttribute("decoding")) el.setAttribute("decoding", "async");
-  }
-});
-
-function filterClasses(html: string, allowed: Set<string>): string {
-  return html.replace(/\sclass="([^"]*)"/g, (_match, classes: string) => {
-    const filtered = classes
-      .split(/\s+/)
-      .filter((c) => c.length > 0 && allowed.has(c));
-    if (filtered.length === 0) return "";
-    return ` class="${filtered.join(" ")}"`;
   });
+
+  DOMPurify.addHook("afterSanitizeAttributes", (node) => {
+    const el = node as Element;
+    if (el.tagName === "A" && el.hasAttribute("href")) {
+      el.setAttribute("target", "_blank");
+      el.setAttribute("rel", "noopener noreferrer");
+    }
+    if (el.tagName === "IMG") {
+      if (!el.hasAttribute("width") || !el.hasAttribute("height")) {
+        el.setAttribute("width", "1200");
+        el.setAttribute("height", "675");
+        console.warn(
+          "[news/sanitize] <img> missing width/height; default 1200x675 applied",
+        );
+      }
+      /* istanbul ignore next -- @preserve 入力 HTML に loading 属性が事前に付くケースは運用上稀 */
+      if (!el.hasAttribute("loading")) el.setAttribute("loading", "lazy");
+      /* istanbul ignore next -- @preserve 入力 HTML に decoding 属性が事前に付くケースは運用上稀 */
+      if (!el.hasAttribute("decoding")) el.setAttribute("decoding", "async");
+    }
+  });
+}
+
+registerHooksOnce();
+
+// `class="..."` (double quotes) と `class='...'` (single quotes) の両方を捕捉。
+// DOMPurify は通常 double quote に正規化するが、念のため両方サポートする
+// (将来 DOMPurify オプションが変わったり、将来別のサニタイザに差し替えても安全)。
+function filterClasses(html: string, allowed: Set<string>): string {
+  return html.replace(
+    /\sclass=(?:"([^"]*)"|'([^']*)')/g,
+    (_match, dq?: string, sq?: string) => {
+      /* istanbul ignore next -- @preserve DOMPurify は出力を double-quote に正規化するため single-quote 分岐は防御的 (将来 DOMPurify オプション変更や別サニタイザ差し替え対策) */
+      const classes = dq ?? sq ?? "";
+      const filtered = classes
+        .split(/\s+/)
+        .filter((c) => c.length > 0 && allowed.has(c));
+      if (filtered.length === 0) return "";
+      // 出力は常に double quote に正規化
+      return ` class="${filtered.join(" ")}"`;
+    },
+  );
 }
 
 export interface SanitizeOptions {

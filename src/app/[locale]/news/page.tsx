@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 
@@ -14,10 +13,8 @@ import {
   NEWS_PAGE_SIZE,
   type NewsCategoryId,
 } from "@/constants/news";
-import { routing } from "@/i18n/routing";
+import { parseLocale, routing } from "@/i18n/routing";
 import { getNewsList } from "@/lib/microcms/queries";
-
-type Locale = "ja" | "en";
 
 interface NewsPageProps {
   params: Promise<{ locale: string }>;
@@ -63,8 +60,9 @@ export default async function NewsPage({
 }: NewsPageProps) {
   if (!isCmsNewsEnabled()) notFound();
 
-  const { locale } = await params;
-  if (!hasLocale(routing.locales, locale)) notFound();
+  const { locale: rawLocale } = await params;
+  const locale = parseLocale(rawLocale);
+  if (!locale) notFound();
   setRequestLocale(locale);
 
   const sp = await searchParams;
@@ -81,7 +79,7 @@ export default async function NewsPage({
 
   const t = await getTranslations("News");
   const list = await getNewsList({
-    locale: locale as Locale,
+    locale: locale,
     limit: NEWS_PAGE_SIZE,
     offset,
     category,
@@ -104,7 +102,7 @@ export default async function NewsPage({
           <h1 className="text-text-light text-3xl lg:text-4xl font-bold mb-8">
             {t("heading")}
           </h1>
-          <CategoryChips locale={locale as Locale} activeCategory={category} />
+          <CategoryChips locale={locale} activeCategory={category} />
           {list.contents.length === 0 ? (
             <p className="text-text-gray py-16">
               {locale === "ja"
@@ -118,14 +116,14 @@ export default async function NewsPage({
                   <NewsCard
                     key={item.id}
                     item={item}
-                    locale={locale as Locale}
+                    locale={locale}
                   />
                 ))}
               </div>
               <NewsPagination
                 currentPage={page}
                 totalPages={totalPages}
-                locale={locale as Locale}
+                locale={locale}
                 category={category}
               />
             </>

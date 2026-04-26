@@ -3,7 +3,7 @@ import { createHmac } from "node:crypto";
 
 const revalidateTagMock = vi.fn();
 vi.mock("next/cache", () => ({
-  revalidateTag: (tag: string, _profile?: string) => revalidateTagMock(tag),
+  revalidateTag: (tag: string, _profile: unknown) => revalidateTagMock(tag),
 }));
 
 const SECRET = "s3cret";
