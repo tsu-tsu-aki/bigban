@@ -61,6 +61,30 @@ describe("newsItemSchema", () => {
     ).toThrow();
   });
 
+  it("category 日本語ラベルは内部IDに変換される", () => {
+    const p = newsItemSchema.parse({
+      ...validItem,
+      category: ["お知らせ", "イベント情報"],
+    });
+    expect(p.category).toEqual(["notice", "event"]);
+  });
+
+  it("category 英語IDも引き続き受理 (後方互換)", () => {
+    const p = newsItemSchema.parse({
+      ...validItem,
+      category: ["media", "campaign"],
+    });
+    expect(p.category).toEqual(["media", "campaign"]);
+  });
+
+  it("category 英語/日本語 混在もOK", () => {
+    const p = newsItemSchema.parse({
+      ...validItem,
+      category: ["お知らせ", "media"],
+    });
+    expect(p.category).toEqual(["notice", "media"]);
+  });
+
   it("displayMode 想定外はエラー", () => {
     expect(() =>
       newsItemSchema.parse({ ...validItem, displayMode: ["pdf"] }),

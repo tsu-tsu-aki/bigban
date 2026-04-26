@@ -1,7 +1,7 @@
 export const NEWS_CATEGORIES = [
   { id: "notice", labelJa: "お知らせ", labelEn: "Notice", color: "#C8FF00" },
   { id: "media", labelJa: "メディア掲載", labelEn: "Media", color: "#8AB4FF" },
-  { id: "event", labelJa: "イベント", labelEn: "Event", color: "#FF6A3D" },
+  { id: "event", labelJa: "イベント情報", labelEn: "Event", color: "#FF6A3D" },
   { id: "campaign", labelJa: "キャンペーン", labelEn: "Campaign", color: "#F6FF54" },
 ] as const;
 

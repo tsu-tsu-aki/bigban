@@ -4,10 +4,18 @@ import { microcmsFetch } from "./client";
 import { newsListSchema, type NewsItem, type NewsList } from "./schema";
 import {
   DETAIL_PAGE_STATIC_LIMIT,
+  NEWS_CATEGORIES,
   type NewsCategoryId,
 } from "@/constants/news";
 
 type Locale = "ja" | "en";
+
+// microCMS の category は日本語ラベルで保存されているため、
+// 内部ID (notice 等) → 日本語ラベル (お知らせ 等) に変換してフィルタ送信する。
+function categoryFilterValue(id: NewsCategoryId): string {
+  const found = NEWS_CATEGORIES.find((c) => c.id === id);
+  return found?.labelJa ?? id;
+}
 
 export interface GetNewsListParams {
   locale: Locale;
@@ -23,7 +31,7 @@ export async function getNewsList({
   category,
 }: GetNewsListParams): Promise<NewsList> {
   const filters = category
-    ? `locale[equals]${locale}[and]category[contains]${category}`
+    ? `locale[equals]${locale}[and]category[contains]${categoryFilterValue(category)}`
     : `locale[equals]${locale}`;
   return microcmsFetch("news", newsListSchema, {
     searchParams: { filters, orders: "-publishedAt", limit, offset },

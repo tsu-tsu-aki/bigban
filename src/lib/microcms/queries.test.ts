@@ -37,7 +37,7 @@ describe("queries", () => {
       expect(url).toContain("limit=12");
     });
 
-    it("category 指定で filters AND", async () => {
+    it("category 指定で filters AND (microCMS 側は日本語ラベルで保存されているため日本語で送る)", async () => {
       (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
         ok: true,
         json: async () => makeNewsList([]),
@@ -52,7 +52,7 @@ describe("queries", () => {
       const url = (global.fetch as ReturnType<typeof vi.fn>).mock
         .calls[0][0] as string;
       expect(decodeURIComponent(url)).toContain(
-        "filters=locale[equals]ja[and]category[contains]media",
+        "filters=locale[equals]ja[and]category[contains]メディア掲載",
       );
     });
   });
