@@ -20,6 +20,21 @@ function categoryFilterValue(id: NewsCategoryId): string {
   return found?.labelJa ?? id;
 }
 
+/**
+ * 防御的ロギング: 公開版経路 (draftKey なし) の取得結果に下書きが
+ * 紛れていないかチェック。`updatedAt > revisedAt` は「公開後に編集して
+ * 下書き保存している」状態を示し、API キーに「下書き全取得」権限が
+ * ON になっていると公開版 API でも下書きが返ってくる事故が起きうる。
+ * 開発・本番ログから検知できるよう warn を出す (本番でも有効、頻発しないため)。
+ */
+function warnIfDraftLeak(item: NewsItem): void {
+  if (item.revisedAt && item.updatedAt > item.revisedAt) {
+    console.warn(
+      `[microcms] possible draft leak detected: id=${item.id} slug=${item.slug} updatedAt(${item.updatedAt}) > revisedAt(${item.revisedAt}). Check API key permission ("GET draft" should be OFF for public-facing key).`,
+    );
+  }
+}
+
 export interface GetNewsListParams {
   locale: Locale;
   limit: number;
@@ -36,13 +51,15 @@ export async function getNewsList({
   const filters = category
     ? `locale[contains]${locale}[and]category[contains]${categoryFilterValue(category)}`
     : `locale[contains]${locale}`;
-  return microcmsFetch("news", newsListSchema, {
+  const result = await microcmsFetch("news", newsListSchema, {
     searchParams: { filters, orders: "-publishedAt", limit, offset },
     tags: [
       "news",
       `news-list-${locale}${category ? `-${category}` : ""}`,
     ],
   });
+  for (const item of result.contents) warnIfDraftLeak(item);
+  return result;
 }
 
 export interface GetNewsDetailParams {
@@ -66,7 +83,9 @@ export async function getNewsDetail({
     },
     tags: ["news", `news-${slug}-${locale}`],
   });
-  return list.contents[0] ?? null;
+  const item = list.contents[0] ?? null;
+  if (item) warnIfDraftLeak(item);
+  return item;
 }
 
 export interface GetNewsByContentIdParams {
