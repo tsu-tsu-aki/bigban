@@ -32,7 +32,7 @@ describe("queries", () => {
       expect(r.contents).toHaveLength(1);
       const url = (global.fetch as ReturnType<typeof vi.fn>).mock
         .calls[0][0] as string;
-      expect(decodeURIComponent(url)).toContain("filters=locale[equals]ja");
+      expect(decodeURIComponent(url)).toContain("filters=locale[contains]ja");
       expect(decodeURIComponent(url)).toContain("orders=-publishedAt");
       expect(url).toContain("limit=12");
     });
@@ -52,7 +52,7 @@ describe("queries", () => {
       const url = (global.fetch as ReturnType<typeof vi.fn>).mock
         .calls[0][0] as string;
       expect(decodeURIComponent(url)).toContain(
-        "filters=locale[equals]ja[and]category[contains]メディア掲載",
+        "filters=locale[contains]ja[and]category[contains]メディア掲載",
       );
     });
   });
@@ -105,7 +105,7 @@ describe("queries", () => {
       (global.fetch as ReturnType<typeof vi.fn>).mockImplementation(
         async (u: unknown) => {
           const url = String(u);
-          if (decodeURIComponent(url).includes("locale[equals]ja")) {
+          if (decodeURIComponent(url).includes("locale[contains]ja")) {
             return {
               ok: true,
               json: async () =>

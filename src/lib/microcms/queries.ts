@@ -31,8 +31,8 @@ export async function getNewsList({
   category,
 }: GetNewsListParams): Promise<NewsList> {
   const filters = category
-    ? `locale[equals]${locale}[and]category[contains]${categoryFilterValue(category)}`
-    : `locale[equals]${locale}`;
+    ? `locale[contains]${locale}[and]category[contains]${categoryFilterValue(category)}`
+    : `locale[contains]${locale}`;
   return microcmsFetch("news", newsListSchema, {
     searchParams: { filters, orders: "-publishedAt", limit, offset },
     tags: [
@@ -61,7 +61,7 @@ export async function getNewsDetail({
   const draftKey = await readDraftKey();
   const list = await microcmsFetch("news", newsListSchema, {
     searchParams: {
-      filters: `slug[equals]${slug}[and]locale[equals]${locale}`,
+      filters: `slug[equals]${slug}[and]locale[contains]${locale}`,
       limit: 1,
     },
     tags: ["news", `news-${slug}-${locale}`],
@@ -80,7 +80,7 @@ export async function getNewsSlugs(): Promise<NewsSlug[]> {
   for (const locale of ["ja", "en"] as const) {
     const list = await microcmsFetch("news", newsListSchema, {
       searchParams: {
-        filters: `locale[equals]${locale}`,
+        filters: `locale[contains]${locale}`,
         limit: DETAIL_PAGE_STATIC_LIMIT,
       },
       tags: ["news", `news-slugs-${locale}`],
