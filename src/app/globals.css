@@ -231,4 +231,112 @@ html[data-browser="ios-safari"] .site-header-bg {
   .prose .caution > :where(p):first-child {
     margin-top: 0;
   }
+
+  /* === CTA Button (primary action) === */
+  /* prose-a の underline をオーバーライド */
+  .prose a.cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    background-color: var(--color-accent);
+    color: var(--color-deep-black);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--color-accent);
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+  .prose a.cta:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+  .prose a.cta:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  /* CTA セカンダリ (ゴースト) — 「詳細はこちら」用 */
+  .prose a.cta.cta--ghost {
+    background-color: transparent;
+    color: var(--color-accent);
+  }
+  .prose a.cta.cta--ghost:hover {
+    background-color: rgba(246, 255, 84, 0.08);
+    opacity: 1;
+  }
+
+  /* === Schedule timeline === */
+  .prose .schedule {
+    list-style: none;
+    padding: 0;
+    margin: 2.5rem 0;
+    position: relative;
+  }
+  /* 縦の rail (accent 25%) */
+  .prose .schedule::before {
+    content: "";
+    position: absolute;
+    left: 0.4375rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background-color: rgba(246, 255, 84, 0.25);
+  }
+  .prose .schedule-item {
+    position: relative;
+    padding: 0 0 2rem 2rem;
+    margin: 0;
+  }
+  .prose .schedule-item:last-child {
+    padding-bottom: 0;
+  }
+  /* dot marker (rail を貫通する punched-through 表現) */
+  .prose .schedule-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 0.9375rem;
+    height: 0.9375rem;
+    background-color: var(--color-accent);
+    border-radius: 9999px;
+    box-shadow: 0 0 0 4px var(--color-deep-black);
+  }
+  /* 日付 (eyebrow style) */
+  .prose .schedule-item > time {
+    display: block;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-bottom: 0.375rem;
+  }
+  .prose .schedule-item > h3 {
+    margin-top: 0;
+  }
+  .prose .schedule-item > p {
+    margin-top: 0.375rem;
+    color: var(--color-text-light);
+  }
+
+  /* mobile: padding/dot を縮小 */
+  @media (max-width: 480px) {
+    .prose .schedule-item {
+      padding-left: 1.5rem;
+    }
+    .prose .schedule-item::before {
+      width: 0.75rem;
+      height: 0.75rem;
+    }
+    .prose .schedule::before {
+      left: 0.3125rem;
+    }
+  }
 }

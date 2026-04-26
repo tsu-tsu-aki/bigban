@@ -50,6 +50,8 @@ const COMMON_ALLOWED_ATTR = [
   "aria-label",
   "aria-labelledby",
   "aria-describedby",
+  // <time datetime="..."> 用
+  "datetime",
 ];
 
 // 注: ALLOWED_URI_REGEXP オプションは DOMPurify 3.x + jsdom env で
@@ -67,6 +69,12 @@ const ALLOWED_CLASSES = new Set([
   "note",
   "caution",
   "news-table-scroll",
+  // CTA ボタン (一次/二次)
+  "cta",
+  "cta--ghost",
+  // スケジュール timeline
+  "schedule",
+  "schedule-item",
 ]);
 
 // 共通の許可タグ (block / inline / table / 注釈)
@@ -104,6 +112,7 @@ const COMMON_ALLOWED_TAGS = [
   "span",
   "aside",
   "mark",
+  "time",
 ];
 
 export const STRICT_HTML_CONFIG = {
@@ -125,6 +134,9 @@ export const RICH_EDITOR_CONFIG = {
 
 const VALID_SCOPE_VALUES = new Set(["row", "col", "rowgroup", "colgroup"]);
 const SPAN_REGEX = /^[1-9]\d?$/;
+// HTML5 time datetime: ISO 8601 ライク (年/年月/年月日/日時/タイムゾーン任意)
+const ISO_DATETIME_REGEX =
+  /^\d{4}(-\d{2}(-\d{2}(T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:\d{2})?)?)?)?$/;
 
 DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
   const tag = (node as Element).tagName;
@@ -161,6 +173,14 @@ DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
   // <td/th colspan|rowspan> は 1-99 のみ (DoS 対策)
   if (data.attrName === "colspan" || data.attrName === "rowspan") {
     if (!SPAN_REGEX.test(data.attrValue)) {
+      data.keepAttr = false;
+    }
+    return;
+  }
+
+  // <time datetime=...> のみ受理し、ISO 8601 形式のみに制限
+  if (data.attrName === "datetime") {
+    if (tag !== "TIME" || !ISO_DATETIME_REGEX.test(data.attrValue)) {
       data.keepAttr = false;
     }
     return;

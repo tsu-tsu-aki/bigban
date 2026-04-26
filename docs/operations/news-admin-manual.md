@@ -173,12 +173,55 @@ https://www.thepicklebang.com/api/draft/enable?secret=${MICROCMS_DRAFT_SECRET}&c
 
 **重要**: 緊急通知 (`role="alert"`) ではなく、編集上の補足です。`<p>` で囲んで本文を入れてください。
 
+### CTA ボタン (`.cta` / `.cta--ghost`)
+
+「申し込む」「詳細はこちら」のような **アクション導線** を強調する黄色塗りボタン。
+
+```html
+<p><a href="https://reserva.be/tpbt" class="cta">今すぐ申し込む</a></p>
+
+<p><a href="https://example.com" class="cta cta--ghost">詳細を見る</a></p>
+```
+
+- `.cta` (デフォルト): アクセント塗りボタン (一次アクション)
+- `.cta--ghost`: アウトラインのみ (二次アクション)
+
+**重要**:
+- リンクテキストは具体的に (「**今すぐ申し込む**」「**詳細を見る**」)。「**こちら**」のような曖昧表現は使わない (a11y / SEO)
+- 1 セクションに **CTA は1個まで** (一次・二次の組合せは可)
+- 外部リンクは自動で `target="_blank"` + `rel="noopener noreferrer"` が付く
+
+### スケジュール timeline (`.schedule` / `.schedule-item`)
+
+イベント開催スケジュールや段階的な手順を縦軸タイムラインで表示:
+
+```html
+<ol class="schedule">
+  <li class="schedule-item">
+    <time datetime="2026-04-29">04/29 (水・祝)</time>
+    <h3>オープニングデー</h3>
+    <p>無料体験会 + フリープレイ</p>
+  </li>
+  <li class="schedule-item">
+    <time datetime="2026-05-02">05/02 (土)</time>
+    <h3>チャレンジカップ 2026</h3>
+    <p>ダブルストーナメント本戦</p>
+  </li>
+</ol>
+```
+
+**重要**:
+- `<ol>` (順序付きリスト) を使う ← 日付は順序があるため意味的に正しい
+- `<time datetime="...">` の `datetime` は **ISO 8601 形式** のみ (`2026-04-29` / `2026-04-29T10:00:00+09:00` 等)
+- 日本語表示 (`04/29 (水・祝)`) と機械可読 (`datetime="2026-04-29"`) を両立
+- スケジュール直前に `<h2>` で文脈を補足するのが推奨
+
 ### 使用してはいけないタグ
 
 - `<h1>`: 記事タイトルは page 側で出力するため、本文では h2 以下のみ使用
 - `<script>`, `<iframe>`, `<style>`, `<form>`, `<input>`: セキュリティ上の理由で除去
 - `style="..."` 属性, `onclick="..."` 等のイベント属性: 同上
-- 任意の class 名: `lead`, `caption`, `badge`, `highlight`, `note`, `caution` 以外は除去される
+- 任意の class 名: `lead`, `caption`, `badge`, `highlight`, `note`, `caution`, `cta`, `cta--ghost`, `schedule`, `schedule-item`, `news-table-scroll` 以外は除去される
 
 ---
 

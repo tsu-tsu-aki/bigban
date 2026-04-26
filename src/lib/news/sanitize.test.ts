@@ -282,3 +282,80 @@ describe("Badge / Note / Mark 等のカスタム要素", () => {
     expect(out).toMatch(/<aside class="note">x<\/aside>/);
   });
 });
+
+describe("CTA / Schedule timeline / time 要素", () => {
+  beforeEach(() => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+
+  it("a class=cta が許可される + 自動 target/rel 補完", () => {
+    const out = sanitizeNewsHtml(
+      `<a href="https://example.com" class="cta">申し込む</a>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<a [^>]*class="cta"/);
+    expect(out).toMatch(/target="_blank"/);
+    expect(out).toMatch(/rel="noopener noreferrer"/);
+  });
+
+  it("cta--ghost (二次CTA) も許可される", () => {
+    const out = sanitizeNewsHtml(
+      `<a href="https://example.com" class="cta cta--ghost">詳細</a>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/class="cta cta--ghost"/);
+  });
+
+  it("schedule / schedule-item クラスが許可される", () => {
+    const out = sanitizeNewsHtml(
+      `<ol class="schedule"><li class="schedule-item"><time datetime="2026-04-29">04/29</time><h3>X</h3></li></ol>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<ol class="schedule">/);
+    expect(out).toMatch(/<li class="schedule-item">/);
+    expect(out).toMatch(/<time datetime="2026-04-29">04\/29<\/time>/);
+  });
+
+  it("time 要素が単独でも使える (datetime 任意)", () => {
+    const out = sanitizeNewsHtml(
+      `<p>開催: <time>2026年5月2日</time></p>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<time>2026年5月2日<\/time>/);
+  });
+
+  it("datetime 不正値は除去 (XSS 防御)", () => {
+    const out = sanitizeNewsHtml(
+      `<time datetime="javascript:alert(1)">x</time>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<time>x<\/time>/);
+    expect(out).not.toMatch(/datetime/);
+  });
+
+  it("datetime は ISO 8601 形式のみ許可 (フォーマット違反は除去)", () => {
+    const out = sanitizeNewsHtml(
+      `<time datetime="2026年04月29日">x</time>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<time>x<\/time>/);
+    expect(out).not.toMatch(/datetime/);
+  });
+
+  it("datetime ISO 形式 (年月日 + 時刻 + タイムゾーン) は許可", () => {
+    const out = sanitizeNewsHtml(
+      `<time datetime="2026-04-29T10:00:00+09:00">x</time>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/datetime="2026-04-29T10:00:00\+09:00"/);
+  });
+
+  it("datetime は <time> 以外では除去 (スコープ制限)", () => {
+    const out = sanitizeNewsHtml(
+      `<p datetime="2026-04-29">x</p>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<p>x<\/p>/);
+    expect(out).not.toMatch(/datetime/);
+  });
+});
