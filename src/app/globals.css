@@ -233,30 +233,31 @@ html[data-browser="ios-safari"] .site-header-bg {
   }
 
   /* === CTA Button (primary action) === */
-  /* prose-a の underline をオーバーライド */
-  .prose a.cta {
+  /* prose-a:text-accent / prose-a:underline 等の Tailwind utility を上書きするため
+     クラスセレクタを 2 重 (.cta.cta) にして特異度を持ち上げる。
+     色と下線は意図的なデザイン上書きのため !important を併用。 */
+  .prose a.cta.cta {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.875rem 1.75rem;
     background-color: var(--color-accent);
-    color: var(--color-deep-black);
+    color: var(--color-deep-black) !important;
     font-size: 0.8125rem;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    text-decoration: none;
+    text-decoration: none !important;
     border: 1px solid var(--color-accent);
     transition:
       opacity 0.25s ease,
       transform 0.25s ease;
   }
-  .prose a.cta:hover {
+  .prose a.cta.cta:hover {
     opacity: 0.85;
     transform: translateY(-1px);
-    text-decoration: none;
   }
-  .prose a.cta:focus-visible {
+  .prose a.cta.cta:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
   }
@@ -264,7 +265,7 @@ html[data-browser="ios-safari"] .site-header-bg {
   /* CTA セカンダリ (ゴースト) — 「詳細はこちら」用 */
   .prose a.cta.cta--ghost {
     background-color: transparent;
-    color: var(--color-accent);
+    color: var(--color-accent) !important;
   }
   .prose a.cta.cta--ghost:hover {
     background-color: rgba(246, 255, 84, 0.08);
