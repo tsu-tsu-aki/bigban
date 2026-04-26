@@ -40,10 +40,6 @@ function buildNewsUrl(locale: Locale, slug: string): string {
     : `${SITE_URL}/en/news/${slug}`;
 }
 
-function buildLocalPath(locale: Locale, slug: string): string {
-  return locale === "ja" ? `/news/${slug}` : `/en/news/${slug}`;
-}
-
 function pickStringParam(
   sp: Record<string, string | string[] | undefined>,
   key: string,
@@ -154,12 +150,7 @@ export default async function NewsDetailPage({
 
   return (
     <article className="min-h-screen bg-primary text-text-light py-16 lg:py-24">
-      {previewItem && (
-        <PreviewBanner
-          locale={locale as Locale}
-          exitHref={buildLocalPath(locale as Locale, slug)}
-        />
-      )}
+      {previewItem && <PreviewBanner locale={locale as Locale} />}
       <NewsArticleJsonLd item={item} locale={locale as Locale} />
       <div className="mx-auto max-w-3xl px-6 lg:px-12">
         <div className="flex items-center justify-between gap-4">
