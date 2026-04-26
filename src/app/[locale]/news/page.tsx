@@ -3,6 +3,8 @@ import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 
+import HomeFooter from "@/components/home/HomeFooter";
+import HomeNavigation from "@/components/home/HomeNavigation";
 import { CategoryChips } from "@/components/news/CategoryChips";
 import { NewsCard } from "@/components/news/NewsCard";
 import { NewsPagination } from "@/components/news/NewsPagination";
@@ -92,41 +94,45 @@ export default async function NewsPage({
   if (page > totalPages && list.totalCount > 0) notFound();
 
   return (
-    <section className="min-h-screen bg-primary text-text-light py-16 lg:py-24">
-      <div className="mx-auto max-w-7xl px-6 lg:px-12">
-        <p className="text-xs tracking-[0.3em] text-text-gray uppercase mb-4">
-          News
-        </p>
-        <h1 className="text-text-light text-3xl lg:text-4xl font-bold mb-8">
-          {t("heading")}
-        </h1>
-        <CategoryChips locale={locale as Locale} activeCategory={category} />
-        {list.contents.length === 0 ? (
-          <p className="text-text-gray py-16">
-            {locale === "ja"
-              ? "現在表示できるニュースはありません。"
-              : "No news to show right now."}
+    <>
+      <HomeNavigation />
+      <main className="min-h-screen bg-deep-black text-text-light pt-[calc(6rem+var(--promo-banner-h))] lg:pt-[calc(7rem+var(--promo-banner-h))] pb-16 lg:pb-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-12 py-8 lg:py-12">
+          <p className="text-xs tracking-[0.3em] text-text-gray uppercase mb-4">
+            News
           </p>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {list.contents.map((item) => (
-                <NewsCard
-                  key={item.id}
-                  item={item}
-                  locale={locale as Locale}
-                />
-              ))}
-            </div>
-            <NewsPagination
-              currentPage={page}
-              totalPages={totalPages}
-              locale={locale as Locale}
-              category={category}
-            />
-          </>
-        )}
-      </div>
-    </section>
+          <h1 className="text-text-light text-3xl lg:text-4xl font-bold mb-8">
+            {t("heading")}
+          </h1>
+          <CategoryChips locale={locale as Locale} activeCategory={category} />
+          {list.contents.length === 0 ? (
+            <p className="text-text-gray py-16">
+              {locale === "ja"
+                ? "現在表示できるニュースはありません。"
+                : "No news to show right now."}
+            </p>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {list.contents.map((item) => (
+                  <NewsCard
+                    key={item.id}
+                    item={item}
+                    locale={locale as Locale}
+                  />
+                ))}
+              </div>
+              <NewsPagination
+                currentPage={page}
+                totalPages={totalPages}
+                locale={locale as Locale}
+                category={category}
+              />
+            </>
+          )}
+        </div>
+      </main>
+      <HomeFooter />
+    </>
   );
 }

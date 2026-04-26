@@ -5,6 +5,8 @@ import { hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 
+import HomeFooter from "@/components/home/HomeFooter";
+import HomeNavigation from "@/components/home/HomeNavigation";
 import { NewsArticleJsonLd } from "@/components/news/NewsArticleJsonLd";
 import { NewsBodyRenderer } from "@/components/news/NewsBodyRenderer";
 import { NewsLanguageSwitcher } from "@/components/news/NewsLanguageSwitcher";
@@ -149,10 +151,12 @@ export default async function NewsDetailPage({
     locale === "ja" ? "← ニュース一覧へ" : "← News index";
 
   return (
-    <article className="min-h-screen bg-primary text-text-light py-16 lg:py-24">
+    <>
       {previewItem && <PreviewBanner locale={locale as Locale} />}
+      <HomeNavigation />
       <NewsArticleJsonLd item={item} locale={locale as Locale} />
-      <div className="mx-auto max-w-3xl px-6 lg:px-12">
+      <main className="min-h-screen bg-deep-black text-text-light pt-[calc(6rem+var(--promo-banner-h))] lg:pt-[calc(7rem+var(--promo-banner-h))] pb-16 lg:pb-24">
+        <article className="mx-auto max-w-3xl px-6 lg:px-12 py-8 lg:py-12">
         <div className="flex items-center justify-between gap-4">
           <Link
             href={backHref}
@@ -216,7 +220,9 @@ export default async function NewsDetailPage({
             </a>
           </div>
         )}
-      </div>
-    </article>
+        </article>
+      </main>
+      <HomeFooter />
+    </>
   );
 }

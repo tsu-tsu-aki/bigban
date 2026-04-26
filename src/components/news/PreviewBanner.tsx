@@ -10,7 +10,7 @@ export function PreviewBanner({ locale }: PreviewBannerProps) {
     <div
       role="status"
       aria-live="polite"
-      className="fixed top-0 inset-x-0 z-50 bg-accent text-deep-black text-xs font-semibold tracking-wider py-2 text-center"
+      className="fixed top-0 inset-x-0 z-[70] bg-accent text-deep-black text-xs font-semibold tracking-wider py-2 text-center"
     >
       {label}
     </div>

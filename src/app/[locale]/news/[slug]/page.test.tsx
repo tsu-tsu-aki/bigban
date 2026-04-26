@@ -30,6 +30,12 @@ vi.mock("next-intl", () => ({
 vi.mock("@/config/featureFlags", () => ({
   isCmsNewsEnabled: isCmsNewsEnabledMock,
 }));
+vi.mock("@/components/home/HomeNavigation", () => ({
+  default: () => null,
+}));
+vi.mock("@/components/home/HomeFooter", () => ({
+  default: () => null,
+}));
 
 async function renderPage(
   params: { locale: string; slug: string },
