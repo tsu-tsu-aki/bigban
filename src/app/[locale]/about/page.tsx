@@ -60,6 +60,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
       });
       newsItems = list.contents;
     } catch {
+      /* istanbul ignore next -- @preserve microCMS 未到達時の防御フォールバック */
       newsItems = [];
     }
   }

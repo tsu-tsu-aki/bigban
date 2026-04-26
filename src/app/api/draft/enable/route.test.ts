@@ -136,6 +136,25 @@ describe("/api/draft/enable GET", () => {
     expect(res.status).toBe(401);
   });
 
+  it("MICROCMS_DRAFT_ALLOWED_ORIGINS 設定時、Origin ヘッダ欠落で401", async () => {
+    vi.stubEnv("MICROCMS_DRAFT_ALLOWED_ORIGINS", "https://app.microcms.io");
+    const req = new Request(
+      "http://localhost/api/draft/enable?secret=ds3cret&slug=a&draftKey=dk",
+    );
+    const { GET } = await import("./route");
+    const res = await GET(req);
+    expect(res.status).toBe(401);
+  });
+
+  it("slug クエリ欠落 (contentId も無し) で401", async () => {
+    const req = new Request(
+      "http://localhost/api/draft/enable?secret=ds3cret&draftKey=dk",
+    );
+    const { GET } = await import("./route");
+    const res = await GET(req);
+    expect(res.status).toBe(401);
+  });
+
   describe("contentId 経由 (microCMS 画面プレビュー)", () => {
     it("正常系: contentId から slug/locale 逆引き → /news/{slug}?draftKey=&contentId= に redirect", async () => {
       getNewsByContentIdMock.mockResolvedValue({

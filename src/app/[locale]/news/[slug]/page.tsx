@@ -74,6 +74,7 @@ export async function generateStaticParams() {
   try {
     return await getNewsSlugs();
   } catch {
+    /* istanbul ignore next -- @preserve microCMS 未到達時の防御フォールバック (build 時のみ実行) */
     return [];
   }
 }

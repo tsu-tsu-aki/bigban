@@ -15,6 +15,7 @@ interface Params {
 export default async function Image({ params }: Params): Promise<Response> {
   const { locale, slug } = await params;
   const fallback = `${SITE_URL}${locale === "en" ? "/en" : ""}/opengraph-image`;
+  /* istanbul ignore next -- @preserve middleware で routing 制限済みのため到達不可 (defensive) */
   if (locale !== "ja" && locale !== "en") {
     return Response.redirect(fallback, 302);
   }

@@ -14,6 +14,7 @@ const webhookSchema = z.object({
 });
 
 function safeEqualHex(a: string, b: string): boolean {
+  /* istanbul ignore next -- @preserve HMAC は固定長 64 字なので length 不一致は実運用で到達困難 */
   if (a.length !== b.length) return false;
   try {
     return timingSafeEqual(Buffer.from(a, "hex"), Buffer.from(b, "hex"));

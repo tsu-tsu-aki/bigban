@@ -135,6 +135,14 @@ describe("NewsPage", () => {
     ).toBeInTheDocument();
   });
 
+  it("locale=en 空リストメッセージ", async () => {
+    getNewsListMock.mockResolvedValue(makeNewsList([], 0));
+    await renderPage({ locale: "en" });
+    expect(
+      screen.getByText(/No news to show right now/),
+    ).toBeInTheDocument();
+  });
+
   it("totalCount>12 でページネーション描画", async () => {
     getNewsListMock.mockResolvedValue(
       makeNewsList(
@@ -146,5 +154,31 @@ describe("NewsPage", () => {
     );
     await renderPage({ locale: "ja" });
     expect(screen.getByRole("link", { name: "2" })).toBeInTheDocument();
+  });
+
+  it("generateStaticParams が全 locale を返す", async () => {
+    const { generateStaticParams } = await import("./page");
+    expect(generateStaticParams()).toEqual([
+      { locale: "ja" },
+      { locale: "en" },
+    ]);
+  });
+
+  it("generateMetadata: ja は日本語タイトル/説明", async () => {
+    const { generateMetadata } = await import("./page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+    expect(meta.title).toContain("ニュース");
+    expect(meta.description).toContain("最新");
+  });
+
+  it("generateMetadata: en は英語タイトル/説明", async () => {
+    const { generateMetadata } = await import("./page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ locale: "en" }),
+    });
+    expect(meta.title).toContain("News");
+    expect(meta.description).toContain("Latest");
   });
 });

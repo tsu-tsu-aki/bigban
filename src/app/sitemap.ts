@@ -45,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     slugs = await getNewsSlugs();
   } catch {
-    // microCMS 未設定/未到達時はサイトマップにニュース詳細を含めない
+    /* istanbul ignore next -- @preserve microCMS 未設定/未到達時の防御フォールバック */
     slugs = [];
   }
   const newsDetails: MetadataRoute.Sitemap = slugs.map(

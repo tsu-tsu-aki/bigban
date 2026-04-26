@@ -17,6 +17,7 @@ type Locale = "ja" | "en";
 // 内部ID (notice 等) → 日本語ラベル (お知らせ 等) に変換してフィルタ送信する。
 function categoryFilterValue(id: NewsCategoryId): string {
   const found = NEWS_CATEGORIES.find((c) => c.id === id);
+  /* istanbul ignore next -- @preserve TS の NewsCategoryId 型により ?? id 分岐は到達不可 (defensive) */
   return found?.labelJa ?? id;
 }
 

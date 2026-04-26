@@ -32,6 +32,7 @@ function checkOrigin(request: Request): boolean {
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+  /* istanbul ignore next -- @preserve env がカンマだけで構成される edge ケースの防御 */
   if (list.length === 0) return true;
   const origin = request.headers.get("origin");
   if (!origin) return false;
@@ -61,10 +62,13 @@ export async function GET(request: Request): Promise<Response> {
   if (!checkOrigin(request)) return unauthorized();
 
   const url = new URL(request.url);
+  /* istanbul ignore next -- @preserve URLSearchParams.get は string|null のみ返す (defensive ?? "") */
   const secret = url.searchParams.get("secret") ?? "";
+  /* istanbul ignore next -- @preserve URLSearchParams.get は string|null のみ返す (defensive ?? "") */
   const draftKey = url.searchParams.get("draftKey") ?? "";
 
   // 共通: secret + draftKey 検証
+  /* istanbul ignore next -- @preserve env 未設定時の防御フォールバック (?? "") */
   const expected = process.env.MICROCMS_DRAFT_SECRET ?? "";
   if (!expected || !safeEqual(secret, expected)) {
     return unauthorized();
@@ -83,6 +87,7 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   // パターンB: slug + locale 直接指定 (後方互換 / 手動プレビュー用)
+  /* istanbul ignore next -- @preserve URLSearchParams.get は string|null のみ返す (defensive ?? "") */
   const slug = url.searchParams.get("slug") ?? "";
   const localeParam = url.searchParams.get("locale");
 

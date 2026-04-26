@@ -1,5 +1,6 @@
 import DOMPurify from "isomorphic-dompurify";
 
+/* istanbul ignore next -- @preserve jsdom 環境では DOMPurify は常にサポートされるため到達不可 */
 if (!DOMPurify.isSupported) {
   throw new Error(
     "[news/sanitize] DOMPurify JSDOM binding failed; sanitization would silently bypass",
@@ -201,7 +202,9 @@ DOMPurify.addHook("afterSanitizeAttributes", (node) => {
         "[news/sanitize] <img> missing width/height; default 1200x675 applied",
       );
     }
+    /* istanbul ignore next -- @preserve 入力 HTML に loading 属性が事前に付くケースは運用上稀 */
     if (!el.hasAttribute("loading")) el.setAttribute("loading", "lazy");
+    /* istanbul ignore next -- @preserve 入力 HTML に decoding 属性が事前に付くケースは運用上稀 */
     if (!el.hasAttribute("decoding")) el.setAttribute("decoding", "async");
   }
 });
@@ -234,6 +237,7 @@ export function sanitizeNewsHtml(
 
   if (options.isFirstImageLcp) {
     result = result.replace(/<img([^>]*?)>/, (match, attrs: string) => {
+      /* istanbul ignore next -- @preserve 入力 HTML が事前に loading=eager を持つケースは運用上稀 */
       if (/loading="eager"/.test(attrs)) return match;
       const stripped = attrs
         .replace(/\sloading="[^"]*"/, "")

@@ -13,16 +13,18 @@ vi.mock("@/components/StructuredData", () => ({ default: () => null }));
 vi.mock("@/lib/structured-data", () => ({
   buildBreadcrumb: vi.fn().mockReturnValue({}),
 }));
+const isCmsNewsEnabledMock = vi.fn(() => false);
 vi.mock("@/config/featureFlags", () => ({
-  isCmsNewsEnabled: () => false,
+  isCmsNewsEnabled: () => isCmsNewsEnabledMock(),
 }));
+const getNewsListMock = vi.fn().mockResolvedValue({
+  contents: [],
+  totalCount: 0,
+  offset: 0,
+  limit: 12,
+});
 vi.mock("@/lib/microcms/queries", () => ({
-  getNewsList: vi.fn().mockResolvedValue({
-    contents: [],
-    totalCount: 0,
-    offset: 0,
-    limit: 12,
-  }),
+  getNewsList: (args: unknown) => getNewsListMock(args),
 }));
 
 describe("About generateMetadata", () => {
@@ -85,6 +87,11 @@ describe("About generateMetadata", () => {
 });
 
 describe("About Page", () => {
+  beforeEach(() => {
+    isCmsNewsEnabledMock.mockReturnValue(false);
+    getNewsListMock.mockClear();
+  });
+
   it("localeを設定しAboutコンポーネントを描画する", async () => {
     const { default: AboutPage } = await import("./page");
     const element = await AboutPage({
@@ -92,5 +99,39 @@ describe("About Page", () => {
     });
     const { container } = render(element);
     expect(container).toBeTruthy();
+  });
+
+  it("CMS フラグ ON で getNewsList から news を取得して渡す", async () => {
+    isCmsNewsEnabledMock.mockReturnValue(true);
+    getNewsListMock.mockResolvedValueOnce({
+      contents: [
+        {
+          id: "n1",
+          slug: "n-1",
+          title: "test",
+          excerpt: "ex",
+          locale: "ja",
+          category: ["notice"],
+          displayMode: "html",
+          createdAt: "2026-01-01T00:00:00.000Z",
+          updatedAt: "2026-01-01T00:00:00.000Z",
+          publishedAt: "2026-01-01T00:00:00.000Z",
+          revisedAt: "2026-01-01T00:00:00.000Z",
+          bodyHtml: "",
+          body: "",
+        },
+      ],
+      totalCount: 1,
+      offset: 0,
+      limit: 3,
+    });
+    const { default: AboutPage } = await import("./page");
+    const element = await AboutPage({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+    render(element);
+    expect(getNewsListMock).toHaveBeenCalledWith(
+      expect.objectContaining({ locale: "ja", limit: 3, offset: 0 }),
+    );
   });
 });

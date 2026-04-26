@@ -78,6 +78,23 @@ describe("NewsDetailPage", () => {
     ).not.toBeNull();
   });
 
+  it("publishedAt/bodyHtml/body が undefined でも createdAt と空文字 fallback で描画", async () => {
+    getNewsDetailMock.mockImplementation(async () => {
+      const base = makeNewsItem({
+        title: "ドラフト",
+        slug: "x",
+        createdAt: "2026-03-15T00:00:00.000Z",
+      });
+      const { publishedAt: _p, bodyHtml: _bh, body: _b, ...rest } = base;
+      void _p;
+      void _bh;
+      void _b;
+      return rest;
+    });
+    await renderPage({ locale: "ja", slug: "x" });
+    expect(screen.getByText(/2026\.03\.15/)).toBeInTheDocument();
+  });
+
   it("記事なし notFound", async () => {
     getNewsDetailMock.mockResolvedValue(null);
     await expect(
@@ -177,6 +194,48 @@ describe("NewsDetailPage", () => {
       searchParams: Promise.resolve({}),
     });
     expect(meta).toEqual({});
+  });
+
+  it("generateMetadata 不正locale で空", async () => {
+    const { generateMetadata } = await import("./page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ locale: "fr", slug: "x" }),
+      searchParams: Promise.resolve({}),
+    });
+    expect(meta).toEqual({});
+  });
+
+  it("generateMetadata locale=en で対向 ja を引きに行く", async () => {
+    getNewsDetailMock.mockImplementation(async ({ locale }) => {
+      if (locale === "en") {
+        return makeNewsItem({ title: "T", slug: "x", locale: "en" });
+      }
+      if (locale === "ja") {
+        return makeNewsItem({ title: "T", slug: "x" });
+      }
+      return null;
+    });
+    const { generateMetadata } = await import("./page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ locale: "en", slug: "x" }),
+      searchParams: Promise.resolve({}),
+    });
+    expect(meta.alternates?.languages).toBeDefined();
+  });
+
+  it("readPreviewItem: getNewsByContentId が null を返す時は preview なし扱い", async () => {
+    getNewsByContentIdMock.mockResolvedValue(null);
+    getNewsDetailMock.mockResolvedValue(
+      makeNewsItem({ slug: "x", title: "公開版" }),
+    );
+    await renderPage(
+      { locale: "ja", slug: "x" },
+      { contentId: "g-missing", draftKey: "dk-1" },
+    );
+    expect(
+      screen.getByRole("heading", { name: "公開版" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 
   it("対向言語が存在する時のみ alternates.languages を出力", async () => {

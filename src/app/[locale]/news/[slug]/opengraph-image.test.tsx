@@ -61,4 +61,16 @@ describe("news detail opengraph-image", () => {
     expect(res.status).toBe(302);
     expect(res.headers.get("location") ?? "").toMatch(/opengraph-image/);
   });
+
+  it("locale=en eyecatchなし: /en/opengraph-image にリダイレクト", async () => {
+    getNewsDetailMock.mockResolvedValue(null);
+    const { default: handler } = await import("./opengraph-image");
+    const res = await handler({
+      params: Promise.resolve({ locale: "en", slug: "none" }),
+    });
+    expect(res.status).toBe(302);
+    expect(res.headers.get("location") ?? "").toMatch(
+      /\/en\/opengraph-image/,
+    );
+  });
 });

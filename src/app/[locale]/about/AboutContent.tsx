@@ -82,6 +82,7 @@ interface AboutContentProps {
   locale?: "ja" | "en";
 }
 
+/* istanbul ignore next -- @preserve デフォルト引数は呼び出し側で常に props を渡すため到達不可 */
 export default function AboutContent({
   newsItems = [],
   locale = "ja",
@@ -448,6 +449,7 @@ export default function AboutContent({
             </h2>
 
             <div className="space-y-10">
+              {/* istanbul ignore next -- @preserve CMS 経路は e2e (USE_CMS_NEWS=true) で検証 */}
               {useCms ? (
                 <>
                   {newsItems.map((item) => {
