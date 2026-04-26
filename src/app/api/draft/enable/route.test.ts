@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 const enableMock = vi.fn();
 const cookieSetMock = vi.fn();
 const getNewsDetailMock = vi.fn();
+const getNewsByContentIdMock = vi.fn();
 const redirectMock = vi.fn();
 
 vi.mock("next/headers", () => ({
@@ -17,6 +18,7 @@ vi.mock("next/navigation", () => ({
 }));
 vi.mock("@/lib/microcms/queries", () => ({
   getNewsDetail: (args: unknown) => getNewsDetailMock(args),
+  getNewsByContentId: (args: unknown) => getNewsByContentIdMock(args),
 }));
 
 function makeReq(url: string) {
@@ -28,6 +30,7 @@ describe("/api/draft/enable GET", () => {
     enableMock.mockClear();
     cookieSetMock.mockClear();
     getNewsDetailMock.mockReset();
+    getNewsByContentIdMock.mockReset();
     redirectMock.mockClear();
     vi.stubEnv("MICROCMS_DRAFT_SECRET", "ds3cret");
     vi.stubEnv("MICROCMS_DRAFT_ALLOWED_ORIGINS", "");
@@ -144,5 +147,86 @@ describe("/api/draft/enable GET", () => {
     const { GET } = await import("./route");
     const res = await GET(req);
     expect(res.status).toBe(401);
+  });
+
+  describe("contentId 経由 (microCMS 画面プレビュー)", () => {
+    it("正常系: contentId から slug/locale 逆引き → enable + redirect", async () => {
+      getNewsByContentIdMock.mockResolvedValue({
+        slug: "grand-opening-campaign",
+        locale: "ja",
+      });
+      const { GET } = await import("./route");
+      await expect(
+        GET(
+          makeReq(
+            "http://localhost/api/draft/enable?secret=ds3cret&contentId=g-bj1ezru&draftKey=dk",
+          ),
+        ),
+      ).rejects.toThrow(/NEXT_REDIRECT/);
+      expect(getNewsByContentIdMock).toHaveBeenCalledWith({
+        id: "g-bj1ezru",
+        draftKey: "dk",
+      });
+      expect(redirectMock).toHaveBeenCalledWith("/news/grand-opening-campaign");
+    });
+
+    it("locale=en の record は /en/news/... へ", async () => {
+      getNewsByContentIdMock.mockResolvedValue({
+        slug: "x",
+        locale: "en",
+      });
+      const { GET } = await import("./route");
+      await expect(
+        GET(
+          makeReq(
+            "http://localhost/api/draft/enable?secret=ds3cret&contentId=g-abc&draftKey=dk",
+          ),
+        ),
+      ).rejects.toThrow(/NEXT_REDIRECT/);
+      expect(redirectMock).toHaveBeenCalledWith("/en/news/x");
+    });
+
+    it("contentId 不正形式で401 (テンプレート文字列残存)", async () => {
+      const { GET } = await import("./route");
+      const res = await GET(
+        makeReq(
+          "http://localhost/api/draft/enable?secret=ds3cret&contentId={CONTENT_ID}&draftKey=dk",
+        ),
+      );
+      expect(res.status).toBe(401);
+      expect(getNewsByContentIdMock).not.toHaveBeenCalled();
+    });
+
+    it("contentId 該当無し (microCMS 404) で401", async () => {
+      getNewsByContentIdMock.mockResolvedValue(null);
+      const { GET } = await import("./route");
+      const res = await GET(
+        makeReq(
+          "http://localhost/api/draft/enable?secret=ds3cret&contentId=g-none&draftKey=dk",
+        ),
+      );
+      expect(res.status).toBe(401);
+    });
+
+    it("contentId 経路でも secret 不一致は401", async () => {
+      const { GET } = await import("./route");
+      const res = await GET(
+        makeReq(
+          "http://localhost/api/draft/enable?secret=bad&contentId=g-abc&draftKey=dk",
+        ),
+      );
+      expect(res.status).toBe(401);
+      expect(getNewsByContentIdMock).not.toHaveBeenCalled();
+    });
+
+    it("contentId 経路で draftKey 欠落は401", async () => {
+      const { GET } = await import("./route");
+      const res = await GET(
+        makeReq(
+          "http://localhost/api/draft/enable?secret=ds3cret&contentId=g-abc",
+        ),
+      );
+      expect(res.status).toBe(401);
+    });
   });
 });

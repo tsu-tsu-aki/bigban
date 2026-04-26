@@ -1,7 +1,12 @@
 import { cookies, draftMode } from "next/headers";
 
 import { microcmsFetch } from "./client";
-import { newsListSchema, type NewsItem, type NewsList } from "./schema";
+import {
+  newsItemSchema,
+  newsListSchema,
+  type NewsItem,
+  type NewsList,
+} from "./schema";
 import {
   DETAIL_PAGE_STATIC_LIMIT,
   NEWS_CATEGORIES,
@@ -68,6 +73,30 @@ export async function getNewsDetail({
     draftKey,
   });
   return list.contents[0] ?? null;
+}
+
+export interface GetNewsByContentIdParams {
+  id: string;
+  draftKey?: string;
+}
+
+/**
+ * microCMS contentId 直接指定でレコード取得 (画面プレビューから利用)。
+ * GET /api/v1/news/{id}?draftKey=... で単一コンテンツを返す。
+ * 取得失敗 (404 / Zod parse 失敗) は null を返す。
+ */
+export async function getNewsByContentId({
+  id,
+  draftKey,
+}: GetNewsByContentIdParams): Promise<NewsItem | null> {
+  try {
+    return await microcmsFetch(`news/${id}`, newsItemSchema, {
+      tags: ["news", `news-${id}`],
+      draftKey,
+    });
+  } catch {
+    return null;
+  }
 }
 
 export interface NewsSlug {

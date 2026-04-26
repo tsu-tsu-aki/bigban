@@ -4,13 +4,14 @@ import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
-import { getNewsDetail } from "@/lib/microcms/queries";
+import { getNewsByContentId, getNewsDetail } from "@/lib/microcms/queries";
 
 export const runtime = "nodejs";
 
 type Locale = "ja" | "en";
 
 const SLUG_RE = /^[a-z0-9-]+$/;
+const CONTENT_ID_RE = /^[a-zA-Z0-9_-]+$/;
 
 function isLocale(v: string | null): v is Locale {
   return v === "ja" || v === "en";
@@ -38,31 +39,11 @@ function checkOrigin(request: Request): boolean {
   return list.includes(origin);
 }
 
-export async function GET(request: Request): Promise<Response> {
-  if (!checkOrigin(request)) return unauthorized();
-
-  const url = new URL(request.url);
-  const secret = url.searchParams.get("secret") ?? "";
-  const slug = url.searchParams.get("slug") ?? "";
-  const draftKey = url.searchParams.get("draftKey") ?? "";
-  const localeParam = url.searchParams.get("locale");
-
-  const expected = process.env.MICROCMS_DRAFT_SECRET ?? "";
-  if (!expected || !safeEqual(secret, expected)) {
-    return unauthorized();
-  }
-
-  if (!slug || !draftKey) return unauthorized();
-  if (!SLUG_RE.test(slug)) return unauthorized();
-
-  if (localeParam !== null && !isLocale(localeParam)) {
-    return unauthorized();
-  }
-  const locale: Locale = isLocale(localeParam) ? localeParam : "ja";
-
-  const item = await getNewsDetail({ locale, slug });
-  if (!item) return unauthorized();
-
+async function enableAndRedirect(
+  draftKey: string,
+  locale: Locale,
+  slug: string,
+): Promise<never> {
   const draft = await draftMode();
   draft.enable();
 
@@ -79,4 +60,45 @@ export async function GET(request: Request): Promise<Response> {
   // localePrefix: 'as-needed' により ja は prefix なし、en のみ /en/...
   const path = locale === "ja" ? `/news/${slug}` : `/en/news/${slug}`;
   redirect(path);
+}
+
+export async function GET(request: Request): Promise<Response> {
+  if (!checkOrigin(request)) return unauthorized();
+
+  const url = new URL(request.url);
+  const secret = url.searchParams.get("secret") ?? "";
+  const draftKey = url.searchParams.get("draftKey") ?? "";
+
+  // 共通: secret + draftKey 検証
+  const expected = process.env.MICROCMS_DRAFT_SECRET ?? "";
+  if (!expected || !safeEqual(secret, expected)) {
+    return unauthorized();
+  }
+  if (!draftKey) return unauthorized();
+
+  // パターンA: contentId 経由 (microCMS 画面プレビュー推奨)
+  // microCMS が変数置換するのは {CONTENT_ID} と {DRAFT_KEY} のみのため、
+  // ID から slug/locale を逆引きしてリダイレクトする。
+  const contentId = url.searchParams.get("contentId");
+  if (contentId) {
+    if (!CONTENT_ID_RE.test(contentId)) return unauthorized();
+    const item = await getNewsByContentId({ id: contentId, draftKey });
+    if (!item) return unauthorized();
+    return enableAndRedirect(draftKey, item.locale, item.slug);
+  }
+
+  // パターンB: slug + locale 直接指定 (後方互換 / 手動プレビュー用)
+  const slug = url.searchParams.get("slug") ?? "";
+  const localeParam = url.searchParams.get("locale");
+
+  if (!slug) return unauthorized();
+  if (!SLUG_RE.test(slug)) return unauthorized();
+  if (localeParam !== null && !isLocale(localeParam)) {
+    return unauthorized();
+  }
+  const locale: Locale = isLocale(localeParam) ? localeParam : "ja";
+
+  const item = await getNewsDetail({ locale, slug });
+  if (!item) return unauthorized();
+  return enableAndRedirect(draftKey, locale, slug);
 }

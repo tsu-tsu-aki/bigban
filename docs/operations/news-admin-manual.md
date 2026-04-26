@@ -49,10 +49,12 @@
 3. 下書きプレビュー URL は次の形式で構築されます:
 
 ```
-https://www.thepicklebang.com/api/draft/enable?secret=${MICROCMS_DRAFT_SECRET}&slug=${slug}&draftKey=${draftKey}&locale=ja
+https://www.thepicklebang.com/api/draft/enable?secret=${MICROCMS_DRAFT_SECRET}&contentId={CONTENT_ID}&draftKey={DRAFT_KEY}
 ```
 
 (microCMS 管理画面の「画面プレビュー設定」で上記テンプレートを登録済み)
+
+> **注**: microCMS が置換するのは `{CONTENT_ID}` と `{DRAFT_KEY}` のみ。サイト側で contentId から slug/locale を逆引きしてリダイレクトします。
 
 4. プレビュー画面上部に **黄色いバナー**「プレビューモード中」が表示されます
 5. プレビュー終了は同バナーの「終了」をクリック
