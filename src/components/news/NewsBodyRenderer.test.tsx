@@ -178,4 +178,22 @@ describe("NewsBodyRenderer", () => {
     expect(container.querySelector("p")?.textContent).toBe("rich-fallback");
     warnSpy.mockRestore();
   });
+
+  it("displayMode=rich フォールバック: body 空でも bodyHtml があれば STRICT で表示", () => {
+    const { container } = render(
+      <NewsBodyRenderer
+        displayMode="rich"
+        bodyHtml="<p>html-fallback</p>"
+        body=""
+      />,
+    );
+    expect(container.querySelector("p")?.textContent).toBe("html-fallback");
+  });
+
+  it("displayMode=rich で body / bodyHtml 共に空 → 空状態フォールバック", () => {
+    const { container } = render(
+      <NewsBodyRenderer displayMode="rich" bodyHtml="" body="" />,
+    );
+    expect(container.textContent).toContain("本文がありません");
+  });
 });

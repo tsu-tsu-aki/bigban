@@ -71,6 +71,22 @@ describe("NewsCard", () => {
     expect(screen.getByText(/2026\.01\.15/)).toBeInTheDocument();
   });
 
+  it("カテゴリ未定義 (allowlist 外) でも fallback 色でプレースホルダ描画", () => {
+    const base = makeParsedNewsItem({ slug: "u" });
+    const { eyecatch: _e, category: _c, ...rest } = base;
+    void _e;
+    void _c;
+    // 強引に未知カテゴリを設定 (microCMS 側にしかないラベル想定の防御)
+    const item = {
+      ...rest,
+      category: ["unknown-category"] as unknown as typeof base.category,
+    };
+    const { getByTestId } = render(<NewsCard item={item} locale="ja" />);
+    const placeholder = getByTestId("news-card-placeholder");
+    // fallback 色 #8A8A8A33 (RGB 138,138,138 + 33 alpha) が browser で normalize された状態を確認
+    expect(placeholder.getAttribute("style")).toContain("138, 138, 138");
+  });
+
   it("time要素 dateTime 属性", () => {
     render(
       <NewsCard

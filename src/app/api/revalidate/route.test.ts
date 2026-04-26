@@ -103,4 +103,13 @@ describe("/api/revalidate POST", () => {
     const res = await POST(makeRequest({ api: "news" }, "00".repeat(32)));
     expect(res.status).toBe(500);
   });
+
+  it("署名が非hex文字 (timingSafeEqual内例外) でも 401 で安全に弾く", async () => {
+    const { POST } = await import("./route");
+    // 64 文字だが非 hex (z は 16 進外) → Buffer.from(.., 'hex') が長さ不一致を返し
+    // timingSafeEqual が throw → safeEqualHex の catch ブランチに落ちる
+    const res = await POST(makeRequest({ api: "news" }, "zz".repeat(32)));
+    expect(res.status).toBe(401);
+    expect(revalidateTagMock).not.toHaveBeenCalled();
+  });
 });

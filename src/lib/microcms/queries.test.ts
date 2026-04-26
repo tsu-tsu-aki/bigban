@@ -116,6 +116,50 @@ describe("queries", () => {
     });
   });
 
+  describe("warnIfDraftLeak (防御ロギング)", () => {
+    it("updatedAt > revisedAt の時は console.warn を出す", async () => {
+      const warnSpy = vi
+        .spyOn(console, "warn")
+        .mockImplementation(() => {});
+      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        ok: true,
+        json: async () =>
+          makeNewsList([
+            makeNewsItem({
+              id: "leak-1",
+              slug: "leak-slug",
+              publishedAt: "2026-01-01T00:00:00.000Z",
+              revisedAt: "2026-01-01T00:00:00.000Z",
+              updatedAt: "2026-02-01T00:00:00.000Z",
+            }),
+          ]),
+      });
+      const { getNewsList } = await import("./queries");
+      await getNewsList({ locale: "ja", limit: 12, offset: 0 });
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("possible draft leak detected"),
+      );
+      warnSpy.mockRestore();
+    });
+
+    it("revisedAt が無い (未公開) 時は warn しない", async () => {
+      const warnSpy = vi
+        .spyOn(console, "warn")
+        .mockImplementation(() => {});
+      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        ok: true,
+        json: async () =>
+          makeNewsList([
+            makeNewsItem({ id: "no-leak", revisedAt: undefined }),
+          ]),
+      });
+      const { getNewsList } = await import("./queries");
+      await getNewsList({ locale: "ja", limit: 12, offset: 0 });
+      expect(warnSpy).not.toHaveBeenCalled();
+      warnSpy.mockRestore();
+    });
+  });
+
   describe("getNewsSlugs", () => {
     it("全 locale の slug を返す", async () => {
       (global.fetch as ReturnType<typeof vi.fn>).mockImplementation(

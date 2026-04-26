@@ -61,6 +61,14 @@ describe("sanitizeNewsHtml — 共通", () => {
     expect(out).not.toMatch(/src="https:\/\/evil/);
   });
 
+  it("img の src が URL parse 失敗 (相対パス等) でも安全に除去", () => {
+    const out = sanitizeNewsHtml(
+      `<img src="not-a-valid-url" alt="x">`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).not.toMatch(/src="not-a-valid-url"/);
+  });
+
   it("img の許可ホスト (images.microcms-assets.io) は src 保持", () => {
     const out = sanitizeNewsHtml(
       `<img src="https://images.microcms-assets.io/a.jpg" alt="x" width="10" height="10">`,
