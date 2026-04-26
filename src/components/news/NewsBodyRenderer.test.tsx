@@ -19,10 +19,10 @@ describe("NewsBodyRenderer", () => {
       <NewsBodyRenderer
         displayMode="rich"
         bodyHtml="<p>html-mode-body</p>"
-        body="<h1>rich-title</h1><p>rich-body</p>"
+        body="<h2>rich-title</h2><p>rich-body</p>"
       />,
     );
-    expect(container.querySelector("h1")?.textContent).toBe("rich-title");
+    expect(container.querySelector("h2")?.textContent).toBe("rich-title");
   });
 
   it("displayMode=html で <script> 除去", () => {
@@ -71,6 +71,46 @@ describe("NewsBodyRenderer", () => {
     expect(cls).toContain("prose-blockquote:border-accent/40");
     expect(cls).toContain("prose-a:focus-visible:outline");
     expect(cls).toContain("prose-img:rounded-none");
+  });
+
+  it("<table> は news-table-scroll ラッパー (role=region + tabindex=0) で自動的に包まれる", () => {
+    const { container } = render(
+      <NewsBodyRenderer
+        displayMode="html"
+        bodyHtml='<table><tr><th scope="col">A</th></tr></table>'
+        body=""
+      />,
+    );
+    const wrapper = container.querySelector("figure.news-table-scroll");
+    expect(wrapper).not.toBeNull();
+    expect(wrapper?.getAttribute("role")).toBe("region");
+    expect(wrapper?.getAttribute("tabindex")).toBe("0");
+    expect(wrapper?.getAttribute("aria-label")).toBe("表");
+    expect(wrapper?.querySelector("table")).not.toBeNull();
+  });
+
+  it("badge / note / mark / aside がサニタイズ後に保持される", () => {
+    const { container } = render(
+      <NewsBodyRenderer
+        displayMode="html"
+        bodyHtml={
+          '<p><span class="badge">中級</span> <mark>強調</mark></p>' +
+          '<aside class="note">注意</aside>' +
+          '<aside class="caution">警告</aside>'
+        }
+        body=""
+      />,
+    );
+    expect(
+      container.querySelector('span.badge')?.textContent,
+    ).toBe("中級");
+    expect(container.querySelector("mark")?.textContent).toBe("強調");
+    expect(
+      container.querySelector('aside.note')?.textContent,
+    ).toBe("注意");
+    expect(
+      container.querySelector('aside.caution')?.textContent,
+    ).toBe("警告");
   });
 
   it("isFirstImageLcp=true で先頭 img に fetchpriority=high", () => {

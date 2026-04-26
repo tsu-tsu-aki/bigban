@@ -121,4 +121,114 @@ html[data-browser="ios-safari"] .site-header-bg {
     background-color: var(--color-accent);
     margin-bottom: 1rem;
   }
+
+  /* === Editorial table (no vertical borders, no zebra) === */
+  .prose :where(table) {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 2.5rem 0;
+    font-size: 0.9375rem;
+  }
+  .prose :where(thead th) {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    color: var(--color-text-gray);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(230, 230, 230, 0.25);
+    text-align: left;
+    font-weight: 500;
+  }
+  .prose :where(tbody td, tbody th) {
+    color: var(--color-text-light);
+    padding: 1rem;
+    border-bottom: 1px solid rgba(230, 230, 230, 0.08);
+  }
+  .prose :where(tbody tr:last-child td, tbody tr:last-child th) {
+    border-bottom: 0;
+  }
+  .prose :where(table caption) {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--color-text-gray);
+    font-size: 0.8125rem;
+    margin-top: 0.75rem;
+    /* 上書き: figcaption 用の uppercase/letter-spacing を解除 */
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  /* === Mobile horizontal scroll wrapper for tables === */
+  .prose .news-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 2.5rem 0;
+  }
+  .prose .news-table-scroll table {
+    margin: 0;
+    min-width: 32rem;
+  }
+  .prose .news-table-scroll:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* === Badge (small inline label) === */
+  .prose .badge {
+    display: inline-block;
+    padding: 0.125rem 0.625rem;
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* === Highlight / mark — 蛍光ペン風 (loud な背景色を回避) === */
+  .prose :where(mark, .highlight) {
+    background: linear-gradient(
+      transparent 65%,
+      rgba(246, 255, 84, 0.3) 65%
+    );
+    color: inherit;
+    padding: 0 0.1em;
+  }
+
+  /* === Note / Caution callouts (blockquote と差別化) === */
+  .prose .note,
+  .prose .caution {
+    position: relative;
+    padding: 1.5rem 1.5rem 1.25rem;
+    margin: 2rem 0;
+    border: 1px solid rgba(230, 230, 230, 0.15);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--color-text-light);
+  }
+  .prose .note::before,
+  .prose .caution::before {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  .prose .note::before {
+    content: "NOTE";
+  }
+  .prose .caution::before {
+    content: "CAUTION";
+  }
+  /* note/caution 内の段落の上下マージンを軽減 */
+  .prose .note > :where(p):last-child,
+  .prose .caution > :where(p):last-child {
+    margin-bottom: 0;
+  }
+  .prose .note > :where(p):first-child,
+  .prose .caution > :where(p):first-child {
+    margin-top: 0;
+  }
 }

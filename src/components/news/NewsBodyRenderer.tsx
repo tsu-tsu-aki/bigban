@@ -34,6 +34,39 @@ const PROSE_CLASS = [
 // sanitizeNewsHtml (DOMPurify) with STRICT_HTML_CONFIG or RICH_EDITOR_CONFIG.
 // Untrusted CMS content is XSS-safe after sanitization (see lib/news/sanitize.ts).
 
+/**
+ * <table> をスクロール可能なラッパーで包む (a11y + モバイル対応)。
+ * - role="region" + aria-label: スクリーンリーダ向けのランドマーク
+ * - tabindex="0": キーボード矢印キーでスクロール可能
+ */
+function wrapTablesForScroll(html: string): string {
+  return html
+    .replace(
+      /<table([^>]*)>/g,
+      (_match, attrs: string) =>
+        `<figure class="news-table-scroll" role="region" tabindex="0" aria-label="表"><table${attrs}>`,
+    )
+    .replace(/<\/table>/g, "</table></figure>");
+}
+
+function renderBody(safeHtml: string) {
+  return (
+    <div
+      data-testid="news-body"
+      className={PROSE_CLASS}
+      dangerouslySetInnerHTML={{ __html: wrapTablesForScroll(safeHtml) }}
+    />
+  );
+}
+
+function renderEmpty() {
+  return (
+    <div data-testid="news-body-empty" className={PROSE_CLASS} role="status">
+      本文がありません。
+    </div>
+  );
+}
+
 export function NewsBodyRenderer({
   displayMode,
   bodyHtml,
@@ -42,70 +75,30 @@ export function NewsBodyRenderer({
 }: NewsBodyRendererProps) {
   if (displayMode === "html") {
     if (bodyHtml.trim().length > 0) {
-      const safeHtml = sanitizeNewsHtml(bodyHtml, STRICT_HTML_CONFIG, {
-        isFirstImageLcp,
-      });
-      return (
-        <div
-          data-testid="news-body"
-          className={PROSE_CLASS}
-          dangerouslySetInnerHTML={{ __html: safeHtml }}
-        />
+      return renderBody(
+        sanitizeNewsHtml(bodyHtml, STRICT_HTML_CONFIG, { isFirstImageLcp }),
       );
     }
     if (body.trim().length > 0) {
       console.warn(
         "[NewsBodyRenderer] displayMode=html だが bodyHtml が空のため body (rich) にフォールバック",
       );
-      const safeHtml = sanitizeNewsHtml(body, RICH_EDITOR_CONFIG, {
-        isFirstImageLcp,
-      });
-      return (
-        <div
-          data-testid="news-body"
-          className={PROSE_CLASS}
-          dangerouslySetInnerHTML={{ __html: safeHtml }}
-        />
+      return renderBody(
+        sanitizeNewsHtml(body, RICH_EDITOR_CONFIG, { isFirstImageLcp }),
       );
     }
-    return (
-      <div
-        data-testid="news-body-empty"
-        className={PROSE_CLASS}
-        role="status"
-      >
-        本文がありません。
-      </div>
-    );
+    return renderEmpty();
   }
 
   if (body.trim().length > 0) {
-    const safeHtml = sanitizeNewsHtml(body, RICH_EDITOR_CONFIG, {
-      isFirstImageLcp,
-    });
-    return (
-      <div
-        data-testid="news-body"
-        className={PROSE_CLASS}
-        dangerouslySetInnerHTML={{ __html: safeHtml }}
-      />
+    return renderBody(
+      sanitizeNewsHtml(body, RICH_EDITOR_CONFIG, { isFirstImageLcp }),
     );
   }
   if (bodyHtml.trim().length > 0) {
-    const safeHtml = sanitizeNewsHtml(bodyHtml, STRICT_HTML_CONFIG, {
-      isFirstImageLcp,
-    });
-    return (
-      <div
-        data-testid="news-body"
-        className={PROSE_CLASS}
-        dangerouslySetInnerHTML={{ __html: safeHtml }}
-      />
+    return renderBody(
+      sanitizeNewsHtml(bodyHtml, STRICT_HTML_CONFIG, { isFirstImageLcp }),
     );
   }
-  return (
-    <div data-testid="news-body-empty" className={PROSE_CLASS} role="status">
-      本文がありません。
-    </div>
-  );
+  return renderEmpty();
 }

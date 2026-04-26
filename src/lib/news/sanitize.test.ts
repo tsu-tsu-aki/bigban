@@ -136,12 +136,13 @@ describe("RICH_EDITOR_CONFIG", () => {
     vi.spyOn(console, "warn").mockImplementation(() => {});
   });
 
-  it("リッチエディタ系タグ (h1/section) も保持", () => {
+  it("h2/h3/h4/p は保持されるが h1/section 等は除去される (記事 h1 は page側で出すため)", () => {
     const out = sanitizeNewsHtml(
-      `<h1>title</h1><h2>sub</h2><p>ok</p>`,
+      `<h1>title</h1><section>x</section><h2>sub</h2><p>ok</p>`,
       RICH_EDITOR_CONFIG,
     );
-    expect(out).toMatch(/<h1/);
+    expect(out).not.toMatch(/<h1/);
+    expect(out).not.toMatch(/<section/);
     expect(out).toMatch(/<h2/);
     expect(out).toMatch(/<p>ok<\/p>/);
   });
@@ -153,5 +154,131 @@ describe("RICH_EDITOR_CONFIG", () => {
     );
     expect(out).toMatch(/class="lead"/);
     expect(out).toMatch(/class="caption"/);
+  });
+
+  it("RICH モードでも任意の class は除去される (Tailwind ユーティリティで clickjacking 等を防止)", () => {
+    const out = sanitizeNewsHtml(
+      `<aside class="note fixed inset-0 z-50">x</aside>`,
+      RICH_EDITOR_CONFIG,
+    );
+    expect(out).toMatch(/class="note"/);
+    expect(out).not.toMatch(/fixed/);
+    expect(out).not.toMatch(/inset-0/);
+    expect(out).not.toMatch(/z-50/);
+  });
+});
+
+describe("Table 系タグ", () => {
+  beforeEach(() => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+
+  it("table/thead/tbody/tr/th/td/caption が許可される", () => {
+    const input = `
+      <table>
+        <caption>料金表</caption>
+        <thead><tr><th scope="col">プラン</th><th scope="col">価格</th></tr></thead>
+        <tbody><tr><td>Standard</td><td>2,750円</td></tr></tbody>
+      </table>
+    `;
+    const out = sanitizeNewsHtml(input, STRICT_HTML_CONFIG);
+    expect(out).toMatch(/<table/);
+    expect(out).toMatch(/<caption>料金表<\/caption>/);
+    expect(out).toMatch(/<th[^>]*scope="col"/);
+    expect(out).toMatch(/<td>Standard<\/td>/);
+  });
+
+  it("th scope の不正値は除去 (enum 検証)", () => {
+    const out = sanitizeNewsHtml(
+      `<table><tr><th scope="javascript:alert(1)">X</th></tr></table>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<th>X<\/th>/);
+    expect(out).not.toMatch(/scope=/);
+  });
+
+  it("colspan の DoS 値 (大きすぎる数字) は除去", () => {
+    const out = sanitizeNewsHtml(
+      `<table><tr><td colspan="999999999">X</td></tr></table>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<td>X<\/td>/);
+    expect(out).not.toMatch(/colspan=/);
+  });
+
+  it("colspan の正常値 (1-99) は保持", () => {
+    const out = sanitizeNewsHtml(
+      `<table><tr><td colspan="2">X</td><td rowspan="3">Y</td></tr></table>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/colspan="2"/);
+    expect(out).toMatch(/rowspan="3"/);
+  });
+
+  it("table 内に script があれば除去", () => {
+    const out = sanitizeNewsHtml(
+      `<table><script>alert(1)</script><tr><td>X</td></tr></table>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).not.toMatch(/<script/);
+    expect(out).toMatch(/<td>X<\/td>/);
+  });
+});
+
+describe("Badge / Note / Mark 等のカスタム要素", () => {
+  beforeEach(() => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+
+  it("span class=badge / class=highlight が許可される", () => {
+    const out = sanitizeNewsHtml(
+      `<p>レベル: <span class="badge">中級</span> <span class="highlight">重要</span></p>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<span class="badge">中級<\/span>/);
+    expect(out).toMatch(/<span class="highlight">重要<\/span>/);
+  });
+
+  it("aside class=note / class=caution が許可される", () => {
+    const out = sanitizeNewsHtml(
+      `<aside class="note">注意1</aside><aside class="caution">注意2</aside>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<aside class="note">注意1<\/aside>/);
+    expect(out).toMatch(/<aside class="caution">注意2<\/aside>/);
+  });
+
+  it("aside class=danger 等の許可外クラスは除去", () => {
+    const out = sanitizeNewsHtml(
+      `<aside class="danger">x</aside>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<aside>x<\/aside>/);
+    expect(out).not.toMatch(/danger/);
+  });
+
+  it("mark タグが許可される", () => {
+    const out = sanitizeNewsHtml(
+      `<p><mark>強調</mark></p>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<mark>強調<\/mark>/);
+  });
+
+  it("mark の on* 属性は除去", () => {
+    const out = sanitizeNewsHtml(
+      `<p><mark onmouseover="alert(1)">x</mark></p>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<mark>x<\/mark>/);
+    expect(out).not.toMatch(/onmouseover/);
+  });
+
+  it("class が複数指定された場合、許可されたものだけ残る", () => {
+    const out = sanitizeNewsHtml(
+      `<aside class="note danger evil">x</aside>`,
+      STRICT_HTML_CONFIG,
+    );
+    expect(out).toMatch(/<aside class="note">x<\/aside>/);
   });
 });

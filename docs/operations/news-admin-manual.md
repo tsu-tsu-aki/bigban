@@ -105,6 +105,83 @@ https://www.thepicklebang.com/api/draft/enable?secret=${MICROCMS_DRAFT_SECRET}&c
 
 ---
 
+## 拡張 HTML 要素 (表 / バッジ / 注記ボックス)
+
+イベント告知などで使える要素を許可しています。HTML モード (`displayMode=html`) で `bodyHtml` フィールドに直接記述してください。
+
+### 表 (table)
+
+料金表・キャンセル規定・カテゴリ比較などに使用。
+
+```html
+<table>
+  <caption>キャンセル規定</caption>
+  <thead>
+    <tr>
+      <th scope="col">キャンセル日</th>
+      <th scope="col">キャンセル料</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>15日前まで</td><td>無料</td></tr>
+    <tr><td>14〜2日前</td><td>50%</td></tr>
+    <tr><td>前日・当日</td><td>100%</td></tr>
+  </tbody>
+</table>
+```
+
+**重要**:
+- 1 行目は必ず `<th scope="col">` (列見出し) を使う
+- `<caption>` で表の用途を 1 文で記述すると SEO/a11y が向上
+- モバイルでは自動で横スクロール可能になる (キーボード矢印キー対応)
+
+### バッジ (badge)
+
+「中級」「重要」など、インラインで小さなラベルを付けたい時:
+
+```html
+<p>レベル: <span class="badge">中級</span> <span class="badge">DUPR 3.5+</span></p>
+```
+
+**重要**: 色だけで意味を伝えない (例: 「赤=危険」のような区別はしない)。テキストで意味を明示する。
+
+### 強調マーカー (mark / highlight)
+
+本文中の重要語を蛍光ペン風にハイライト:
+
+```html
+<p><mark>最低3試合保証</mark>、ペアがいない方の単独エントリーも歓迎します。</p>
+```
+
+または `<span class="highlight">` でも同じ表示。
+
+### 注記ボックス (note / caution)
+
+補足説明や注意喚起:
+
+```html
+<aside class="note">
+  <p>注意: 駐車場はございません。公共交通機関でお越しください。</p>
+</aside>
+
+<aside class="caution">
+  <p>申込期限を過ぎたキャンセルは100%のキャンセル料が発生します。</p>
+</aside>
+```
+
+`note` は通常の補足、`caution` はより注意喚起レベル (上部ラベルが NOTE / CAUTION で切り替わる)。
+
+**重要**: 緊急通知 (`role="alert"`) ではなく、編集上の補足です。`<p>` で囲んで本文を入れてください。
+
+### 使用してはいけないタグ
+
+- `<h1>`: 記事タイトルは page 側で出力するため、本文では h2 以下のみ使用
+- `<script>`, `<iframe>`, `<style>`, `<form>`, `<input>`: セキュリティ上の理由で除去
+- `style="..."` 属性, `onclick="..."` 等のイベント属性: 同上
+- 任意の class 名: `lead`, `caption`, `badge`, `highlight`, `note`, `caution` 以外は除去される
+
+---
+
 ## トラブルシューティング
 
 | 症状 | 原因と対処 |
