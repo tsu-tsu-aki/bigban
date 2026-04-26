@@ -89,8 +89,12 @@ describe("microcmsFetch", () => {
     ).rejects.toThrow(/404/);
   });
 
-  it("環境変数未設定で import エラー", async () => {
+  it("環境変数未設定で fetch 呼び出し時にエラー (モジュールロードは成功)", async () => {
     vi.unstubAllEnvs();
-    await expect(import("./client")).rejects.toThrow(/MICROCMS/);
+    // モジュール ロード自体は throw しない (build 互換性のため遅延評価)
+    const { microcmsFetch } = await import("./client");
+    await expect(
+      microcmsFetch("news", schema, { tags: ["news"] }),
+    ).rejects.toThrow(/MICROCMS_SERVICE_DOMAIN \/ MICROCMS_API_KEY/);
   });
 });
