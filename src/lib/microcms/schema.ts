@@ -2,17 +2,27 @@ import { z } from "zod";
 
 import { NEWS_CATEGORIES, type NewsCategoryId } from "@/constants/news";
 
-const localeSelect = z
-  .array(z.enum(["ja", "en"]))
-  .min(1)
-  .max(1)
-  .transform((v) => v[0]);
+// microCMS の locale / displayMode は **単一選択セレクト** で運用 (戻り値は string)。
+// 後方互換のため `["ja"]` 形式 (複数選択) も受理する。
+const localeEnum = z.enum(["ja", "en"]);
+const localeSelect = z.union([
+  localeEnum,
+  z
+    .array(localeEnum)
+    .min(1)
+    .max(1)
+    .transform((v) => v[0]),
+]);
 
-const displayModeSelect = z
-  .array(z.enum(["html", "rich"]))
-  .min(1)
-  .max(1)
-  .transform((v) => v[0]);
+const displayModeEnum = z.enum(["html", "rich"]);
+const displayModeSelect = z.union([
+  displayModeEnum,
+  z
+    .array(displayModeEnum)
+    .min(1)
+    .max(1)
+    .transform((v) => v[0]),
+]);
 
 // microCMS の category 選択肢は **日本語ラベル** で運用 (非エンジニア配慮)。
 // サイト内部は英語IDで扱うため、ここで日本語→ID 変換 transform を入れる。

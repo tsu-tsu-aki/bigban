@@ -55,6 +55,22 @@ describe("newsItemSchema", () => {
     expect(() => newsItemSchema.parse({ ...validItem, locale: ["fr"] })).toThrow();
   });
 
+  it("locale 単一string形式 (microCMS 単一選択) も受理", () => {
+    const p = newsItemSchema.parse({ ...validItem, locale: "ja" });
+    expect(p.locale).toBe("ja");
+  });
+
+  it("displayMode 単一string形式 (microCMS 単一選択) も受理", () => {
+    const p = newsItemSchema.parse({ ...validItem, displayMode: "rich" });
+    expect(p.displayMode).toBe("rich");
+  });
+
+  it("locale 単一string で想定外値はエラー", () => {
+    expect(() =>
+      newsItemSchema.parse({ ...validItem, locale: "fr" }),
+    ).toThrow();
+  });
+
   it("category 想定外はエラー", () => {
     expect(() =>
       newsItemSchema.parse({ ...validItem, category: ["invalid"] }),
