@@ -1,18 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { makeNewsItem } from "../../../../../__mocks__/microcms-fixtures";
+import { makeParsedNewsItem as makeNewsItem } from "../../../../../__mocks__/microcms-fixtures";
 
 const getNewsDetailMock = vi.fn();
+const getNewsByContentIdMock = vi.fn();
 const getNewsSlugsMock = vi.fn();
 const notFoundMock = vi.fn(() => {
   throw new Error("NEXT_NOT_FOUND");
 });
 const isCmsNewsEnabledMock = vi.fn(() => true);
-const draftModeMock = vi.fn(async () => ({ isEnabled: false }));
 const routerPushMock = vi.fn();
 
 vi.mock("@/lib/microcms/queries", () => ({
   getNewsDetail: (args: unknown) => getNewsDetailMock(args),
+  getNewsByContentId: (args: unknown) => getNewsByContentIdMock(args),
   getNewsSlugs: () => getNewsSlugsMock(),
 }));
 vi.mock("next/navigation", () => ({
@@ -29,23 +30,26 @@ vi.mock("next-intl", () => ({
 vi.mock("@/config/featureFlags", () => ({
   isCmsNewsEnabled: isCmsNewsEnabledMock,
 }));
-vi.mock("next/headers", () => ({
-  draftMode: () => draftModeMock(),
-}));
 
-async function renderPage(params: { locale: string; slug: string }) {
+async function renderPage(
+  params: { locale: string; slug: string },
+  search: Record<string, string> = {},
+) {
   const { default: Detail } = await import("./page");
-  const jsx = await Detail({ params: Promise.resolve(params) });
+  const jsx = await Detail({
+    params: Promise.resolve(params),
+    searchParams: Promise.resolve(search),
+  });
   render(jsx);
 }
 
 describe("NewsDetailPage", () => {
   beforeEach(() => {
     getNewsDetailMock.mockReset();
+    getNewsByContentIdMock.mockReset();
     getNewsSlugsMock.mockReset();
     notFoundMock.mockClear();
     isCmsNewsEnabledMock.mockReturnValue(true);
-    draftModeMock.mockResolvedValue({ isEnabled: false });
   });
 
   it("記事+JSON-LD描画", async () => {
@@ -77,15 +81,15 @@ describe("NewsDetailPage", () => {
 
   it("flag OFF notFound", async () => {
     isCmsNewsEnabledMock.mockReturnValue(false);
-    await expect(renderPage({ locale: "ja", slug: "x" })).rejects.toThrow(
-      /NEXT_NOT_FOUND/,
-    );
+    await expect(
+      renderPage({ locale: "ja", slug: "x" }),
+    ).rejects.toThrow(/NEXT_NOT_FOUND/);
   });
 
   it("不正locale notFound", async () => {
-    await expect(renderPage({ locale: "fr", slug: "x" })).rejects.toThrow(
-      /NEXT_NOT_FOUND/,
-    );
+    await expect(
+      renderPage({ locale: "fr", slug: "x" }),
+    ).rejects.toThrow(/NEXT_NOT_FOUND/);
   });
 
   it("externalLink ボタン", async () => {
@@ -112,9 +116,10 @@ describe("NewsDetailPage", () => {
       locale === "ja" ? makeNewsItem({ slug: "x" }) : null,
     );
     await renderPage({ locale: "ja", slug: "x" });
-    expect(
-      screen.getByRole("link", { name: /一覧/ }),
-    ).toHaveAttribute("href", "/news");
+    expect(screen.getByRole("link", { name: /一覧/ })).toHaveAttribute(
+      "href",
+      "/news",
+    );
   });
 
   it("locale=en 戻るリンク /en/news", async () => {
@@ -124,9 +129,10 @@ describe("NewsDetailPage", () => {
         : null,
     );
     await renderPage({ locale: "en", slug: "x" });
-    expect(
-      screen.getByRole("link", { name: /news index/i }),
-    ).toHaveAttribute("href", "/en/news");
+    expect(screen.getByRole("link", { name: /news index/i })).toHaveAttribute(
+      "href",
+      "/en/news",
+    );
   });
 
   it("generateStaticParams が全slug返す", async () => {
@@ -151,6 +157,7 @@ describe("NewsDetailPage", () => {
     const { generateMetadata } = await import("./page");
     const meta = await generateMetadata({
       params: Promise.resolve({ locale: "ja", slug: "x" }),
+      searchParams: Promise.resolve({}),
     });
     expect(meta.title).toContain("T");
     expect(meta.description).toBe("E");
@@ -161,22 +168,9 @@ describe("NewsDetailPage", () => {
     const { generateMetadata } = await import("./page");
     const meta = await generateMetadata({
       params: Promise.resolve({ locale: "ja", slug: "x" }),
+      searchParams: Promise.resolve({}),
     });
     expect(meta).toEqual({});
-  });
-
-  it("draftモードで noindex", async () => {
-    draftModeMock.mockResolvedValue({ isEnabled: true });
-    getNewsDetailMock.mockImplementation(async ({ locale }) =>
-      locale === "ja"
-        ? makeNewsItem({ title: "T", slug: "x" })
-        : null,
-    );
-    const { generateMetadata } = await import("./page");
-    const meta = await generateMetadata({
-      params: Promise.resolve({ locale: "ja", slug: "x" }),
-    });
-    expect(meta.robots).toEqual({ index: false, follow: false });
   });
 
   it("対向言語が存在する時のみ alternates.languages を出力", async () => {
@@ -192,6 +186,7 @@ describe("NewsDetailPage", () => {
     const { generateMetadata } = await import("./page");
     const meta = await generateMetadata({
       params: Promise.resolve({ locale: "ja", slug: "x" }),
+      searchParams: Promise.resolve({}),
     });
     expect(meta.alternates?.languages).toBeDefined();
   });
@@ -203,7 +198,78 @@ describe("NewsDetailPage", () => {
     const { generateMetadata } = await import("./page");
     const meta = await generateMetadata({
       params: Promise.resolve({ locale: "ja", slug: "x" }),
+      searchParams: Promise.resolve({}),
     });
     expect(meta.alternates?.languages).toBeUndefined();
+  });
+
+  describe("preview (URL クエリ ?contentId & ?draftKey)", () => {
+    it("preview パラメータ揃って microCMS から返れば draft 表示 + プレビューバナー表示", async () => {
+      getNewsByContentIdMock.mockResolvedValue(
+        makeNewsItem({ slug: "x", title: "ドラフトタイトル" }),
+      );
+      // 公開版は呼ばれない (preview を優先)
+      getNewsDetailMock.mockResolvedValue(null);
+      await renderPage(
+        { locale: "ja", slug: "x" },
+        { contentId: "g-abc", draftKey: "dk-1" },
+      );
+      expect(getNewsByContentIdMock).toHaveBeenCalledWith({
+        id: "g-abc",
+        draftKey: "dk-1",
+      });
+      expect(
+        screen.getByRole("heading", { name: "ドラフトタイトル" }),
+      ).toBeInTheDocument();
+      // プレビューバナー (role=status) が出る
+      expect(screen.getByRole("status")).toBeInTheDocument();
+    });
+
+    it("preview の slug/locale が URL と不一致なら fallback (公開版を見る)", async () => {
+      getNewsByContentIdMock.mockResolvedValue(
+        makeNewsItem({ slug: "different-slug" }),
+      );
+      getNewsDetailMock.mockResolvedValue(
+        makeNewsItem({ slug: "x", title: "公開版" }),
+      );
+      await renderPage(
+        { locale: "ja", slug: "x" },
+        { contentId: "g-abc", draftKey: "dk-1" },
+      );
+      expect(
+        screen.getByRole("heading", { name: "公開版" }),
+      ).toBeInTheDocument();
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    });
+
+    it("contentId が不正形式なら preview 経路をスキップ", async () => {
+      getNewsDetailMock.mockResolvedValue(
+        makeNewsItem({ slug: "x", title: "公開版" }),
+      );
+      await renderPage(
+        { locale: "ja", slug: "x" },
+        { contentId: "{CONTENT_ID}", draftKey: "dk-1" },
+      );
+      expect(getNewsByContentIdMock).not.toHaveBeenCalled();
+      expect(
+        screen.getByRole("heading", { name: "公開版" }),
+      ).toBeInTheDocument();
+    });
+
+    it("preview 中は generateMetadata が noindex + alternates なし", async () => {
+      getNewsByContentIdMock.mockResolvedValue(
+        makeNewsItem({ slug: "x", title: "T", excerpt: "E" }),
+      );
+      const { generateMetadata } = await import("./page");
+      const meta = await generateMetadata({
+        params: Promise.resolve({ locale: "ja", slug: "x" }),
+        searchParams: Promise.resolve({
+          contentId: "g-abc",
+          draftKey: "dk-1",
+        }),
+      });
+      expect(meta.robots).toEqual({ index: false, follow: false });
+      expect(meta.alternates?.languages).toBeUndefined();
+    });
   });
 });

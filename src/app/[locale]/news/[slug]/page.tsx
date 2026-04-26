@@ -1,4 +1,3 @@
-import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,13 +13,26 @@ import { isCmsNewsEnabled } from "@/config/featureFlags";
 import { NEWS_CATEGORIES } from "@/constants/news";
 import { EXTERNAL_LINK_PROPS, SITE_URL } from "@/constants/site";
 import { routing } from "@/i18n/routing";
-import { getNewsDetail, getNewsSlugs } from "@/lib/microcms/queries";
+import {
+  getNewsByContentId,
+  getNewsDetail,
+  getNewsSlugs,
+} from "@/lib/microcms/queries";
+import type { NewsItem } from "@/lib/microcms/schema";
 
 type Locale = "ja" | "en";
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
+
+interface MetadataProps {
+  params: Promise<{ locale: string; slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+const CONTENT_ID_RE = /^[a-zA-Z0-9_-]+$/;
 
 function buildNewsUrl(locale: Locale, slug: string): string {
   return locale === "ja"
@@ -28,45 +40,81 @@ function buildNewsUrl(locale: Locale, slug: string): string {
     : `${SITE_URL}/en/news/${slug}`;
 }
 
+function buildLocalPath(locale: Locale, slug: string): string {
+  return locale === "ja" ? `/news/${slug}` : `/en/news/${slug}`;
+}
+
+function pickStringParam(
+  sp: Record<string, string | string[] | undefined>,
+  key: string,
+): string | undefined {
+  const v = sp[key];
+  return typeof v === "string" ? v : undefined;
+}
+
+/**
+ * URL クエリ ?contentId= ?draftKey= からプレビュー対象を取得する。
+ * - 両パラメータ揃っていない / 形式違反 → null (公開版経路へフォールバック)
+ * - microCMS で取得できない → null
+ * - 取得できたが locale/slug が URL と一致しない → null (URL 流用防止)
+ */
+async function readPreviewItem(
+  locale: Locale,
+  slug: string,
+  searchParams: Record<string, string | string[] | undefined>,
+): Promise<NewsItem | null> {
+  const contentId = pickStringParam(searchParams, "contentId");
+  const draftKey = pickStringParam(searchParams, "draftKey");
+  if (!contentId || !draftKey) return null;
+  if (!CONTENT_ID_RE.test(contentId)) return null;
+  const item = await getNewsByContentId({ id: contentId, draftKey });
+  if (!item) return null;
+  if (item.locale !== locale || item.slug !== slug) return null;
+  return item;
+}
+
 export async function generateStaticParams() {
   try {
     return await getNewsSlugs();
   } catch {
-    // microCMS 未設定/未到達時はビルド時の事前生成を空にする
-    // (ランタイム fetch で 404 を返す)
     return [];
   }
 }
 
 export async function generateMetadata({
   params,
-}: PageProps): Promise<Metadata> {
+  searchParams,
+}: MetadataProps): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!hasLocale(routing.locales, locale)) return {};
 
-  const item = await getNewsDetail({ locale: locale as Locale, slug });
+  const sp = await searchParams;
+  const previewItem = await readPreviewItem(locale as Locale, slug, sp);
+  const item =
+    previewItem ?? (await getNewsDetail({ locale: locale as Locale, slug }));
   if (!item) return {};
-
-  const draft = await draftMode();
-  const otherLocale: Locale = locale === "ja" ? "en" : "ja";
-  const other = await getNewsDetail({ locale: otherLocale, slug });
 
   const meta: Metadata = {
     title: `${item.title} | THE PICKLE BANG THEORY`,
     description: item.excerpt,
   };
 
-  if (draft.isEnabled) {
+  if (previewItem) {
     meta.robots = { index: false, follow: false };
   }
 
-  if (other) {
-    meta.alternates = {
-      languages: {
-        ja: buildNewsUrl("ja", slug),
-        en: buildNewsUrl("en", slug),
-      },
-    };
+  // alternates は公開版についてのみ算出 (プレビュー時は noindex)
+  if (!previewItem) {
+    const otherLocale: Locale = locale === "ja" ? "en" : "ja";
+    const other = await getNewsDetail({ locale: otherLocale, slug });
+    if (other) {
+      meta.alternates = {
+        languages: {
+          ja: buildNewsUrl("ja", slug),
+          en: buildNewsUrl("en", slug),
+        },
+      };
+    }
   }
 
   return meta;
@@ -77,19 +125,26 @@ function formatDate(iso: string): string {
   return `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, "0")}.${String(d.getUTCDate()).padStart(2, "0")}`;
 }
 
-export default async function NewsDetailPage({ params }: PageProps) {
+export default async function NewsDetailPage({
+  params,
+  searchParams,
+}: PageProps) {
   if (!isCmsNewsEnabled()) notFound();
 
   const { locale, slug } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
-  const item = await getNewsDetail({ locale: locale as Locale, slug });
+  const sp = await searchParams;
+  const previewItem = await readPreviewItem(locale as Locale, slug, sp);
+  const item =
+    previewItem ?? (await getNewsDetail({ locale: locale as Locale, slug }));
   if (!item) notFound();
 
-  const draft = await draftMode();
   const otherLocale: Locale = locale === "ja" ? "en" : "ja";
-  const other = await getNewsDetail({ locale: otherLocale, slug });
+  const other = previewItem
+    ? null
+    : await getNewsDetail({ locale: otherLocale, slug });
   const hasOtherLocale = other !== null;
 
   const cat = NEWS_CATEGORIES.find((c) => c.id === item.category[0]);
@@ -99,7 +154,12 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
   return (
     <article className="min-h-screen bg-primary text-text-light py-16 lg:py-24">
-      {draft.isEnabled && <PreviewBanner locale={locale as Locale} />}
+      {previewItem && (
+        <PreviewBanner
+          locale={locale as Locale}
+          exitHref={buildLocalPath(locale as Locale, slug)}
+        />
+      )}
       <NewsArticleJsonLd item={item} locale={locale as Locale} />
       <div className="mx-auto max-w-3xl px-6 lg:px-12">
         <div className="flex items-center justify-between gap-4">

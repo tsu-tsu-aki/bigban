@@ -1,5 +1,3 @@
-import { cookies, draftMode } from "next/headers";
-
 import { microcmsFetch } from "./client";
 import {
   newsItemSchema,
@@ -52,44 +50,15 @@ export interface GetNewsDetailParams {
   slug: string;
 }
 
-interface DraftContext {
-  draftKey: string;
-  contentId: string | undefined;
-}
-
-async function readDraftContext(): Promise<DraftContext | null> {
-  const draft = await draftMode();
-  if (!draft.isEnabled) return null;
-  const store = await cookies();
-  const draftKey = store.get("microcms_draft_key")?.value;
-  if (!draftKey) return null;
-  return {
-    draftKey,
-    contentId: store.get("microcms_content_id")?.value,
-  };
-}
-
+/**
+ * 公開版の詳細を slug + locale で取得する。
+ * プレビュー (ドラフト) 取得は別関数 `getNewsByContentId` を使う
+ * (microCMS の draftKey は単一GET API でのみ確実に動くため)。
+ */
 export async function getNewsDetail({
   locale,
   slug,
 }: GetNewsDetailParams): Promise<NewsItem | null> {
-  const draftCtx = await readDraftContext();
-
-  // ドラフト確認時は単一 GET API (/news/{id}?draftKey=) を使う。
-  // microCMS の draftKey は LIST API では公開版を返す仕様のため、
-  // ID 経由でないとドラフトが取れない。
-  if (draftCtx && draftCtx.contentId) {
-    const item = await getNewsByContentId({
-      id: draftCtx.contentId,
-      draftKey: draftCtx.draftKey,
-    });
-    // contentId と URL の locale/slug が一致する記事のみ採用 (Cookie 流用防止)
-    if (item && item.locale === locale && item.slug === slug) {
-      return item;
-    }
-    return null;
-  }
-
   const list = await microcmsFetch("news", newsListSchema, {
     searchParams: {
       filters: `slug[equals]${slug}[and]locale[contains]${locale}`,

@@ -4,33 +4,33 @@ import { PreviewBanner } from "./PreviewBanner";
 
 describe("PreviewBanner", () => {
   it("ja 日本語", () => {
-    render(<PreviewBanner locale="ja" />);
+    render(<PreviewBanner locale="ja" exitHref="/news/x" />);
     expect(screen.getByText(/プレビューモード/)).toBeInTheDocument();
   });
 
   it("en 英語", () => {
-    render(<PreviewBanner locale="en" />);
+    render(<PreviewBanner locale="en" exitHref="/en/news/x" />);
     expect(screen.getByText(/Preview mode/i)).toBeInTheDocument();
   });
 
-  it("終了リンクが /api/draft/disable", () => {
-    render(<PreviewBanner locale="ja" />);
+  it("終了リンクは exitHref に従う (公開版 URL に遷移)", () => {
+    render(<PreviewBanner locale="ja" exitHref="/news/grand-opening" />);
     expect(screen.getByRole("link", { name: /終了/ })).toHaveAttribute(
       "href",
-      "/api/draft/disable",
+      "/news/grand-opening",
     );
   });
 
-  it("英語 Exit リンク", () => {
-    render(<PreviewBanner locale="en" />);
+  it("英語 Exit リンクも exitHref に従う", () => {
+    render(<PreviewBanner locale="en" exitHref="/en/news/grand-opening" />);
     expect(screen.getByRole("link", { name: /Exit/ })).toHaveAttribute(
       "href",
-      "/api/draft/disable",
+      "/en/news/grand-opening",
     );
   });
 
   it("role=status + aria-live=polite", () => {
-    render(<PreviewBanner locale="ja" />);
+    render(<PreviewBanner locale="ja" exitHref="/news/x" />);
     const b = screen.getByRole("status");
     expect(b).toHaveAttribute("aria-live", "polite");
   });

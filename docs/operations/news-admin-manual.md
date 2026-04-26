@@ -54,10 +54,10 @@ https://www.thepicklebang.com/api/draft/enable?secret=${MICROCMS_DRAFT_SECRET}&c
 
 (microCMS 管理画面の「画面プレビュー設定」で上記テンプレートを登録済み)
 
-> **注**: microCMS が置換するのは `{CONTENT_ID}` と `{DRAFT_KEY}` のみ。サイト側で contentId から slug/locale を逆引きしてリダイレクトします。
+> **動作**: microCMS が `{CONTENT_ID}` と `{DRAFT_KEY}` を置換 → サイト側で slug/locale を逆引きして `/news/{slug}?draftKey=...&contentId=...` へリダイレクト。プレビュー状態は **URL クエリで管理** (Cookie 不使用)。
 
 4. プレビュー画面上部に **黄色いバナー**「プレビューモード中」が表示されます
-5. プレビュー終了は同バナーの「終了」をクリック
+5. プレビュー終了は同バナーの「終了」をクリック (URL から `?draftKey=...` が消えて公開版に戻る)、もしくはタブを閉じる
 
 > プレビュー URL は **secret 必須**で、社外公開しないでください。
 

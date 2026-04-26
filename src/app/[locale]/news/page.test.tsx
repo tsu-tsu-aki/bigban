@@ -10,7 +10,6 @@ const notFoundMock = vi.fn(() => {
   throw new Error("NEXT_NOT_FOUND");
 });
 const isCmsNewsEnabledMock = vi.fn(() => true);
-const draftModeMock = vi.fn(async () => ({ isEnabled: false }));
 const routerPushMock = vi.fn();
 
 vi.mock("@/lib/microcms/queries", () => ({
@@ -33,9 +32,6 @@ vi.mock("next-intl", () => ({
 vi.mock("@/config/featureFlags", () => ({
   isCmsNewsEnabled: isCmsNewsEnabledMock,
 }));
-vi.mock("next/headers", () => ({
-  draftMode: () => draftModeMock(),
-}));
 
 async function renderPage(
   params: { locale: string },
@@ -54,7 +50,6 @@ describe("NewsPage", () => {
     getNewsListMock.mockReset();
     notFoundMock.mockClear();
     isCmsNewsEnabledMock.mockReturnValue(true);
-    draftModeMock.mockResolvedValue({ isEnabled: false });
     routerPushMock.mockClear();
   });
 
@@ -132,13 +127,6 @@ describe("NewsPage", () => {
     expect(
       screen.getByText(/表示できるニュースはありません/),
     ).toBeInTheDocument();
-  });
-
-  it("draft時にPreviewBanner", async () => {
-    draftModeMock.mockResolvedValue({ isEnabled: true });
-    getNewsListMock.mockResolvedValue(makeNewsList([]));
-    await renderPage({ locale: "ja" });
-    expect(screen.getByRole("status")).toBeInTheDocument();
   });
 
   it("totalCount>12 でページネーション描画", async () => {

@@ -10,15 +10,10 @@ describe("queries", () => {
     vi.stubEnv("MICROCMS_SERVICE_DOMAIN", "example");
     vi.stubEnv("MICROCMS_API_KEY", "test-key");
     vi.stubGlobal("fetch", vi.fn());
-    vi.doMock("next/headers", () => ({
-      cookies: async () => ({ get: (_k: string) => undefined }),
-      draftMode: async () => ({ isEnabled: false }),
-    }));
   });
   afterEach(() => {
     vi.unstubAllEnvs();
     vi.unstubAllGlobals();
-    vi.doUnmock("next/headers");
   });
 
   describe("getNewsList", () => {
@@ -79,62 +74,7 @@ describe("queries", () => {
       ).toBeNull();
     });
 
-    it("draft mode 有効 + content_id Cookie あり → 単一 GET API を使う (LIST API では下書きが取れないため)", async () => {
-      vi.resetModules();
-      vi.doMock("next/headers", () => ({
-        cookies: async () => ({
-          get: (k: string) => {
-            if (k === "microcms_draft_key") return { value: "dk-1" };
-            if (k === "microcms_content_id") return { value: "g-abc" };
-            return undefined;
-          },
-        }),
-        draftMode: async () => ({ isEnabled: true }),
-      }));
-      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-        ok: true,
-        json: async () => makeNewsItem({ slug: "x" }),
-      });
-      const { getNewsDetail } = await import("./queries");
-      const r = await getNewsDetail({ locale: "ja", slug: "x" });
-      expect(r?.slug).toBe("x");
-      const url = (global.fetch as ReturnType<typeof vi.fn>).mock
-        .calls[0][0] as string;
-      expect(url).toContain("/news/g-abc");
-      expect(url).toContain("draftKey=dk-1");
-    });
-
-    it("draft mode 有効 + content_id の slug/locale が URL と不一致 → null (Cookie 流用防止)", async () => {
-      vi.resetModules();
-      vi.doMock("next/headers", () => ({
-        cookies: async () => ({
-          get: (k: string) => {
-            if (k === "microcms_draft_key") return { value: "dk-1" };
-            if (k === "microcms_content_id") return { value: "g-abc" };
-            return undefined;
-          },
-        }),
-        draftMode: async () => ({ isEnabled: true }),
-      }));
-      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-        ok: true,
-        json: async () => makeNewsItem({ slug: "different-slug" }),
-      });
-      const { getNewsDetail } = await import("./queries");
-      expect(
-        await getNewsDetail({ locale: "ja", slug: "x" }),
-      ).toBeNull();
-    });
-
-    it("draft mode 有効でも content_id Cookie が無ければ通常の LIST 経路", async () => {
-      vi.resetModules();
-      vi.doMock("next/headers", () => ({
-        cookies: async () => ({
-          get: (k: string) =>
-            k === "microcms_draft_key" ? { value: "dk-1" } : undefined,
-        }),
-        draftMode: async () => ({ isEnabled: true }),
-      }));
+    it("getNewsDetail は LIST 経路のみ (公開版)、draftKey は付与しない (プレビューは別関数)", async () => {
       (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
         ok: true,
         json: async () => makeNewsList([makeNewsItem({ slug: "x" })]),
@@ -145,6 +85,34 @@ describe("queries", () => {
         .calls[0][0] as string;
       expect(url).toContain("filters=");
       expect(url).not.toContain("draftKey=");
+    });
+  });
+
+  describe("getNewsByContentId", () => {
+    it("単一GET /news/{id}?draftKey= でドラフト取得", async () => {
+      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        ok: true,
+        json: async () => makeNewsItem({ slug: "x" }),
+      });
+      const { getNewsByContentId } = await import("./queries");
+      const r = await getNewsByContentId({ id: "g-abc", draftKey: "dk-1" });
+      expect(r?.slug).toBe("x");
+      const url = (global.fetch as ReturnType<typeof vi.fn>).mock
+        .calls[0][0] as string;
+      expect(url).toContain("/news/g-abc");
+      expect(url).toContain("draftKey=dk-1");
+    });
+
+    it("404 エラー時は null", async () => {
+      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        ok: false,
+        status: 404,
+        statusText: "Not Found",
+      });
+      const { getNewsByContentId } = await import("./queries");
+      expect(
+        await getNewsByContentId({ id: "g-none", draftKey: "dk" }),
+      ).toBeNull();
     });
   });
 

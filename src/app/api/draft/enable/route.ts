@@ -1,6 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
 
-import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
@@ -39,32 +38,23 @@ function checkOrigin(request: Request): boolean {
   return list.includes(origin);
 }
 
-async function enableAndRedirect(
-  draftKey: string,
+/**
+ * プレビュー用 URL クエリ付きで詳細ページにリダイレクトする。
+ * Cookie / Next.js draftMode は使わず、microCMS 仕様準拠で
+ * `?draftKey=` `?contentId=` を URL に持たせる。
+ */
+function previewRedirect(
   locale: Locale,
   slug: string,
   contentId: string,
-): Promise<never> {
-  const draft = await draftMode();
-  draft.enable();
-
-  const cookieJar = await cookies();
-  const isDev = process.env.NODE_ENV === "development";
-  const cookieOpts = {
-    httpOnly: true,
-    sameSite: isDev ? ("lax" as const) : ("none" as const),
-    secure: true,
-    path: "/",
-    maxAge: 1800,
-  };
-  cookieJar.set("microcms_draft_key", draftKey, cookieOpts);
-  // microCMS の draftKey は単一コンテンツ GET (/news/{id}) のみ有効。
-  // LIST API では公開版が返るため、詳細ページでは ID 経由で再 fetch する。
-  cookieJar.set("microcms_content_id", contentId, cookieOpts);
-
-  // localePrefix: 'as-needed' により ja は prefix なし、en のみ /en/...
-  const path = locale === "ja" ? `/news/${slug}` : `/en/news/${slug}`;
-  redirect(path);
+  draftKey: string,
+): never {
+  const base = locale === "ja" ? `/news/${slug}` : `/en/news/${slug}`;
+  const params = new URLSearchParams({
+    draftKey,
+    contentId,
+  });
+  redirect(`${base}?${params.toString()}`);
 }
 
 export async function GET(request: Request): Promise<Response> {
@@ -89,7 +79,7 @@ export async function GET(request: Request): Promise<Response> {
     if (!CONTENT_ID_RE.test(contentId)) return unauthorized();
     const item = await getNewsByContentId({ id: contentId, draftKey });
     if (!item) return unauthorized();
-    return enableAndRedirect(draftKey, item.locale, item.slug, contentId);
+    return previewRedirect(item.locale, item.slug, contentId, draftKey);
   }
 
   // パターンB: slug + locale 直接指定 (後方互換 / 手動プレビュー用)
@@ -105,5 +95,5 @@ export async function GET(request: Request): Promise<Response> {
 
   const item = await getNewsDetail({ locale, slug });
   if (!item) return unauthorized();
-  return enableAndRedirect(draftKey, locale, slug, item.id);
+  return previewRedirect(locale, slug, item.id, draftKey);
 }
