@@ -57,6 +57,22 @@ describe("NewsBodyRenderer", () => {
     expect(screen.getByTestId("news-body").className).toContain("prose");
   });
 
+  it("prose-invert + ブランドオーバーライド (リンク色 / blockquote / focus) が付与される", () => {
+    render(
+      <NewsBodyRenderer
+        displayMode="html"
+        bodyHtml="<p>x</p>"
+        body=""
+      />,
+    );
+    const cls = screen.getByTestId("news-body").className;
+    expect(cls).toContain("prose-invert");
+    expect(cls).toContain("prose-a:text-accent");
+    expect(cls).toContain("prose-blockquote:border-accent/40");
+    expect(cls).toContain("prose-a:focus-visible:outline");
+    expect(cls).toContain("prose-img:rounded-none");
+  });
+
   it("isFirstImageLcp=true で先頭 img に fetchpriority=high", () => {
     const { container } = render(
       <NewsBodyRenderer
