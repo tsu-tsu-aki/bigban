@@ -63,22 +63,44 @@ const externalLink = z.object({
     }),
 });
 
+// microCMS は未入力フィールドを `null` で返すため、`optional()` だけだと
+// (undefined のみ許容) パースに失敗する。`nullish()` で undefined と null
+// 両対応にする。string 系はさらに `transform` で空文字に正規化。
+// `.optional()` を最後に重ねてプロパティ自体を任意化する (型推論で `?` 付きに)。
+const optionalString = z
+  .string()
+  .nullish()
+  .transform((v) => v ?? undefined)
+  .optional();
+
+const optionalStringWithDefault = z
+  .string()
+  .nullish()
+  .transform((v) => v ?? "")
+  .optional();
+
 export const newsItemSchema = z.object({
   id: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  publishedAt: z.string().optional(),
-  revisedAt: z.string().optional(),
+  publishedAt: optionalString,
+  revisedAt: optionalString,
   title: z.string(),
   slug: slugSchema,
   locale: localeSelect,
   category: z.array(categoryEnum).min(1),
-  excerpt: z.string().max(160),
+  excerpt: z.string(),
   displayMode: displayModeSelect,
-  bodyHtml: z.string().optional().default(""),
-  body: z.string().optional().default(""),
-  eyecatch: eyecatch.optional(),
-  externalLink: externalLink.optional(),
+  bodyHtml: optionalStringWithDefault,
+  body: optionalStringWithDefault,
+  eyecatch: eyecatch
+    .nullish()
+    .transform((v) => v ?? undefined)
+    .optional(),
+  externalLink: externalLink
+    .nullish()
+    .transform((v) => v ?? undefined)
+    .optional(),
 });
 export type NewsItem = z.infer<typeof newsItemSchema>;
 

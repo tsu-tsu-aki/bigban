@@ -9,7 +9,6 @@ import HomeFooter from "@/components/home/HomeFooter";
 import HomeNavigation from "@/components/home/HomeNavigation";
 import { NewsArticleJsonLd } from "@/components/news/NewsArticleJsonLd";
 import { NewsBodyRenderer } from "@/components/news/NewsBodyRenderer";
-import { NewsLanguageSwitcher } from "@/components/news/NewsLanguageSwitcher";
 import { PreviewBanner } from "@/components/news/PreviewBanner";
 import { isCmsNewsEnabled } from "@/config/featureFlags";
 import { NEWS_CATEGORIES } from "@/constants/news";
@@ -139,12 +138,6 @@ export default async function NewsDetailPage({
     previewItem ?? (await getNewsDetail({ locale: locale as Locale, slug }));
   if (!item) notFound();
 
-  const otherLocale: Locale = locale === "ja" ? "en" : "ja";
-  const other = previewItem
-    ? null
-    : await getNewsDetail({ locale: otherLocale, slug });
-  const hasOtherLocale = other !== null;
-
   const cat = NEWS_CATEGORIES.find((c) => c.id === item.category[0]);
   const backHref = locale === "ja" ? "/news" : "/en/news";
   const backLabel =
@@ -157,19 +150,12 @@ export default async function NewsDetailPage({
       <NewsArticleJsonLd item={item} locale={locale as Locale} />
       <main className="min-h-screen bg-deep-black text-text-light pt-[calc(6rem+var(--promo-banner-h))] lg:pt-[calc(7rem+var(--promo-banner-h))] pb-16 lg:pb-24">
         <article className="mx-auto max-w-3xl px-6 lg:px-12 py-8 lg:py-12">
-        <div className="flex items-center justify-between gap-4">
-          <Link
-            href={backHref}
-            className="text-xs tracking-wider text-text-gray hover:text-accent transition-colors"
-          >
-            {backLabel}
-          </Link>
-          <NewsLanguageSwitcher
-            slug={slug}
-            currentLocale={locale as Locale}
-            hasOtherLocale={hasOtherLocale}
-          />
-        </div>
+        <Link
+          href={backHref}
+          className="text-xs tracking-wider text-text-gray hover:text-accent transition-colors"
+        >
+          {backLabel}
+        </Link>
         <div className="mt-6 flex items-center gap-3 text-xs">
           {cat && (
             <span
@@ -203,8 +189,8 @@ export default async function NewsDetailPage({
         <div className="mt-10">
           <NewsBodyRenderer
             displayMode={item.displayMode}
-            bodyHtml={item.bodyHtml}
-            body={item.body}
+            bodyHtml={item.bodyHtml ?? ""}
+            body={item.body ?? ""}
             isFirstImageLcp={!item.eyecatch}
           />
         </div>

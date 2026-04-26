@@ -119,14 +119,13 @@ describe("newsItemSchema", () => {
     expect(() => newsItemSchema.parse(missing)).toThrow();
   });
 
-  it("excerpt 160字超過はエラー", () => {
-    const longExcerpt = "あ".repeat(161);
-    expect(() =>
-      newsItemSchema.parse({ ...validItem, excerpt: longExcerpt }),
-    ).toThrow();
+  it("excerpt 長文も受理 (文字数制限なし)", () => {
+    const longExcerpt = "あ".repeat(500);
+    const p = newsItemSchema.parse({ ...validItem, excerpt: longExcerpt });
+    expect(p.excerpt.length).toBe(500);
   });
 
-  it("必須欠落 (title) でエラー", () => {
+it("必須欠落 (title) でエラー", () => {
     const { title: _t, ...missing } = validItem;
     void _t;
     expect(() => newsItemSchema.parse(missing)).toThrow();
@@ -154,6 +153,38 @@ describe("newsItemSchema", () => {
     expect(() =>
       newsItemSchema.parse({ ...validItem, slug: "Invalid-Slug" }),
     ).toThrow();
+  });
+
+  // microCMS は未入力フィールドを null で返す (省略ではなく)。
+  // optional() は undefined のみ許容するため、null も受理できるよう nullish() に。
+  it("body / bodyHtml が null でも受理 (microCMS 未入力時の表現)", () => {
+    const p = newsItemSchema.parse({
+      ...validItem,
+      body: null,
+      bodyHtml: null,
+    });
+    expect(p.body).toBe("");
+    expect(p.bodyHtml).toBe("");
+  });
+
+  it("eyecatch / externalLink が null でも受理", () => {
+    const p = newsItemSchema.parse({
+      ...validItem,
+      eyecatch: null,
+      externalLink: null,
+    });
+    expect(p.eyecatch).toBeUndefined();
+    expect(p.externalLink).toBeUndefined();
+  });
+
+  it("publishedAt / revisedAt が null でも受理 (DRAFT のみ状態)", () => {
+    const p = newsItemSchema.parse({
+      ...validItem,
+      publishedAt: null,
+      revisedAt: null,
+    });
+    expect(p.publishedAt).toBeUndefined();
+    expect(p.revisedAt).toBeUndefined();
   });
 });
 
