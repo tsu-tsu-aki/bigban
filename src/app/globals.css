@@ -272,15 +272,18 @@ html[data-browser="ios-safari"] .site-header-bg {
     opacity: 1;
   }
 
-  /* === Schedule timeline === */
-  .prose .schedule {
-    list-style: none;
-    padding: 0;
+  /* === Schedule timeline ===
+     Tailwind Typography (v4 utilities layer) が ol に list-style: decimal や
+     padding-inline-start を強制する。@layer の順序で utilities が後勝ちのため、
+     ここでは !important で確実に上書きする。 */
+  .prose ol.schedule {
+    list-style: none !important;
+    padding: 0 !important;
     margin: 2.5rem 0;
     position: relative;
   }
   /* 縦の rail (accent 25%) */
-  .prose .schedule::before {
+  .prose ol.schedule::before {
     content: "";
     position: absolute;
     left: 0.4375rem;
@@ -289,16 +292,16 @@ html[data-browser="ios-safari"] .site-header-bg {
     width: 1px;
     background-color: rgba(246, 255, 84, 0.25);
   }
-  .prose .schedule-item {
+  .prose ol.schedule li.schedule-item {
     position: relative;
-    padding: 0 0 2rem 2rem;
-    margin: 0;
+    padding: 0 0 2rem 2rem !important;
+    margin: 0 !important;
   }
-  .prose .schedule-item:last-child {
-    padding-bottom: 0;
+  .prose ol.schedule li.schedule-item:last-child {
+    padding-bottom: 0 !important;
   }
   /* dot marker (rail を貫通する punched-through 表現) */
-  .prose .schedule-item::before {
+  .prose ol.schedule li.schedule-item::before {
     content: "";
     position: absolute;
     left: 0;
@@ -309,8 +312,13 @@ html[data-browser="ios-safari"] .site-header-bg {
     border-radius: 9999px;
     box-shadow: 0 0 0 4px var(--color-deep-black);
   }
+  /* li ::marker 自体も非表示に (decimal の番号を完全に消す) */
+  .prose ol.schedule li.schedule-item::marker {
+    content: "";
+    color: transparent;
+  }
   /* 日付 (eyebrow style) */
-  .prose .schedule-item > time {
+  .prose ol.schedule li.schedule-item > time {
     display: block;
     font-size: 0.6875rem;
     letter-spacing: 0.18em;
@@ -319,24 +327,24 @@ html[data-browser="ios-safari"] .site-header-bg {
     font-weight: 600;
     margin-bottom: 0.375rem;
   }
-  .prose .schedule-item > h3 {
-    margin-top: 0;
+  .prose ol.schedule li.schedule-item > h3 {
+    margin-top: 0 !important;
   }
-  .prose .schedule-item > p {
+  .prose ol.schedule li.schedule-item > p {
     margin-top: 0.375rem;
     color: var(--color-text-light);
   }
 
   /* mobile: padding/dot を縮小 */
   @media (max-width: 480px) {
-    .prose .schedule-item {
-      padding-left: 1.5rem;
+    .prose ol.schedule li.schedule-item {
+      padding-left: 1.5rem !important;
     }
-    .prose .schedule-item::before {
+    .prose ol.schedule li.schedule-item::before {
       width: 0.75rem;
       height: 0.75rem;
     }
-    .prose .schedule::before {
+    .prose ol.schedule::before {
       left: 0.3125rem;
     }
   }
