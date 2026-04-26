@@ -43,19 +43,24 @@ async function enableAndRedirect(
   draftKey: string,
   locale: Locale,
   slug: string,
+  contentId: string,
 ): Promise<never> {
   const draft = await draftMode();
   draft.enable();
 
   const cookieJar = await cookies();
   const isDev = process.env.NODE_ENV === "development";
-  cookieJar.set("microcms_draft_key", draftKey, {
+  const cookieOpts = {
     httpOnly: true,
-    sameSite: isDev ? "lax" : "none",
+    sameSite: isDev ? ("lax" as const) : ("none" as const),
     secure: true,
     path: "/",
     maxAge: 1800,
-  });
+  };
+  cookieJar.set("microcms_draft_key", draftKey, cookieOpts);
+  // microCMS の draftKey は単一コンテンツ GET (/news/{id}) のみ有効。
+  // LIST API では公開版が返るため、詳細ページでは ID 経由で再 fetch する。
+  cookieJar.set("microcms_content_id", contentId, cookieOpts);
 
   // localePrefix: 'as-needed' により ja は prefix なし、en のみ /en/...
   const path = locale === "ja" ? `/news/${slug}` : `/en/news/${slug}`;
@@ -84,7 +89,7 @@ export async function GET(request: Request): Promise<Response> {
     if (!CONTENT_ID_RE.test(contentId)) return unauthorized();
     const item = await getNewsByContentId({ id: contentId, draftKey });
     if (!item) return unauthorized();
-    return enableAndRedirect(draftKey, item.locale, item.slug);
+    return enableAndRedirect(draftKey, item.locale, item.slug, contentId);
   }
 
   // パターンB: slug + locale 直接指定 (後方互換 / 手動プレビュー用)
@@ -100,5 +105,5 @@ export async function GET(request: Request): Promise<Response> {
 
   const item = await getNewsDetail({ locale, slug });
   if (!item) return unauthorized();
-  return enableAndRedirect(draftKey, locale, slug);
+  return enableAndRedirect(draftKey, locale, slug, item.id);
 }

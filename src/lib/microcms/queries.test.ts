@@ -79,7 +79,54 @@ describe("queries", () => {
       ).toBeNull();
     });
 
-    it("draft mode 有効時は Cookie draftKey 付与", async () => {
+    it("draft mode 有効 + content_id Cookie あり → 単一 GET API を使う (LIST API では下書きが取れないため)", async () => {
+      vi.resetModules();
+      vi.doMock("next/headers", () => ({
+        cookies: async () => ({
+          get: (k: string) => {
+            if (k === "microcms_draft_key") return { value: "dk-1" };
+            if (k === "microcms_content_id") return { value: "g-abc" };
+            return undefined;
+          },
+        }),
+        draftMode: async () => ({ isEnabled: true }),
+      }));
+      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        ok: true,
+        json: async () => makeNewsItem({ slug: "x" }),
+      });
+      const { getNewsDetail } = await import("./queries");
+      const r = await getNewsDetail({ locale: "ja", slug: "x" });
+      expect(r?.slug).toBe("x");
+      const url = (global.fetch as ReturnType<typeof vi.fn>).mock
+        .calls[0][0] as string;
+      expect(url).toContain("/news/g-abc");
+      expect(url).toContain("draftKey=dk-1");
+    });
+
+    it("draft mode 有効 + content_id の slug/locale が URL と不一致 → null (Cookie 流用防止)", async () => {
+      vi.resetModules();
+      vi.doMock("next/headers", () => ({
+        cookies: async () => ({
+          get: (k: string) => {
+            if (k === "microcms_draft_key") return { value: "dk-1" };
+            if (k === "microcms_content_id") return { value: "g-abc" };
+            return undefined;
+          },
+        }),
+        draftMode: async () => ({ isEnabled: true }),
+      }));
+      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        ok: true,
+        json: async () => makeNewsItem({ slug: "different-slug" }),
+      });
+      const { getNewsDetail } = await import("./queries");
+      expect(
+        await getNewsDetail({ locale: "ja", slug: "x" }),
+      ).toBeNull();
+    });
+
+    it("draft mode 有効でも content_id Cookie が無ければ通常の LIST 経路", async () => {
       vi.resetModules();
       vi.doMock("next/headers", () => ({
         cookies: async () => ({
@@ -96,7 +143,8 @@ describe("queries", () => {
       await getNewsDetail({ locale: "ja", slug: "x" });
       const url = (global.fetch as ReturnType<typeof vi.fn>).mock
         .calls[0][0] as string;
-      expect(url).toContain("draftKey=dk-1");
+      expect(url).toContain("filters=");
+      expect(url).not.toContain("draftKey=");
     });
   });
 

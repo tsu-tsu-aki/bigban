@@ -89,7 +89,7 @@ describe("/api/draft/enable GET", () => {
   });
 
   it("正常系: enable+cookie+redirect", async () => {
-    getNewsDetailMock.mockResolvedValue({ slug: "a" });
+    getNewsDetailMock.mockResolvedValue({ slug: "a", id: "g-id-a" });
     const { GET } = await import("./route");
     await expect(
       GET(
@@ -108,6 +108,11 @@ describe("/api/draft/enable GET", () => {
         secure: true,
         maxAge: 1800,
       }),
+    );
+    expect(cookieSetMock).toHaveBeenCalledWith(
+      "microcms_content_id",
+      "g-id-a",
+      expect.any(Object),
     );
     expect(redirectMock).toHaveBeenCalledWith("/news/a");
   });
@@ -150,7 +155,7 @@ describe("/api/draft/enable GET", () => {
   });
 
   describe("contentId 経由 (microCMS 画面プレビュー)", () => {
-    it("正常系: contentId から slug/locale 逆引き → enable + redirect", async () => {
+    it("正常系: contentId から slug/locale 逆引き → enable + draft_key/content_id cookie 設定 + redirect", async () => {
       getNewsByContentIdMock.mockResolvedValue({
         slug: "grand-opening-campaign",
         locale: "ja",
@@ -167,6 +172,16 @@ describe("/api/draft/enable GET", () => {
         id: "g-bj1ezru",
         draftKey: "dk",
       });
+      expect(cookieSetMock).toHaveBeenCalledWith(
+        "microcms_draft_key",
+        "dk",
+        expect.any(Object),
+      );
+      expect(cookieSetMock).toHaveBeenCalledWith(
+        "microcms_content_id",
+        "g-bj1ezru",
+        expect.any(Object),
+      );
       expect(redirectMock).toHaveBeenCalledWith("/news/grand-opening-campaign");
     });
 
