@@ -17,10 +17,13 @@ export function PreviewBanner({ locale, exitHref }: PreviewBannerProps) {
     <div
       role="status"
       aria-live="polite"
-      className="fixed top-0 inset-x-0 z-50 bg-accent text-primary text-xs tracking-wider py-2 text-center"
+      className="fixed top-0 inset-x-0 z-50 bg-accent text-deep-black text-xs font-semibold tracking-wider py-2 text-center"
     >
       {label}
-      <a href={exitHref} className="ml-4 underline">
+      <a
+        href={exitHref}
+        className="ml-4 underline text-deep-black hover:opacity-70"
+      >
         {linkLabel}
       </a>
     </div>
