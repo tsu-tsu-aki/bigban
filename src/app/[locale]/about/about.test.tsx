@@ -287,10 +287,7 @@ describe("AboutContent 05 NEWS (CMS integration)", () => {
     vi.resetModules();
   });
 
-  it("flag ON+3件で NewsItem 表示 (続きを読む + すべてのニュースを見る)", async () => {
-    vi.doMock("@/config/featureFlags", () => ({
-      isCmsNewsEnabled: () => true,
-    }));
+  it("newsItems が渡されると NewsItem 表示 (続きを読む + すべてのニュースを見る)", async () => {
     const { default: AboutContentReloaded } = await import("./AboutContent");
     const items = Array.from({ length: 3 }, (_, i) => ({
       id: `n${i}`,
@@ -314,10 +311,7 @@ describe("AboutContent 05 NEWS (CMS integration)", () => {
     ).toHaveAttribute("href", "/news");
   });
 
-  it("flag OFF (newsItems=[]) は旧ハードコード表示", async () => {
-    vi.doMock("@/config/featureFlags", () => ({
-      isCmsNewsEnabled: () => false,
-    }));
+  it("newsItems=[] (flag OFF / fetch失敗時) は旧ハードコード表示", async () => {
     const { default: AboutContentReloaded } = await import("./AboutContent");
     renderWithIntl(<AboutContentReloaded newsItems={[]} locale="ja" />);
     expect(

@@ -11,7 +11,6 @@ import PlayerCarousel from "@/components/about/PlayerCarousel";
 import PlayerCard, { type Player } from "@/components/about/PlayerCard";
 import CrewCard from "@/components/about/CrewCard";
 import InstagramIcon from "@/components/icons/InstagramIcon";
-import { isCmsNewsEnabled } from "@/config/featureFlags";
 import { CAMPFIRE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
 import type { FormEvent } from "react";
@@ -89,7 +88,10 @@ export default function AboutContent({
 }: AboutContentProps = {}) {
   const t = useTranslations("About");
   const categories = useCategories();
-  const useCms = isCmsNewsEnabled() && newsItems.length > 0;
+  // Server で flag OFF 時は newsItems が必ず空配列で渡される (page.tsx 参照)。
+  // Client では env が読めず Hydration mismatch を起こすため、
+  // newsItems の有無のみで CMS 表示を判定する。
+  const useCms = newsItems.length > 0;
 
   const players = useMemo<Player[]>(
     () => [
