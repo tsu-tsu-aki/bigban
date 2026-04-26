@@ -24,9 +24,10 @@ const PROSE_CLASS = [
   "prose-strong:text-text-light prose-strong:font-semibold",
   "prose-blockquote:border-l-2 prose-blockquote:border-accent/40 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-text-light/85",
   "prose-ul:my-6 prose-ol:my-6 prose-li:my-2 prose-li:marker:text-accent",
-  "prose-img:rounded-none prose-img:w-full",
-  "prose-figure:my-12",
-  "prose-figcaption:text-sm prose-figcaption:text-text-gray prose-figcaption:tracking-wide",
+  // 画像: 自然サイズ + コンテナ幅まで縮小、中央寄せ、シャープエッジ
+  "prose-img:rounded-none prose-img:max-w-full prose-img:h-auto prose-img:block prose-img:mx-auto prose-img:my-8",
+  "prose-figure:my-12 prose-figure:text-center",
+  "prose-figcaption:text-sm prose-figcaption:text-text-gray prose-figcaption:tracking-wide prose-figcaption:mt-3 prose-figcaption:italic",
   "prose-hr:border-text-gray/20 prose-hr:my-12",
 ].join(" ");
 
@@ -49,12 +50,30 @@ function wrapTablesForScroll(html: string): string {
     .replace(/<\/table>/g, "</table></figure>");
 }
 
+/**
+ * microCMS 画像 (images.microcms-assets.io) の src に画像 API パラメータを
+ * 自動付与し、WebP + 最大幅 1200px に最適化する。
+ * 既にクエリパラメータ付きの URL は二重付与しない。
+ *
+ * 例:
+ *   <img src="https://images.microcms-assets.io/foo.jpg" />
+ *   → <img src="https://images.microcms-assets.io/foo.jpg?w=1200&fm=webp&q=80" />
+ */
+function optimizeMicrocmsImages(html: string): string {
+  return html.replace(
+    /(<img[^>]*\ssrc=")(https:\/\/images\.microcms-assets\.io\/[^"?]+)(")/g,
+    (_match, before: string, src: string, after: string) =>
+      `${before}${src}?w=1200&fm=webp&q=80${after}`,
+  );
+}
+
 function renderBody(safeHtml: string) {
+  const processed = optimizeMicrocmsImages(wrapTablesForScroll(safeHtml));
   return (
     <div
       data-testid="news-body"
       className={PROSE_CLASS}
-      dangerouslySetInnerHTML={{ __html: wrapTablesForScroll(safeHtml) }}
+      dangerouslySetInnerHTML={{ __html: processed }}
     />
   );
 }

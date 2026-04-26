@@ -89,6 +89,33 @@ describe("NewsBodyRenderer", () => {
     expect(wrapper?.querySelector("table")).not.toBeNull();
   });
 
+  it("microCMS 画像に画像 API パラメータが自動付与される (?w=1200&fm=webp&q=80)", () => {
+    const { container } = render(
+      <NewsBodyRenderer
+        displayMode="html"
+        bodyHtml='<img src="https://images.microcms-assets.io/foo/bar.jpg" alt="x" width="800" height="450">'
+        body=""
+      />,
+    );
+    const img = container.querySelector("img");
+    expect(img?.getAttribute("src")).toContain("w=1200");
+    expect(img?.getAttribute("src")).toContain("fm=webp");
+    expect(img?.getAttribute("src")).toContain("q=80");
+  });
+
+  it("画像 API パラメータが既に付いている場合は二重付与しない", () => {
+    const { container } = render(
+      <NewsBodyRenderer
+        displayMode="html"
+        bodyHtml='<img src="https://images.microcms-assets.io/foo/bar.jpg?w=600" alt="x" width="600" height="338">'
+        body=""
+      />,
+    );
+    const src = container.querySelector("img")?.getAttribute("src") ?? "";
+    expect(src).toContain("?w=600");
+    expect(src.match(/w=/g)?.length).toBe(1); // w= は 1 回だけ
+  });
+
   it("badge / note / mark / aside がサニタイズ後に保持される", () => {
     const { container } = render(
       <NewsBodyRenderer
