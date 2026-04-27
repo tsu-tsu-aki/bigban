@@ -111,6 +111,40 @@ html[data-browser="ios-safari"] .site-header-bg {
 
 /* News article body — typography overrides for microCMS HTML / rich editor content */
 @layer components {
+  /* H2 見出しのピックルボール感: バウンドの軌跡 + 着地ボール (#7 Bouncing Arc)
+     - .news-body は NewsBodyRenderer の content wrapper にのみ付与されるため
+       他ページの h2 には影響しない
+     - 軌跡 SVG は arc 3 段で動きを表現、ボールにグロードロップシャドウ
+     - background-image は data URI でビルド時のリクエスト追加なし */
+  .news-body h2 {
+    position: relative;
+    padding-top: 2.5rem;
+  }
+  .news-body h2::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 30px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 30' fill='none' stroke='%23F6FF54' stroke-width='2' stroke-dasharray='4 6'><path d='M2 26 Q 60 -12 110 26 Q 160 -12 200 22'/></svg>");
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+  .news-body h2::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 198px;
+    width: 28px;
+    height: 28px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='18' fill='%23F6FF54' stroke='%23000' stroke-width='1.5'/><circle cx='20' cy='9' r='2' fill='%23000'/><circle cx='20' cy='31' r='2' fill='%23000'/><circle cx='9' cy='20' r='2' fill='%23000'/><circle cx='31' cy='20' r='2' fill='%23000'/><circle cx='12' cy='12' r='2' fill='%23000'/><circle cx='28' cy='12' r='2' fill='%23000'/><circle cx='12' cy='28' r='2' fill='%23000'/><circle cx='28' cy='28' r='2' fill='%23000'/><circle cx='20' cy='20' r='2' fill='%23000'/></svg>");
+    background-repeat: no-repeat;
+    background-size: contain;
+    filter: drop-shadow(0 4px 8px rgba(246, 255, 84, 0.4));
+    pointer-events: none;
+  }
+
   /* リッチエディタ・HTML 共通カスタムクラス */
   .prose .lead {
     @apply text-lg leading-relaxed font-light mb-8;

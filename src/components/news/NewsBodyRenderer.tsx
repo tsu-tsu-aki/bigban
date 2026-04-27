@@ -74,7 +74,7 @@ function renderBody(safeHtml: string) {
   return (
     <div
       data-testid="news-body"
-      className={PROSE_CLASS}
+      className={`news-body ${PROSE_CLASS}`}
       dangerouslySetInnerHTML={{ __html: processed }}
     />
   );
