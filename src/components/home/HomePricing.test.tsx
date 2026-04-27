@@ -68,8 +68,8 @@ describe("HomePricing", () => {
       </NextIntlClientProvider>
     );
     expect(screen.getByText("6:00-9:00")).toBeInTheDocument();
-    expect(screen.getByText("9:00-18:00")).toBeInTheDocument();
-    expect(screen.getByText("18:00-23:00")).toBeInTheDocument();
+    expect(screen.getByText("9:00-17:00")).toBeInTheDocument();
+    expect(screen.getByText("17:00-23:00")).toBeInTheDocument();
     expect(screen.getByText("¥4,980")).toBeInTheDocument();
     expect(screen.getByText("¥5,980")).toBeInTheDocument();
     const prices7980 = screen.getAllByText("¥7,980");
