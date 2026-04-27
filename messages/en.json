@@ -445,5 +445,8 @@
     "ctaAriaLabel": "Open CAMP-FIRE crowdfunding page (new tab)",
     "close": "Close",
     "imageAlt": "THE PICKLE BANG THEORY Crowdfunding"
+  },
+  "News": {
+    "heading": "News"
   }
 }

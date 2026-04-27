@@ -281,3 +281,41 @@ describe("AboutPage", () => {
     });
   });
 });
+
+describe("AboutContent 05 NEWS (CMS integration)", () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  it("newsItems が渡されると NewsItem 表示 (続きを読む + すべてのニュースを見る)", async () => {
+    const { default: AboutContentReloaded } = await import("./AboutContent");
+    const items = Array.from({ length: 3 }, (_, i) => ({
+      id: `n${i}`,
+      slug: `s${i}`,
+      title: `ニュース${i}`,
+      createdAt: "2026-04-01T00:00:00.000Z",
+      updatedAt: "2026-04-01T00:00:00.000Z",
+      publishedAt: "2026-04-01T00:00:00.000Z",
+      locale: "ja" as const,
+      category: ["notice"] as ("notice" | "media" | "event" | "campaign")[],
+      excerpt: `抜粋${i}`,
+      displayMode: "html" as const,
+      bodyHtml: "<p>本文</p>",
+      body: "",
+    }));
+    renderWithIntl(<AboutContentReloaded newsItems={items} locale="ja" />);
+    expect(screen.getByText("ニュース0")).toBeInTheDocument();
+    expect(screen.getByText("ニュース2")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /すべてのニュース/ }),
+    ).toHaveAttribute("href", "/news");
+  });
+
+  it("newsItems=[] (flag OFF / fetch失敗時) は旧ハードコード表示", async () => {
+    const { default: AboutContentReloaded } = await import("./AboutContent");
+    renderWithIntl(<AboutContentReloaded newsItems={[]} locale="ja" />);
+    expect(
+      screen.getByText(/クラウドファンディング/),
+    ).toBeInTheDocument();
+  });
+});
