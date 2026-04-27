@@ -111,37 +111,42 @@ html[data-browser="ios-safari"] .site-header-bg {
 
 /* News article body — typography overrides for microCMS HTML / rich editor content */
 @layer components {
-  /* H2 見出しのピックルボール感: バウンドの軌跡 + 着地ボール (#7 Bouncing Arc)
+  /* H2 見出しのピックルボール感: 左にボール + 下にグラデーションアクセントバー
      - .news-body は NewsBodyRenderer の content wrapper にのみ付与されるため
        他ページの h2 には影響しない
-     - 軌跡 SVG は arc 3 段で動きを表現、ボールにグロードロップシャドウ
-     - background-image は data URI でビルド時のリクエスト追加なし */
+     - ::before = ボールアイコン (data URI、追加リクエストなし)
+     - ::after  = 細いグラデーション下線 (右に向かって fade、ほのかな glow)
+     - エディトリアル風の控えめな「ちょっとだけセンス」 */
   .news-body h2 {
     position: relative;
-    padding-top: 2.5rem;
+    padding: 0 0 0.625rem 2.75rem;
   }
   .news-body h2::before {
     content: "";
     position: absolute;
-    top: 0;
     left: 0;
-    width: 220px;
-    height: 30px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 30' fill='none' stroke='%23F6FF54' stroke-width='2' stroke-dasharray='4 6'><path d='M2 26 Q 60 -12 110 26 Q 160 -12 200 22'/></svg>");
+    top: 0.125em;
+    width: 1.875rem;
+    height: 1.875rem;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='18' fill='%23F6FF54' stroke='%23000' stroke-width='1.5'/><circle cx='20' cy='9' r='2' fill='%23000'/><circle cx='20' cy='31' r='2' fill='%23000'/><circle cx='9' cy='20' r='2' fill='%23000'/><circle cx='31' cy='20' r='2' fill='%23000'/><circle cx='12' cy='12' r='2' fill='%23000'/><circle cx='28' cy='12' r='2' fill='%23000'/><circle cx='12' cy='28' r='2' fill='%23000'/><circle cx='28' cy='28' r='2' fill='%23000'/><circle cx='20' cy='20' r='2' fill='%23000'/></svg>");
     background-repeat: no-repeat;
+    background-size: contain;
     pointer-events: none;
   }
   .news-body h2::after {
     content: "";
     position: absolute;
-    top: 4px;
-    left: 198px;
-    width: 28px;
-    height: 28px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='18' fill='%23F6FF54' stroke='%23000' stroke-width='1.5'/><circle cx='20' cy='9' r='2' fill='%23000'/><circle cx='20' cy='31' r='2' fill='%23000'/><circle cx='9' cy='20' r='2' fill='%23000'/><circle cx='31' cy='20' r='2' fill='%23000'/><circle cx='12' cy='12' r='2' fill='%23000'/><circle cx='28' cy='12' r='2' fill='%23000'/><circle cx='12' cy='28' r='2' fill='%23000'/><circle cx='28' cy='28' r='2' fill='%23000'/><circle cx='20' cy='20' r='2' fill='%23000'/></svg>");
-    background-repeat: no-repeat;
-    background-size: contain;
-    filter: drop-shadow(0 4px 8px rgba(246, 255, 84, 0.4));
+    bottom: 0;
+    left: 2.75rem;
+    width: 4.5rem;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      var(--color-accent) 0%,
+      rgba(246, 255, 84, 0) 100%
+    );
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(246, 255, 84, 0.35);
     pointer-events: none;
   }
 
@@ -156,16 +161,6 @@ html[data-browser="ios-safari"] .site-header-bg {
     color: var(--color-text-gray);
     letter-spacing: 0.15em;
   }
-  /* ブランド固有: h2 上のアクセントバー */
-  .prose h2::before {
-    content: "";
-    display: block;
-    width: 2.5rem;
-    height: 2px;
-    background-color: var(--color-accent);
-    margin-bottom: 1rem;
-  }
-
   /* === Editorial table (no vertical borders, no zebra) === */
   .prose :where(table) {
     width: 100%;
