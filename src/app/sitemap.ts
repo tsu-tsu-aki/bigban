@@ -48,16 +48,39 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     /* istanbul ignore next -- @preserve microCMS 未設定/未到達時の防御フォールバック */
     slugs = [];
   }
-  const newsDetails: MetadataRoute.Sitemap = slugs.map(
-    ({ locale, slug }) => ({
-      url:
-        locale === "ja"
-          ? `${SITE_URL}/news/${slug}`
-          : `${SITE_URL}/en/news/${slug}`,
+  // slug ごとに ja / en の両方が存在する時のみ alternates.languages を出す。
+  // getNewsSlugs() が両 locale を返してくれるため、追加 API 呼び出しなしで判定可能。
+  const slugLocales = new Map<string, Set<"ja" | "en">>();
+  for (const { slug, locale } of slugs) {
+    if (!slugLocales.has(slug)) slugLocales.set(slug, new Set());
+    slugLocales.get(slug)?.add(locale);
+  }
+
+  const newsDetails: MetadataRoute.Sitemap = slugs.map(({ locale, slug }) => {
+    const url =
+      locale === "ja"
+        ? `${SITE_URL}/news/${slug}`
+        : `${SITE_URL}/en/news/${slug}`;
+    /* istanbul ignore next -- @preserve slugLocales は事前に slugs から populate するため必ず存在 (defensive ?? 分岐は到達不可) */
+    const localesForSlug = slugLocales.get(slug) ?? new Set([locale]);
+    const hasBoth = localesForSlug.has("ja") && localesForSlug.has("en");
+    return {
+      url,
       changeFrequency: "monthly",
       priority: 0.6,
-    }),
-  );
+      ...(hasBoth
+        ? {
+            alternates: {
+              languages: {
+                ja: `${SITE_URL}/news/${slug}`,
+                en: `${SITE_URL}/en/news/${slug}`,
+                "x-default": `${SITE_URL}/news/${slug}`,
+              },
+            },
+          }
+        : {}),
+    };
+  });
 
   return [...staticEntries, ...newsIndex, ...newsDetails];
 }

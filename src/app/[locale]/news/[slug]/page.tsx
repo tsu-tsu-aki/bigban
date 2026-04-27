@@ -99,7 +99,11 @@ export async function generateMetadata({
     meta.robots = { index: false, follow: false };
   }
 
-  // alternates は公開版についてのみ算出 (プレビュー時は noindex)
+  // alternates は公開版についてのみ算出 (プレビュー時は noindex)。
+  // 注: 対向 locale 版が存在するかチェックするため getNewsDetail を 1 回追加発行する。
+  // 結果として 1 記事 1 ロケールあたり 2 回 microCMS API を呼ぶ N+1 構造になるが、
+  // microCMS レスポンスは ISR タグ (`news-${slug}-${locale}`) でキャッシュされるため、
+  // cold start を除けば実コストは無視できる。
   if (!previewItem) {
     const otherLocale: Locale = locale === "ja" ? "en" : "ja";
     const other = await getNewsDetail({ locale: otherLocale, slug });
@@ -192,6 +196,7 @@ export default async function NewsDetailPage({
             bodyHtml={item.bodyHtml ?? ""}
             body={item.body ?? ""}
             isFirstImageLcp={!item.eyecatch}
+            locale={locale}
           />
         </div>
         {item.externalLink && (

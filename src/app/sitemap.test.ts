@@ -147,4 +147,37 @@ describe("news sitemap entries", () => {
     expect(urls).toContain(`${PROD_URL}/news/s1`);
     expect(urls).toContain(`${PROD_URL}/en/news/s2`);
   });
+
+  it("両 locale 揃った slug は alternates.languages を出力", async () => {
+    vi.doMock("@/lib/microcms/queries", () => ({
+      getNewsSlugs: async () => [
+        { locale: "ja", slug: "both" },
+        { locale: "en", slug: "both" },
+      ],
+    }));
+    const { default: sitemap } = await import("./sitemap");
+    const entries = await sitemap();
+    const jaEntry = entries.find((e) => e.url === `${PROD_URL}/news/both`);
+    expect(jaEntry?.alternates?.languages?.ja).toBe(
+      `${PROD_URL}/news/both`,
+    );
+    expect(jaEntry?.alternates?.languages?.en).toBe(
+      `${PROD_URL}/en/news/both`,
+    );
+    expect(jaEntry?.alternates?.languages?.["x-default"]).toBe(
+      `${PROD_URL}/news/both`,
+    );
+  });
+
+  it("片 locale のみの slug は alternates.languages を出力しない", async () => {
+    vi.doMock("@/lib/microcms/queries", () => ({
+      getNewsSlugs: async () => [{ locale: "ja", slug: "only-ja" }],
+    }));
+    const { default: sitemap } = await import("./sitemap");
+    const entries = await sitemap();
+    const jaEntry = entries.find(
+      (e) => e.url === `${PROD_URL}/news/only-ja`,
+    );
+    expect(jaEntry?.alternates?.languages).toBeUndefined();
+  });
 });

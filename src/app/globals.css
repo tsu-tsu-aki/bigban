@@ -11,6 +11,15 @@
 
   --font-serif: "Orbitron", "Inter", sans-serif;
   --font-sans: "Inter", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
+
+  /* z-index トークン (現状の ad-hoc 値を一元管理)。
+     値は既存実装の値をそのまま採用 (50/55/60/70/100)。 */
+  --z-promo-banner: 55;
+  --z-nav-overlay: 60;
+  --z-preview-banner: 70;
+  --z-popup: 70;
+  --z-cursor: 100;
+  --z-intro-overlay: 100;
 }
 
 @layer base {

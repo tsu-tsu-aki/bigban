@@ -7,6 +7,11 @@ vi.mock("next-intl/server", () => ({
   getTranslations: (...args: unknown[]) => mockGetTranslations(...args),
   setRequestLocale: vi.fn(),
 }));
+vi.mock("next/navigation", () => ({
+  notFound: () => {
+    throw new Error("NEXT_NOT_FOUND");
+  },
+}));
 
 vi.mock("./AboutContent", () => ({ default: () => null }));
 vi.mock("@/components/StructuredData", () => ({ default: () => null }));
@@ -99,6 +104,13 @@ describe("About Page", () => {
     });
     const { container } = render(element);
     expect(container).toBeTruthy();
+  });
+
+  it("不正 locale で notFound", async () => {
+    const { default: AboutPage } = await import("./page");
+    await expect(
+      AboutPage({ params: Promise.resolve({ locale: "fr" }) }),
+    ).rejects.toThrow(/NEXT_NOT_FOUND/);
   });
 
   it("CMS フラグ ON で getNewsList から news を取得して渡す", async () => {

@@ -1,3 +1,4 @@
+import type { Locale } from "@/i18n/routing";
 import {
   RICH_EDITOR_CONFIG,
   STRICT_HTML_CONFIG,
@@ -10,6 +11,7 @@ interface NewsBodyRendererProps {
   bodyHtml: string;
   body: string;
   isFirstImageLcp?: boolean;
+  locale?: Locale;
 }
 
 const PROSE_CLASS = [
@@ -78,10 +80,12 @@ function renderBody(safeHtml: string) {
   );
 }
 
-function renderEmpty() {
+function renderEmpty(locale: Locale) {
+  const message =
+    locale === "en" ? "No content available." : "本文がありません。";
   return (
     <div data-testid="news-body-empty" className={PROSE_CLASS} role="status">
-      本文がありません。
+      {message}
     </div>
   );
 }
@@ -91,6 +95,7 @@ export function NewsBodyRenderer({
   bodyHtml,
   body,
   isFirstImageLcp = false,
+  locale = "ja",
 }: NewsBodyRendererProps) {
   if (displayMode === "html") {
     if (bodyHtml.trim().length > 0) {
@@ -106,7 +111,7 @@ export function NewsBodyRenderer({
         sanitizeNewsHtml(body, RICH_EDITOR_CONFIG, { isFirstImageLcp }),
       );
     }
-    return renderEmpty();
+    return renderEmpty(locale);
   }
 
   if (body.trim().length > 0) {
@@ -119,5 +124,5 @@ export function NewsBodyRenderer({
       sanitizeNewsHtml(bodyHtml, STRICT_HTML_CONFIG, { isFirstImageLcp }),
     );
   }
-  return renderEmpty();
+  return renderEmpty(locale);
 }

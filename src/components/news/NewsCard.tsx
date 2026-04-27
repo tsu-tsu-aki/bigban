@@ -36,6 +36,10 @@ export function NewsCard({ item, locale }: NewsCardProps) {
     >
       <div className="relative aspect-[16/9] bg-primary overflow-hidden">
         {item.eyecatch ? (
+          // 設計判断: alt="" (装飾扱い)。
+          // 同カード内の <h3> に記事タイトルがあるため、画像にも alt=item.title
+          // を入れるとスクリーンリーダで二重読み上げになる (WCAG H67)。
+          // a11y 観点では装飾扱いで二重読み上げを避ける方が望ましい。
           <Image
             src={`${item.eyecatch.url}?w=600&fm=webp&q=75`}
             alt=""

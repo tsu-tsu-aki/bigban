@@ -128,6 +128,13 @@ export async function getNewsSlugs(): Promise<NewsSlug[]> {
       },
       tags: ["news", `news-slugs-${locale}`],
     });
+    // 上限超過時は warn を出して運用者に検知させる。
+    // 実際の超過時は反復取得 (offset を進める) を実装する必要がある。
+    if (list.totalCount > DETAIL_PAGE_STATIC_LIMIT) {
+      console.warn(
+        `[microcms] getNewsSlugs locale=${locale} totalCount=${list.totalCount} exceeds limit=${DETAIL_PAGE_STATIC_LIMIT}. ${list.totalCount - DETAIL_PAGE_STATIC_LIMIT} 件の slug が sitemap / generateStaticParams から漏れます。queries.ts に offset 反復取得を実装してください。`,
+      );
+    }
     for (const item of list.contents) {
       results.push({ locale, slug: item.slug });
     }

@@ -161,6 +161,27 @@ describe("queries", () => {
   });
 
   describe("getNewsSlugs", () => {
+    it("totalCount が limit を超える時は warn を出す", async () => {
+      const warnSpy = vi
+        .spyOn(console, "warn")
+        .mockImplementation(() => {});
+      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          contents: [makeNewsItem({ slug: "a" })],
+          totalCount: 200, // limit (100) を超過
+          offset: 0,
+          limit: 100,
+        }),
+      });
+      const { getNewsSlugs } = await import("./queries");
+      await getNewsSlugs();
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("exceeds limit"),
+      );
+      warnSpy.mockRestore();
+    });
+
     it("全 locale の slug を返す", async () => {
       (global.fetch as ReturnType<typeof vi.fn>).mockImplementation(
         async (u: unknown) => {

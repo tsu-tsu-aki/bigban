@@ -196,4 +196,16 @@ describe("NewsBodyRenderer", () => {
     );
     expect(container.textContent).toContain("本文がありません");
   });
+
+  it("locale=en + body/bodyHtml 共に空 → 英語の空状態メッセージ", () => {
+    const { container } = render(
+      <NewsBodyRenderer
+        displayMode="html"
+        bodyHtml=""
+        body=""
+        locale="en"
+      />,
+    );
+    expect(container.textContent).toContain("No content available.");
+  });
 });
