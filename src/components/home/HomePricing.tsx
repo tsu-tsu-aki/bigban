@@ -12,8 +12,8 @@ interface PriceRow {
 
 const COURT_PRICES: PriceRow[] = [
   { timeSlot: "6:00-9:00", weekday: "¥4,980", weekend: "¥7,980" },
-  { timeSlot: "9:00-18:00", weekday: "¥5,980", weekend: "¥7,980" },
-  { timeSlot: "18:00-23:00", weekday: "¥7,980", weekend: "¥7,980" },
+  { timeSlot: "9:00-17:00", weekday: "¥5,980", weekend: "¥7,980" },
+  { timeSlot: "17:00-23:00", weekday: "¥7,980", weekend: "¥7,980" },
 ];
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
