@@ -12,6 +12,7 @@ import PlayerCard, { type Player } from "@/components/about/PlayerCard";
 import CrewCard from "@/components/about/CrewCard";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import { CAMPFIRE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
+import { NEWS_CATEGORIES } from "@/constants/news";
 
 import type { FormEvent } from "react";
 import type { NewsItem } from "@/lib/microcms/schema";
@@ -457,27 +458,55 @@ export default function AboutContent({
                       locale === "ja"
                         ? `/news/${item.slug}`
                         : `/en/news/${item.slug}`;
+                    const cat = NEWS_CATEGORIES.find(
+                      (c) => c.id === item.category[0],
+                    );
                     return (
-                      <div
+                      <Link
                         key={item.id}
-                        className="border-l-2 border-accent/20 pl-6 lg:pl-8"
+                        href={href}
+                        className="group block border-l-2 border-accent/20 pl-6 lg:pl-8 motion-safe:transition-colors hover:border-accent"
                       >
-                        <h3 className="text-accent text-lg lg:text-xl font-bold mb-3">
-                          {item.title}
-                        </h3>
-                        <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
-                          {item.excerpt}
-                        </p>
-                        <Link
-                          href={href}
-                          className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
-                        >
-                          {locale === "ja" ? "続きを読む" : "Read more"}
-                          <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">
-                            →
-                          </span>
-                        </Link>
-                      </div>
+                        <div className="flex flex-col md:flex-row md:items-start md:gap-6">
+                          <div className="relative w-full md:w-48 lg:w-56 shrink-0 aspect-[16/9] bg-primary overflow-hidden mb-4 md:mb-0">
+                            {item.eyecatch ? (
+                              <Image
+                                src={`${item.eyecatch.url}?w=480&fm=webp&q=75`}
+                                alt=""
+                                width={480}
+                                height={Math.round(
+                                  (item.eyecatch.height /
+                                    item.eyecatch.width) *
+                                    480,
+                                )}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div
+                                data-testid="about-news-placeholder"
+                                className="w-full h-full"
+                                style={{
+                                  background: `linear-gradient(135deg, ${cat?.color ?? "#8A8A8A"}33 0%, #0A0A0A 100%)`,
+                                }}
+                              />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-accent text-lg lg:text-xl font-bold mb-3">
+                              {item.title}
+                            </h3>
+                            <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
+                              {item.excerpt}
+                            </p>
+                            <span className="inline-flex items-center gap-2 text-accent text-sm tracking-wide">
+                              {locale === "ja" ? "続きを読む" : "Read more"}
+                              <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">
+                                →
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
                     );
                   })}
                   <Link
