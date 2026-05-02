@@ -285,8 +285,10 @@
       "labelCompanyName": "会社名",
       "labelCeo": "代表取締役",
       "labelBusiness": "事業内容",
+      "labelAddress": "所在地",
       "valueCeo": "西村昭彦",
-      "valueBusiness": "スポーツ施設運営 / スポーツイベント / 大会運営 / スポーツ用品の企画・販売"
+      "valueBusiness": "スポーツ施設運営 / スポーツイベント / 大会運営 / スポーツ用品の企画・販売",
+      "valueAddress": "〒141-0021\n東京都品川区上大崎3丁目14番34号プラスワン402"
     },
     "founder": {
       "name": "西村昭彦",
@@ -418,7 +420,7 @@
     "manager": "販売責任者",
     "managerValue": "西村昭彦",
     "address": "所在地",
-    "addressValue": "東京都品川区二葉1-4-2",
+    "addressValue": "〒141-0021\n東京都品川区上大崎3丁目14番34号プラスワン402",
     "phone": "電話番号",
     "phoneValue": "090 5523 3879",
     "hours": "受付時間",

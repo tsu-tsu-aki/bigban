@@ -71,6 +71,16 @@ describe("AboutPage", () => {
     expect(screen.getByText("2-16-6 6F, Yawata, Ichikawa City, Chiba")).toBeInTheDocument();
   });
 
+  it("COMPANYセクションに会社住所が表示される（JP）", () => {
+    renderWithIntl(<AboutPage />);
+    expect(screen.getByText("〒141-0021 東京都品川区上大崎3丁目14番34号プラスワン402")).toBeInTheDocument();
+  });
+
+  it("COMPANYセクションに会社住所が表示される（EN）", () => {
+    renderWithIntl(<AboutPage />, "en");
+    expect(screen.getByText("Plus One 402, 3-14-34 Kamiosaki, Shinagawa-ku, Tokyo 141-0021")).toBeInTheDocument();
+  });
+
   it("RST Agency情報を表示する", () => {
     renderWithIntl(<AboutPage />);
     const rstElements = screen.getAllByText("RST Agency株式会社");
