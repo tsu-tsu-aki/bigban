@@ -20,6 +20,13 @@ import {
 } from "@/lib/microcms/queries";
 import type { NewsItem } from "@/lib/microcms/schema";
 
+// 画面プレビュー (?draftKey=&contentId=) は searchParams を使うため、
+// generateStaticParams で静的生成された slug にプレビューパラメータ付きで
+// アクセスすると Next.js が "static→dynamic" 矛盾を検出して 500 を返す。
+// ページ全体を動的レンダリングに固定することで両立させる。
+// データ層は microCMS タグキャッシュ (next.tags) で引き続きキャッシュされる。
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
