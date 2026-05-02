@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import HomeNavigation from "@/components/home/HomeNavigation";
@@ -11,8 +12,10 @@ import PlayerCard, { type Player } from "@/components/about/PlayerCard";
 import CrewCard from "@/components/about/CrewCard";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import { CAMPFIRE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
+import { NEWS_CATEGORIES } from "@/constants/news";
 
 import type { FormEvent } from "react";
+import type { NewsItem } from "@/lib/microcms/schema";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
@@ -75,9 +78,22 @@ function SectionHeader({ number, labelEn, id }: SectionHeaderProps) {
   );
 }
 
-export default function AboutContent() {
+interface AboutContentProps {
+  newsItems?: NewsItem[];
+  locale?: "ja" | "en";
+}
+
+/* istanbul ignore next -- @preserve デフォルト引数は呼び出し側で常に props を渡すため到達不可 */
+export default function AboutContent({
+  newsItems = [],
+  locale = "ja",
+}: AboutContentProps = {}) {
   const t = useTranslations("About");
   const categories = useCategories();
+  // Server で flag OFF 時は newsItems が必ず空配列で渡される (page.tsx 参照)。
+  // Client では env が読めず Hydration mismatch を起こすため、
+  // newsItems の有無のみで CMS 表示を判定する。
+  const useCms = newsItems.length > 0;
 
   const players = useMemo<Player[]>(
     () => [
@@ -438,34 +454,111 @@ export default function AboutContent() {
             </h2>
 
             <div className="space-y-10">
-              <div className="border-l-2 border-accent/20 pl-6 lg:pl-8">
-                <h3 className="text-accent text-lg lg:text-xl font-bold mb-3">
-                  {t("news.crowdfundingHeadline")}
-                </h3>
-                <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
-                  {t("news.crowdfundingBody")}
-                </p>
-                <a
-                  href={CAMPFIRE_URL}
-                  {...EXTERNAL_LINK_PROPS}
-                  className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
-                >
-                  {t("news.crowdfundingLink")} <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">→</span>
-                </a>
-              </div>
+              {/* istanbul ignore next -- @preserve CMS 経路は e2e (USE_CMS_NEWS=true) で検証 */}
+              {useCms ? (
+                <>
+                  {newsItems.map((item) => {
+                    const href =
+                      locale === "ja"
+                        ? `/news/${item.slug}`
+                        : `/en/news/${item.slug}`;
+                    const cat = NEWS_CATEGORIES.find(
+                      (c) => c.id === item.category[0],
+                    );
+                    return (
+                      <Link
+                        key={item.id}
+                        href={href}
+                        className="group block border-l-2 border-accent/20 pl-6 lg:pl-8 motion-safe:transition-colors hover:border-accent"
+                      >
+                        <div className="flex flex-col md:flex-row md:items-start md:gap-6">
+                          <div className="relative w-full md:w-48 lg:w-56 shrink-0 aspect-[16/9] bg-primary overflow-hidden mb-4 md:mb-0">
+                            {item.eyecatch ? (
+                              <Image
+                                src={`${item.eyecatch.url}?w=480&fm=webp&q=75`}
+                                alt=""
+                                width={480}
+                                height={Math.round(
+                                  (item.eyecatch.height /
+                                    item.eyecatch.width) *
+                                    480,
+                                )}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div
+                                data-testid="about-news-placeholder"
+                                className="w-full h-full"
+                                style={{
+                                  background: `linear-gradient(135deg, ${cat?.color ?? "#8A8A8A"}33 0%, #0A0A0A 100%)`,
+                                }}
+                              />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-accent text-lg lg:text-xl font-bold mb-3">
+                              {item.title}
+                            </h3>
+                            <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
+                              {item.excerpt}
+                            </p>
+                            <span className="inline-flex items-center gap-2 text-accent text-sm tracking-wide">
+                              {locale === "ja" ? "続きを読む" : "Read more"}
+                              <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">
+                                →
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                  <Link
+                    href={locale === "ja" ? "/news" : "/en/news"}
+                    className="inline-flex items-center gap-2 text-text-light text-sm tracking-wide"
+                  >
+                    {locale === "ja" ? "すべてのニュースを見る" : "View all news"}
+                    <span>→</span>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className="border-l-2 border-accent/20 pl-6 lg:pl-8">
+                    <h3 className="text-accent text-lg lg:text-xl font-bold mb-3">
+                      {t("news.crowdfundingHeadline")}
+                    </h3>
+                    <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
+                      {t("news.crowdfundingBody")}
+                    </p>
+                    <a
+                      href={CAMPFIRE_URL}
+                      {...EXTERNAL_LINK_PROPS}
+                      className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
+                    >
+                      {t("news.crowdfundingLink")}{" "}
+                      <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">
+                        →
+                      </span>
+                    </a>
+                  </div>
 
-              <div className="border-l-2 border-accent/20 pl-6 lg:pl-8">
-                <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
-                  {t("news.body")}
-                </p>
-                <a
-                  href="https://prtimes.jp/main/html/rd/p/000000003.000179043.html"
-                  {...EXTERNAL_LINK_PROPS}
-                  className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
-                >
-                  {t("news.prTimes")} <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">→</span>
-                </a>
-              </div>
+                  <div className="border-l-2 border-accent/20 pl-6 lg:pl-8">
+                    <p className="text-text-light/90 text-base lg:text-lg leading-relaxed mb-4 max-w-3xl">
+                      {t("news.body")}
+                    </p>
+                    <a
+                      href="https://prtimes.jp/main/html/rd/p/000000003.000179043.html"
+                      {...EXTERNAL_LINK_PROPS}
+                      className="group inline-flex items-center gap-2 text-accent text-sm tracking-wide"
+                    >
+                      {t("news.prTimes")}{" "}
+                      <span className="inline-block text-lg motion-safe:transition-transform motion-safe:duration-300 group-hover:translate-x-1">
+                        →
+                      </span>
+                    </a>
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         </div>

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-deep-black: #000000;
@@ -15,6 +16,16 @@
 @layer base {
   :root {
     --promo-banner-h: 2rem;
+
+    /* z-index トークン (ad-hoc 値の一元管理)。
+       Tailwind v4 の @theme は --z-* 名前空間を CSS 変数として
+       出力しないため、:root で直接定義する。 */
+    --z-promo-banner: 55;
+    --z-nav-overlay: 60;
+    --z-preview-banner: 70;
+    --z-popup: 70;
+    --z-cursor: 100;
+    --z-intro-overlay: 100;
   }
 
   html {
@@ -96,4 +107,310 @@ html[data-browser="ios-safari"] .site-header-bg {
 .vertical-text {
   writing-mode: vertical-rl;
   text-orientation: mixed;
+}
+
+/* News article body — typography overrides for microCMS HTML / rich editor content */
+@layer components {
+  /* H2 見出しのピックルボール感: 左にボール + 下にグラデーションアクセントバー
+     - .news-body は NewsBodyRenderer の content wrapper にのみ付与されるため
+       他ページの h2 には影響しない
+     - ::before = ボールアイコン (data URI、追加リクエストなし)
+     - ::after  = 細いグラデーション下線 (右に向かって fade、ほのかな glow)
+     - エディトリアル風の控えめな「ちょっとだけセンス」 */
+  .news-body h2 {
+    position: relative;
+    padding: 0 0 0.625rem 2.75rem;
+  }
+  .news-body h2::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.125em;
+    width: 1.875rem;
+    height: 1.875rem;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='18' fill='%23F6FF54' stroke='%23000' stroke-width='1.5'/><circle cx='20' cy='9' r='2' fill='%23000'/><circle cx='20' cy='31' r='2' fill='%23000'/><circle cx='9' cy='20' r='2' fill='%23000'/><circle cx='31' cy='20' r='2' fill='%23000'/><circle cx='12' cy='12' r='2' fill='%23000'/><circle cx='28' cy='12' r='2' fill='%23000'/><circle cx='12' cy='28' r='2' fill='%23000'/><circle cx='28' cy='28' r='2' fill='%23000'/><circle cx='20' cy='20' r='2' fill='%23000'/></svg>");
+    background-repeat: no-repeat;
+    background-size: contain;
+    pointer-events: none;
+  }
+  .news-body h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 2.75rem;
+    width: 4.5rem;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      var(--color-accent) 0%,
+      rgba(246, 255, 84, 0) 100%
+    );
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(246, 255, 84, 0.35);
+    pointer-events: none;
+  }
+
+  /* リッチエディタ・HTML 共通カスタムクラス */
+  .prose .lead {
+    @apply text-lg leading-relaxed font-light mb-8;
+    color: var(--color-text-light);
+  }
+  .prose .caption,
+  .prose figcaption {
+    @apply mt-3 text-xs uppercase block;
+    color: var(--color-text-gray);
+    letter-spacing: 0.15em;
+  }
+  /* === Editorial table (no vertical borders, no zebra) === */
+  .prose :where(table) {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 2.5rem 0;
+    font-size: 0.9375rem;
+  }
+  .prose :where(thead th) {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    color: var(--color-text-gray);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(230, 230, 230, 0.25);
+    text-align: left;
+    font-weight: 500;
+  }
+  .prose :where(tbody td, tbody th) {
+    color: var(--color-text-light);
+    padding: 1rem;
+    border-bottom: 1px solid rgba(230, 230, 230, 0.08);
+  }
+  .prose :where(tbody tr:last-child td, tbody tr:last-child th) {
+    border-bottom: 0;
+  }
+  .prose :where(table caption) {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--color-text-gray);
+    font-size: 0.8125rem;
+    margin-top: 0.75rem;
+    /* 上書き: figcaption 用の uppercase/letter-spacing を解除 */
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  /* === Mobile horizontal scroll wrapper for tables === */
+  .prose .news-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 2.5rem 0;
+  }
+  .prose .news-table-scroll table {
+    margin: 0;
+    min-width: 32rem;
+  }
+  .prose .news-table-scroll:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* === Badge (small inline label) === */
+  .prose .badge {
+    display: inline-block;
+    padding: 0.125rem 0.625rem;
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* === Highlight / mark — 蛍光ペン風 (loud な背景色を回避) === */
+  .prose :where(mark, .highlight) {
+    background: linear-gradient(
+      transparent 65%,
+      rgba(246, 255, 84, 0.3) 65%
+    );
+    color: inherit;
+    padding: 0 0.1em;
+  }
+
+  /* === Note / Caution callouts (blockquote と差別化) === */
+  .prose .note,
+  .prose .caution {
+    position: relative;
+    padding: 1.5rem 1.5rem 1.25rem;
+    margin: 2rem 0;
+    border: 1px solid rgba(230, 230, 230, 0.15);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--color-text-light);
+  }
+  .prose .note::before,
+  .prose .caution::before {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  .prose .note::before {
+    content: "NOTE";
+  }
+  .prose .caution::before {
+    content: "CAUTION";
+  }
+  /* note/caution 内の段落の上下マージンを軽減 */
+  .prose .note > :where(p):last-child,
+  .prose .caution > :where(p):last-child {
+    margin-bottom: 0;
+  }
+  .prose .note > :where(p):first-child,
+  .prose .caution > :where(p):first-child {
+    margin-top: 0;
+  }
+
+  /* === CTA Button (primary action) === */
+  /* prose-a:text-accent / prose-a:underline 等の Tailwind utility を上書きするため
+     クラスセレクタを 2 重 (.cta.cta) にして特異度を持ち上げる。
+     色と下線は意図的なデザイン上書きのため !important を併用。 */
+  .prose a.cta.cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    background-color: var(--color-accent);
+    color: var(--color-deep-black) !important;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none !important;
+    border: 1px solid var(--color-accent);
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+  .prose a.cta.cta:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+  }
+  .prose a.cta.cta:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  /* CTA セカンダリ (ゴースト) — 「詳細はこちら」用 */
+  .prose a.cta.cta--ghost {
+    background-color: transparent;
+    color: var(--color-accent) !important;
+  }
+  .prose a.cta.cta--ghost:hover {
+    background-color: rgba(246, 255, 84, 0.08);
+    opacity: 1;
+  }
+
+  /* === Schedule (Magazine Two-Column style) ===
+     新聞・雑誌の番組表/スケジュール表風。日付列固定 + 内容列可変、
+     行間に薄い accent 罫線。密度高く編集感のある読みやすさ重視。
+     Tailwind Typography (v4 utilities) 衝突回避のため !important + 二重セレクタ。 */
+  .prose ol.schedule {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 2.5rem 0;
+    border-top: 1px solid rgba(246, 255, 84, 0.25);
+  }
+  .prose ol.schedule li.schedule-item {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 1.5rem;
+    row-gap: 0.25rem;
+    padding: 1.5rem 0 !important;
+    margin: 0 !important;
+    border-bottom: 1px solid rgba(230, 230, 230, 0.1);
+  }
+  /* li ::marker (decimal 番号) を非表示 */
+  .prose ol.schedule li.schedule-item::marker {
+    content: "";
+    color: transparent;
+  }
+  /* 左カラム: 日付 (sans-serif, tabular nums で揃え)、2 行 span */
+  .prose ol.schedule li.schedule-item > time {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    display: block;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    color: var(--color-accent);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    align-self: start;
+  }
+  /* 右カラム 1 行目: 見出し */
+  .prose ol.schedule li.schedule-item > h3 {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  /* h2 用の accent bar は schedule-item の h3 では不要 */
+  .prose ol.schedule li.schedule-item > h3::before {
+    display: none;
+  }
+  /* 右カラム 2 行目: 本文 */
+  .prose ol.schedule li.schedule-item > p {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: rgba(230, 230, 230, 0.7);
+  }
+
+  /* デスクトップ: 日付列を広げる */
+  @media (min-width: 1024px) {
+    .prose ol.schedule li.schedule-item {
+      grid-template-columns: 10rem 1fr;
+      column-gap: 2rem;
+      padding: 1.75rem 0 !important;
+    }
+    .prose ol.schedule li.schedule-item > time {
+      font-size: 1rem;
+    }
+    .prose ol.schedule li.schedule-item > h3 {
+      font-size: 1.0625rem;
+    }
+  }
+
+  /* モバイル: 縦積み */
+  @media (max-width: 640px) {
+    .prose ol.schedule li.schedule-item {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      column-gap: 0;
+      row-gap: 0.375rem;
+      padding: 1.25rem 0 !important;
+    }
+    .prose ol.schedule li.schedule-item > time {
+      grid-column: 1;
+      grid-row: 1;
+      font-size: 0.8125rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .prose ol.schedule li.schedule-item > h3 {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .prose ol.schedule li.schedule-item > p {
+      grid-column: 1;
+      grid-row: 3;
+    }
+  }
 }

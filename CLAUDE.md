@@ -14,14 +14,33 @@ src/
     facility/page.tsx     # Facility
     services/page.tsx     # Services
     teaser/page.tsx       # Teaser (standalone)
+    [locale]/news/        # ニュース一覧 + 詳細 (microCMS 連携)
+    api/revalidate/       # microCMS Webhook (HMAC 検証 + revalidateTag)
+    api/draft/{enable,disable}/  # プレビューモード制御
   components/             # Shared & page-specific components
     Navigation.tsx
     Footer.tsx
     facility/             # Facility page components
     services/             # Services page components
+    news/                 # ニュース UI (NewsCard, NewsBodyRenderer 等)
+  config/featureFlags.ts  # USE_CMS_NEWS 等のフラグ
+  constants/news.ts       # ニュースカテゴリ・ページサイズ定数
+  lib/microcms/           # microCMS クライアント・スキーマ・クエリ
+  lib/news/               # サニタイズ・抜粋ユーティリティ
 public/
   logos/                  # Brand assets (SVG, PNG)
 ```
+
+## ニュース CMS (microCMS)
+
+- 設計書: `docs/superpowers/specs/2026-04-19-news-cms-integration-design.md`
+- 実装計画: `docs/superpowers/plans/2026-04-19-news-cms-integration.md`
+- 運用マニュアル: `docs/operations/news-admin-manual.md`
+- AI 生成プロンプト: `docs/operations/ai-news-prompt.md`
+- Feature Flag: `USE_CMS_NEWS=true` で有効化、未設定/false で旧ハードコード表示
+- 環境変数は `.env.example` の `MICROCMS_*` セクションを参照
+- Webhook URL (microCMS 管理画面で設定): `${SITE_URL}/api/revalidate`
+- プレビュー URL: `${SITE_URL}/api/draft/enable?secret=...&slug=...&draftKey=...&locale=ja|en`
 
 ## Development Process — TDD
 
