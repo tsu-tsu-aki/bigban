@@ -74,15 +74,18 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json({ ok: true, skipped: true });
   }
 
-  // Next.js 16 の revalidateTag は (tag, profile) の 2 引数必須。"default" は
-  // 標準キャッシュプロファイル。https://nextjs.org/docs/app/api-reference/functions/revalidateTag
+  // Next.js 16 の revalidateTag(tag, profile) は profile を必須で要求する。
+  // Webhook 起点で即時無効化を担保するため { expire: 0 } を指定する。
+  // "default" / "max" は stale-while-revalidate 系の挙動に解釈されうるため
+  // 採用しない。
+  // https://nextjs.org/docs/app/api-reference/functions/revalidateTag
   const tags: string[] = ["news"];
-  revalidateTag("news", "default");
+  revalidateTag("news", { expire: 0 });
   if (parsed.data.id) {
     const jaTag = `news-${parsed.data.id}-ja`;
     const enTag = `news-${parsed.data.id}-en`;
-    revalidateTag(jaTag, "default");
-    revalidateTag(enTag, "default");
+    revalidateTag(jaTag, { expire: 0 });
+    revalidateTag(enTag, { expire: 0 });
     tags.push(jaTag, enTag);
   }
 

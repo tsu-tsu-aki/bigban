@@ -14,6 +14,14 @@ import type { NewsItem } from "@/lib/microcms/schema";
 
 import AboutContent from "./AboutContent";
 
+// About ページ内の NEWS セクションは microCMS から最新ニュースを取得するため、
+// 静的生成 + Vercel CDN キャッシュにすると、microCMS Webhook 経由の
+// `revalidateTag("news")` が CDN まで伝播せず、`x-vercel-cache: HIT` で
+// 古い HTML が配信され続ける現象が確認された (本番で再現)。
+// /news 一覧・詳細ページと方針を統一し、リクエスト時動的レンダリングに固定する。
+// データ層は microCMS タグキャッシュ (next.tags) で引き続きキャッシュされる。
+export const dynamic = "force-dynamic";
+
 interface AboutPageProps {
   params: Promise<{ locale: string }>;
 }
