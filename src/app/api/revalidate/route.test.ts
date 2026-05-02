@@ -2,8 +2,11 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { createHmac } from "node:crypto";
 
 const revalidateTagMock = vi.fn();
+// 第2引数 (cacheLife profile) も検証対象にしたいので、すべての引数を
+// そのままモックに転送する。誤って "default" など stale-while-revalidate 系の
+// プロファイルに戻された場合に検知できるようにする。
 vi.mock("next/cache", () => ({
-  revalidateTag: (tag: string, _profile: unknown) => revalidateTagMock(tag),
+  revalidateTag: (...args: unknown[]) => revalidateTagMock(...args),
 }));
 
 const SECRET = "s3cret";
@@ -51,13 +54,20 @@ describe("/api/revalidate POST", () => {
     expect(res.status).toBe(401);
   });
 
-  it("news+id で news/news-{id}-ja/news-{id}-en の3タグ", async () => {
+  it("news+id で news/news-{id}-ja/news-{id}-en の3タグ + 即時無効化プロファイル", async () => {
     const { POST } = await import("./route");
     const res = await POST(makeRequest({ api: "news", id: "abc" }));
     expect(res.status).toBe(200);
-    expect(revalidateTagMock).toHaveBeenCalledWith("news");
-    expect(revalidateTagMock).toHaveBeenCalledWith("news-abc-ja");
-    expect(revalidateTagMock).toHaveBeenCalledWith("news-abc-en");
+    // 3 タグそれぞれが { expire: 0 } (即時無効化) で呼ばれることを検証する。
+    // "default" や "max" などの stale-while-revalidate 系プロファイルに
+    // 戻された場合はここで失敗させる。
+    expect(revalidateTagMock).toHaveBeenCalledWith("news", { expire: 0 });
+    expect(revalidateTagMock).toHaveBeenCalledWith("news-abc-ja", {
+      expire: 0,
+    });
+    expect(revalidateTagMock).toHaveBeenCalledWith("news-abc-en", {
+      expire: 0,
+    });
   });
 
   it("api!=news はスキップ", async () => {
@@ -70,11 +80,11 @@ describe("/api/revalidate POST", () => {
     expect(revalidateTagMock).not.toHaveBeenCalled();
   });
 
-  it("id無しでも news タグ", async () => {
+  it("id無しでも news タグが即時無効化プロファイルで呼ばれる", async () => {
     const { POST } = await import("./route");
     const res = await POST(makeRequest({ api: "news" }));
     expect(res.status).toBe(200);
-    expect(revalidateTagMock).toHaveBeenCalledWith("news");
+    expect(revalidateTagMock).toHaveBeenCalledWith("news", { expire: 0 });
     expect(revalidateTagMock).toHaveBeenCalledTimes(1);
   });
 
