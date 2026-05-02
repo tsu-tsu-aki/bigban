@@ -16,6 +16,11 @@ import {
 import { parseLocale, routing } from "@/i18n/routing";
 import { getNewsList } from "@/lib/microcms/queries";
 
+// searchParams (?category=&page=) は generateStaticParams で静的生成された
+// ロケール別ページと矛盾するため、ページ全体を動的レンダリングに固定する。
+// データ層は microCMS タグキャッシュ (next.tags) で引き続きキャッシュされる。
+export const dynamic = "force-dynamic";
+
 interface NewsPageProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
