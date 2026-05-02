@@ -291,3 +291,121 @@ describe("AboutPage", () => {
     });
   });
 });
+
+describe("AboutContent 05 NEWS (CMS integration)", () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  it("newsItems が渡されると NewsItem 表示 (続きを読む + すべてのニュースを見る)", async () => {
+    const { default: AboutContentReloaded } = await import("./AboutContent");
+    const items = Array.from({ length: 3 }, (_, i) => ({
+      id: `n${i}`,
+      slug: `s${i}`,
+      title: `ニュース${i}`,
+      createdAt: "2026-04-01T00:00:00.000Z",
+      updatedAt: "2026-04-01T00:00:00.000Z",
+      publishedAt: "2026-04-01T00:00:00.000Z",
+      locale: "ja" as const,
+      category: ["notice"] as ("notice" | "media" | "event" | "campaign")[],
+      excerpt: `抜粋${i}`,
+      displayMode: "html" as const,
+      bodyHtml: "<p>本文</p>",
+      body: "",
+    }));
+    renderWithIntl(<AboutContentReloaded newsItems={items} locale="ja" />);
+    expect(screen.getByText("ニュース0")).toBeInTheDocument();
+    expect(screen.getByText("ニュース2")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /すべてのニュース/ }),
+    ).toHaveAttribute("href", "/news");
+  });
+
+  it("newsItems=[] (flag OFF / fetch失敗時) は旧ハードコード表示", async () => {
+    const { default: AboutContentReloaded } = await import("./AboutContent");
+    renderWithIntl(<AboutContentReloaded newsItems={[]} locale="ja" />);
+    expect(
+      screen.getByText(/クラウドファンディング/),
+    ).toBeInTheDocument();
+  });
+
+  it("eyecatch がある記事は画像を表示する", async () => {
+    const { default: AboutContentReloaded } = await import("./AboutContent");
+    const items = [
+      {
+        id: "n0",
+        slug: "s0",
+        title: "アイキャッチあり記事",
+        createdAt: "2026-04-01T00:00:00.000Z",
+        updatedAt: "2026-04-01T00:00:00.000Z",
+        publishedAt: "2026-04-01T00:00:00.000Z",
+        locale: "ja" as const,
+        category: ["notice"] as ("notice" | "media" | "event" | "campaign")[],
+        excerpt: "抜粋",
+        displayMode: "html" as const,
+        bodyHtml: "<p>本文</p>",
+        body: "",
+        eyecatch: {
+          url: "https://images.microcms-assets.io/test.jpg",
+          width: 1600,
+          height: 900,
+        },
+      },
+    ];
+    const { container } = renderWithIntl(
+      <AboutContentReloaded newsItems={items} locale="ja" />,
+    );
+    const imgs = Array.from(container.querySelectorAll("img"));
+    const eyecatchImg = imgs.find((el) =>
+      (el.getAttribute("src") ?? "").includes("test.jpg"),
+    );
+    expect(eyecatchImg).toBeDefined();
+  });
+
+  it("eyecatch がない記事はプレースホルダーを表示する", async () => {
+    const { default: AboutContentReloaded } = await import("./AboutContent");
+    const items = [
+      {
+        id: "n1",
+        slug: "s1",
+        title: "アイキャッチなし記事",
+        createdAt: "2026-04-01T00:00:00.000Z",
+        updatedAt: "2026-04-01T00:00:00.000Z",
+        publishedAt: "2026-04-01T00:00:00.000Z",
+        locale: "ja" as const,
+        category: ["notice"] as ("notice" | "media" | "event" | "campaign")[],
+        excerpt: "抜粋",
+        displayMode: "html" as const,
+        bodyHtml: "<p>本文</p>",
+        body: "",
+      },
+    ];
+    renderWithIntl(<AboutContentReloaded newsItems={items} locale="ja" />);
+    expect(
+      screen.getByTestId("about-news-placeholder"),
+    ).toBeInTheDocument();
+  });
+
+  it("ニュースアイテム全体が記事詳細へのリンクになっている", async () => {
+    const { default: AboutContentReloaded } = await import("./AboutContent");
+    const items = [
+      {
+        id: "n2",
+        slug: "my-slug",
+        title: "クリック可能ニュース",
+        createdAt: "2026-04-01T00:00:00.000Z",
+        updatedAt: "2026-04-01T00:00:00.000Z",
+        publishedAt: "2026-04-01T00:00:00.000Z",
+        locale: "ja" as const,
+        category: ["notice"] as ("notice" | "media" | "event" | "campaign")[],
+        excerpt: "抜粋",
+        displayMode: "html" as const,
+        bodyHtml: "<p>本文</p>",
+        body: "",
+      },
+    ];
+    renderWithIntl(<AboutContentReloaded newsItems={items} locale="ja" />);
+    const link = screen.getByRole("link", { name: /クリック可能ニュース/ });
+    expect(link).toHaveAttribute("href", "/news/my-slug");
+  });
+});
