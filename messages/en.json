@@ -274,8 +274,10 @@
       "labelCompanyName": "Company Name",
       "labelCeo": "CEO",
       "labelBusiness": "Business",
+      "labelAddress": "Address",
       "valueCeo": "Akihiko Nishimura",
-      "valueBusiness": "Sports Facility Operations / Sports Events / Tournament Management / Sports Equipment Planning & Sales"
+      "valueBusiness": "Sports Facility Operations / Sports Events / Tournament Management / Sports Equipment Planning & Sales",
+      "valueAddress": "Plus One 402, 3-14-34 Kamiosaki,\nShinagawa-ku, Tokyo 141-0021"
     },
     "founder": {
       "name": "Akihiko Nishimura",
@@ -407,7 +409,7 @@
     "manager": "Sales Manager",
     "managerValue": "Akihiko Nishimura",
     "address": "Address",
-    "addressValue": "1-4-2 Futaba, Shinagawa-ku, Tokyo",
+    "addressValue": "Plus One 402, 3-14-34 Kamiosaki,\nShinagawa-ku, Tokyo 141-0021",
     "phone": "Phone",
     "phoneValue": "090 5523 3879",
     "hours": "Business Hours",

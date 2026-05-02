@@ -202,6 +202,10 @@ export default function AboutContent() {
                     <dt className="text-text-gray">{t("company.labelBusiness")}</dt>
                     <dd className="text-text-light mt-1">{t("company.valueBusiness")}</dd>
                   </div>
+                  <div>
+                    <dt className="text-text-gray">{t("company.labelAddress")}</dt>
+                    <dd className="text-text-light mt-1 whitespace-pre-line">{t("company.valueAddress")}</dd>
+                  </div>
                 </dl>
               </div>
             </motion.div>
