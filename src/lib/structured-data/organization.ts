@@ -12,6 +12,7 @@ export interface OrganizationSchema {
   address: {
     "@type": "PostalAddress";
     addressCountry: string;
+    postalCode: string;
     addressRegion: string;
     addressLocality: string;
     streetAddress: string;
@@ -44,9 +45,10 @@ export function buildOrganization(): OrganizationSchema {
     address: {
       "@type": "PostalAddress",
       addressCountry: "JP",
+      postalCode: "141-0021",
       addressRegion: "東京都",
       addressLocality: "品川区",
-      streetAddress: "二葉1-4-2",
+      streetAddress: "上大崎3-14-34プラスワン402",
     },
     knowsAbout: [
       "Pickleball",

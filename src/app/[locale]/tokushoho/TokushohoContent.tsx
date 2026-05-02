@@ -55,7 +55,7 @@ export default function TokushohoContent() {
                   <dt className="text-sm font-medium text-text-gray">
                     {t(key)}
                   </dt>
-                  <dd className="mt-1 text-sm text-text-light sm:col-span-2 sm:mt-0">
+                  <dd className={`mt-1 text-sm text-text-light sm:col-span-2 sm:mt-0${key === "address" ? " whitespace-pre-line" : ""}`}>
                     {href ? (
                       <a
                         href={href}
