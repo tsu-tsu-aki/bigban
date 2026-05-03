@@ -115,6 +115,11 @@ describe("Home Page", () => {
     ).rejects.toThrow(/NEXT_NOT_FOUND/);
   });
 
+  it("export const dynamic === 'force-dynamic' (CDN キャッシュ無効化、microCMS 公開終了の即時反映を担保)", async () => {
+    const mod = await import("./page");
+    expect(mod.dynamic).toBe("force-dynamic");
+  });
+
   it("HomeNews を Suspense で囲んでストリーミング遅延を回避する", async () => {
     const { Suspense } = await import("react");
     const { default: Home } = await import("./page");
