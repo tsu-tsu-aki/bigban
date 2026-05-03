@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 
 const SESSION_KEY = "bigban-crowdfunding-dismissed";
-const TRIGGER_SECTION_ID = "concept";
+const TRIGGER_SECTION_ID = "services";
 
 /* istanbul ignore next -- SSR-only snapshot */
 const noop = () => () => {};
@@ -28,7 +28,9 @@ export function useCrowdfundingPopup() {
   const [isDismissed, setIsDismissed] = useState(false);
   const hasTriggered = useRef(false);
 
-  // CONCEPT セクションに到達 (画面に入った) 瞬間にポップアップを表示する。
+  // SERVICES セクションに到達 (画面に入った) 瞬間にポップアップを表示する。
+  // 早すぎるとファーストビューを邪魔するので、ユーザーが Concept/Facility を読み終えて
+  // SERVICES に到達する=ある程度エンゲージしたタイミングで出す設計。
   // sessionStorage で「閉じた」フラグが立っていれば observer を仕掛けない。
   useEffect(() => {
     if (!isMounted || !isNotDismissed || hasTriggered.current) return;

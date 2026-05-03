@@ -29,7 +29,7 @@ function setupIntersectionObserver() {
     MockIntersectionObserver as unknown as typeof IntersectionObserver;
 }
 
-function triggerConceptVisible() {
+function triggerServicesVisible() {
   observerCallback(
     [{ isIntersecting: true } as IntersectionObserverEntry],
     {} as IntersectionObserver,
@@ -38,7 +38,7 @@ function triggerConceptVisible() {
 
 describe("useCrowdfundingPopup", () => {
   let mockStorage: Record<string, string>;
-  let conceptSection: HTMLElement;
+  let servicesSection: HTMLElement;
 
   beforeEach(() => {
     mockStorage = {};
@@ -56,33 +56,33 @@ describe("useCrowdfundingPopup", () => {
     });
     setupIntersectionObserver();
 
-    conceptSection = document.createElement("section");
-    conceptSection.id = "concept";
-    document.body.appendChild(conceptSection);
+    servicesSection = document.createElement("section");
+    servicesSection.id = "services";
+    document.body.appendChild(servicesSection);
   });
 
   afterEach(() => {
-    conceptSection.remove();
+    servicesSection.remove();
     vi.restoreAllMocks();
   });
 
-  it("初回訪問時でも CONCEPT セクション到達前は isOpen が false", () => {
+  it("初回訪問時でも SERVICES セクション到達前は isOpen が false", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
     expect(result.current.isOpen).toBe(false);
   });
 
-  it("CONCEPT セクションが画面に入った瞬間に isOpen が true になる", () => {
+  it("SERVICES セクションが画面に入った瞬間に isOpen が true になる", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
     expect(result.current.isOpen).toBe(false);
 
     act(() => {
-      triggerConceptVisible();
+      triggerServicesVisible();
     });
 
     expect(result.current.isOpen).toBe(true);
   });
 
-  it("CONCEPT がまだ画面外 (isIntersecting=false) なら isOpen は false のまま", () => {
+  it("SERVICES がまだ画面外 (isIntersecting=false) なら isOpen は false のまま", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
     act(() => {
       observerCallback(
@@ -97,7 +97,7 @@ describe("useCrowdfundingPopup", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
 
     act(() => {
-      triggerConceptVisible();
+      triggerServicesVisible();
     });
     expect(result.current.isOpen).toBe(true);
     expect(mockDisconnect).toHaveBeenCalled();
@@ -113,7 +113,7 @@ describe("useCrowdfundingPopup", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
 
     act(() => {
-      triggerConceptVisible();
+      triggerServicesVisible();
     });
     expect(result.current.isOpen).toBe(true);
 
@@ -128,7 +128,7 @@ describe("useCrowdfundingPopup", () => {
     );
   });
 
-  it("sessionStorage アクセスエラー時でも CONCEPT 到達で表示される", () => {
+  it("sessionStorage アクセスエラー時でも SERVICES 到達で表示される", () => {
     Object.defineProperty(window, "sessionStorage", {
       value: {
         getItem: vi.fn(() => {
@@ -145,7 +145,7 @@ describe("useCrowdfundingPopup", () => {
     expect(result.current.isOpen).toBe(false);
 
     act(() => {
-      triggerConceptVisible();
+      triggerServicesVisible();
     });
 
     expect(result.current.isOpen).toBe(true);
@@ -165,7 +165,7 @@ describe("useCrowdfundingPopup", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
 
     act(() => {
-      triggerConceptVisible();
+      triggerServicesVisible();
     });
     expect(result.current.isOpen).toBe(true);
 
@@ -176,8 +176,8 @@ describe("useCrowdfundingPopup", () => {
     expect(result.current.isOpen).toBe(false);
   });
 
-  it("CONCEPT セクションが存在しない場合もエラーにならない", () => {
-    conceptSection.remove();
+  it("SERVICES セクションが存在しない場合もエラーにならない", () => {
+    servicesSection.remove();
     const { result } = renderHook(() => useCrowdfundingPopup());
     expect(result.current.isOpen).toBe(false);
   });
