@@ -20,6 +20,11 @@ import HomeFooter from "@/components/home/HomeFooter";
 
 import type { Metadata } from "next";
 
+// HomeNews の fetch tag が Suspense 境界内のため Full Route Cache に登録されず、
+// revalidateTag/revalidatePath が CDN へ伝播しない (本番で再現)。
+// About ページ (bc30a56) と同様、動的レンダリングに固定して解決する。
+export const dynamic = "force-dynamic";
+
 interface HomePageProps {
   params: Promise<{ locale: string }>;
 }
