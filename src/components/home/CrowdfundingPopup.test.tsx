@@ -45,6 +45,24 @@ describe("CrowdfundingPopup", () => {
     ).toBeInTheDocument();
   });
 
+  it("ボーナス文言 (目標達成 → 6 月も 30%OFF) が role=status で表示される (a11y)", () => {
+    renderWithIntl(<CrowdfundingPopup isOpen={true} onClose={vi.fn()} />);
+    const bonus = screen.getByText("目標金額100%達成で6月も30%OFF🔥");
+    expect(bonus).toBeInTheDocument();
+    // 強調情報なのでスクリーンリーダーに「ステータス」として通知する
+    expect(bonus).toHaveAttribute("role", "status");
+  });
+
+  it("EN ロケールでボーナス文言が英語で表示される", () => {
+    renderWithIntl(
+      <CrowdfundingPopup isOpen={true} onClose={vi.fn()} />,
+      "en",
+    );
+    expect(
+      screen.getByText(/100% goal reached/i),
+    ).toBeInTheDocument();
+  });
+
   it("isOpen=falseでダイアログが非表示", () => {
     renderWithIntl(<CrowdfundingPopup isOpen={false} onClose={vi.fn()} />);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();

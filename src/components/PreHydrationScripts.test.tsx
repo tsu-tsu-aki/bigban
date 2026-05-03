@@ -57,4 +57,13 @@ describe("PreHydrationScripts", () => {
     expect(introScript).toContain("bigban-intro-played");
     expect(introScript).toContain("prefers-reduced-motion");
   });
+
+  it("intro-pending は何があっても 6 秒以内に DOM レベルで必ず剥がれるフェイルセーフを持つ", async () => {
+    // HomeIntro の useEffect が hydration race で走らない場合でも、
+    // main が永久に visibility:hidden に閉じ込められないよう保証する。
+    const { introScript } = await import("./PreHydrationScripts");
+    expect(introScript).toContain("setTimeout");
+    expect(introScript).toContain("6000");
+    expect(introScript).toMatch(/classList\.remove\(['"]intro-pending['"]\)/);
+  });
 });

@@ -124,6 +124,12 @@ export default function CrowdfundingPopup({
               <p className="text-sm text-text-dark leading-relaxed">
                 {t("subheadline")}
               </p>
+              <p
+                role="status"
+                className="bg-accent/10 border border-accent/40 text-accent text-sm font-bold px-4 py-2 leading-relaxed"
+              >
+                {t("bonus")}
+              </p>
               <a
                 href={CAMPFIRE_URL}
                 {...EXTERNAL_LINK_PROPS}
