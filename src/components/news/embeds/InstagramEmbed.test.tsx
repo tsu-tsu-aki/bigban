@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 
 import { InstagramEmbed } from "./InstagramEmbed";
@@ -23,14 +23,6 @@ function renderWithIntl(ui: React.ReactNode, locale = "ja") {
   );
 }
 
-function postInstagramMessage(data: unknown, origin = "https://www.instagram.com") {
-  act(() => {
-    window.dispatchEvent(
-      new MessageEvent("message", { data, origin }),
-    );
-  });
-}
-
 describe("InstagramEmbed", () => {
   it("登録済 shortcode で iframe (instagram.com/p/{id}/embed) を即時描画", () => {
     renderWithIntl(<InstagramEmbed embedId="C12abcXYZ_-" />);
@@ -40,65 +32,28 @@ describe("InstagramEmbed", () => {
     );
   });
 
-  it("初期高さは 600px (postMessage 到達前のフォールバック)", () => {
-    renderWithIntl(<InstagramEmbed embedId="C12abcXYZ_-" />);
-    const iframe = screen.getByTitle("Instagram 投稿") as HTMLIFrameElement;
-    expect(iframe.style.height).toBe("600px");
-  });
-
-  it("aspect-ratio は使わず max-width のみ (高さは動的)", () => {
+  it("固定高さ 700px / 最大幅 540px (CLS 0、カクつきなし)", () => {
     renderWithIntl(<InstagramEmbed embedId="C12abcXYZ_-" />);
     const wrapper = screen.getByTestId("embed-shell");
-    expect(wrapper.style.aspectRatio).toBe("");
+    expect(wrapper.style.height).toBe("700px");
     expect(wrapper.style.maxWidth).toBe("540px");
+    // aspect-ratio は使わない (高さ固定のため不要)
+    expect(wrapper.style.aspectRatio).toBe("");
   });
 
-  it("Instagram からの postMessage (MEASURE 形式) で iframe 高さが更新される", () => {
+  it("iframe には sandbox / referrerpolicy / loading=lazy / allow がハードコード", () => {
     renderWithIntl(<InstagramEmbed embedId="C12abcXYZ_-" />);
-    const iframe = screen.getByTitle("Instagram 投稿") as HTMLIFrameElement;
-    expect(iframe.style.height).toBe("600px");
-
-    postInstagramMessage({ type: "MEASURE", details: { height: 1024 } });
-    expect(iframe.style.height).toBe("1024px");
-  });
-
-  it("Instagram からの postMessage (簡易 height 形式) でも更新される", () => {
-    renderWithIntl(<InstagramEmbed embedId="C12abcXYZ_-" />);
-    const iframe = screen.getByTitle("Instagram 投稿") as HTMLIFrameElement;
-
-    postInstagramMessage({ height: 800 });
-    expect(iframe.style.height).toBe("800px");
-  });
-
-  it("文字列の JSON ペイロードでも高さを抽出できる", () => {
-    renderWithIntl(<InstagramEmbed embedId="C12abcXYZ_-" />);
-    const iframe = screen.getByTitle("Instagram 投稿") as HTMLIFrameElement;
-
-    postInstagramMessage(JSON.stringify({ height: 750 }));
-    expect(iframe.style.height).toBe("750px");
-  });
-
-  it("信頼できない origin からのメッセージは無視 (instagram.com 以外)", () => {
-    renderWithIntl(<InstagramEmbed embedId="C12abcXYZ_-" />);
-    const iframe = screen.getByTitle("Instagram 投稿") as HTMLIFrameElement;
-    expect(iframe.style.height).toBe("600px");
-
-    postInstagramMessage(
-      { height: 9999 },
-      "https://evil.example.com",
+    const iframe = screen.getByTitle("Instagram 投稿");
+    expect(iframe.getAttribute("sandbox")).toBe(
+      "allow-scripts allow-same-origin allow-presentation allow-popups",
     );
-    expect(iframe.style.height).toBe("600px");
-  });
-
-  it("負値 / 0 / 異常データは無視", () => {
-    renderWithIntl(<InstagramEmbed embedId="C12abcXYZ_-" />);
-    const iframe = screen.getByTitle("Instagram 投稿") as HTMLIFrameElement;
-
-    postInstagramMessage({ height: 0 });
-    postInstagramMessage({ height: -100 });
-    postInstagramMessage({ unrelated: "data" });
-    postInstagramMessage("not-json");
-    expect(iframe.style.height).toBe("600px");
+    expect(iframe.getAttribute("referrerpolicy")).toBe(
+      "strict-origin-when-cross-origin",
+    );
+    expect(iframe.getAttribute("loading")).toBe("lazy");
+    const allow = iframe.getAttribute("allow") ?? "";
+    expect(allow).toMatch(/clipboard-write/);
+    expect(allow).toMatch(/encrypted-media/);
   });
 
   it("fallback リンクが元投稿 URL を保持", () => {

@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { useTranslations } from "next-intl";
 
 import { INSTAGRAM_PROVIDER } from "@/lib/news/embeds/instagram";
@@ -16,99 +14,53 @@ const REFERRER_POLICY = "strict-origin-when-cross-origin";
 const ALLOW =
   "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
 
-const TRUSTED_ORIGIN = "https://www.instagram.com";
-// 投稿の中身が postMessage で届くまでの初期高さ。Instagram が送ってきた
-// 実測値で上書きされるため一時的な値で OK だが、極端に小さいと CLS が出る
-// ため標準的な投稿の高さに合わせて 600px とする。
-const INITIAL_HEIGHT = 600;
+// Instagram 投稿の中央値的サイズに合わせた固定高さ。
+// postMessage による動的リサイズは行わない (CLS / カクつき防止)。
+// 短い投稿は下部に余白が出る (黒背景でブランドのダーク基調と整合)。
+// 長い投稿は iframe 内部で縦スクロール (Instagram 標準挙動)。
+const EMBED_HEIGHT_PX = 700;
+const MAX_WIDTH = "540px";
 
 /**
- * Instagram から送られてくる postMessage の型 (旧来の形式)。
- * { type: "MEASURE", details: { height: number } }
- * 仕様未公開のため複数形式を防御的にパースする。
- */
-function extractHeightFromMessage(data: unknown): number | null {
-  if (typeof data === "string") {
-    try {
-      return extractHeightFromMessage(JSON.parse(data));
-    } catch {
-      return null;
-    }
-  }
-  if (typeof data !== "object" || data === null) return null;
-  const obj = data as Record<string, unknown>;
-  // 形式 1: { type: "MEASURE", details: { height: N } }
-  if (obj.type === "MEASURE" && typeof obj.details === "object" && obj.details !== null) {
-    const h = (obj.details as Record<string, unknown>).height;
-    if (typeof h === "number" && h > 0) return h;
-  }
-  // 形式 2: { height: N }
-  if (typeof obj.height === "number" && obj.height > 0) return obj.height;
-  return null;
-}
-
-/**
- * Instagram 埋め込みコンポーネント (動的高さ調整あり)。
+ * Instagram 埋め込みコンポーネント (固定高さ表示)。
  *
  * - id 検証 (1〜15 文字、英数字 + - _) を行い、不正なら何も描画しない
  * - 投稿タイプ (post / reel / IGTV) はすべて /p/{id}/embed で処理可能
  *   (Instagram が内部リダイレクト)
- * - 540px 上限の中央寄せ
- * - 高さは Instagram からの postMessage で自動調整 (投稿の長さに応じて変動)
- *   届く前の初期高さは 600px (CLS 抑制のため)
+ * - 540px 上限の中央寄せ、高さ 700px 固定
+ * - レイアウトシフト 0、カクつき発生なし
  */
 export function InstagramEmbed({ embedId }: InstagramEmbedProps) {
   const t = useTranslations("News.embed");
-  const [height, setHeight] = useState<number>(INITIAL_HEIGHT);
-
-  useEffect(() => {
-    function handleMessage(e: MessageEvent) {
-      if (e.origin !== TRUSTED_ORIGIN) return;
-      const h = extractHeightFromMessage(e.data);
-      if (h !== null) {
-        setHeight(h);
-      }
-    }
-    window.addEventListener("message", handleMessage);
-    return () => {
-      window.removeEventListener("message", handleMessage);
-    };
-  }, []);
 
   if (!INSTAGRAM_PROVIDER.idPattern.test(embedId)) {
     return null;
   }
 
-  const iframeUrl = INSTAGRAM_PROVIDER.buildIframeUrl(embedId);
-  const iframeTitle = t("instagram.iframeTitle");
-  const fallbackHref = `https://www.instagram.com/p/${embedId}/`;
-  const fallbackLabel = t("fallbackLabel");
-
   return (
     <figure
       data-testid="embed-shell"
       className="relative w-full my-8 mx-auto bg-black"
-      style={{ maxWidth: "540px" }}
+      style={{ maxWidth: MAX_WIDTH, height: `${EMBED_HEIGHT_PX}px` }}
     >
       <iframe
-        src={iframeUrl}
-        title={iframeTitle}
+        src={INSTAGRAM_PROVIDER.buildIframeUrl(embedId)}
+        title={t("instagram.iframeTitle")}
         sandbox={SANDBOX}
         referrerPolicy={REFERRER_POLICY}
         loading="lazy"
         allow={ALLOW}
         allowFullScreen
-        className="w-full border-0 block"
-        style={{ height: `${height}px` }}
+        className="w-full h-full border-0 block"
       />
       <a
         data-testid="embed-fallback-link"
-        href={fallbackHref}
+        href={`https://www.instagram.com/p/${embedId}/`}
         target="_blank"
         rel="noopener noreferrer"
         className="sr-only"
       >
-        {fallbackLabel}
+        {t("fallbackLabel")}
       </a>
     </figure>
   );
