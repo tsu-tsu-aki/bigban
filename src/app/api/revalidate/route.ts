@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -89,5 +89,11 @@ export async function POST(request: Request): Promise<Response> {
     tags.push(jaTag, enTag);
   }
 
-  return NextResponse.json({ ok: true, revalidated: tags });
+  // タグ依存が Full Route Cache に記録されていないページ
+  // (Suspense 境界内で fetch しているトップページ HomeNews 等) でも
+  // 確実に再生成するため、root layout レベルで path invalidation を発火する。
+  // "layout" 指定で / 配下 (ja/en 両方含む) すべてのルートが再生成対象になる。
+  revalidatePath("/", "layout");
+
+  return NextResponse.json({ ok: true, revalidated: tags, paths: ["/"] });
 }
