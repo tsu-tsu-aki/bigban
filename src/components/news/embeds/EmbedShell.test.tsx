@@ -55,6 +55,15 @@ describe("EmbedShell", () => {
     expect(wrapper).toHaveStyle({ maxWidth: "540px" });
   });
 
+  it("aspectRatio の代わりに height (固定高さ) を指定できる (Instagram 等の可変投稿向け)", () => {
+    const { aspectRatio: _omit, ...rest } = baseProps;
+    void _omit;
+    render(<EmbedShell {...rest} height="700px" maxWidth="540px" />);
+    const wrapper = screen.getByTestId("embed-shell");
+    expect(wrapper).toHaveStyle({ height: "700px", maxWidth: "540px" });
+    expect(wrapper.style.aspectRatio).toBe("");
+  });
+
   it("fallback リンクが sr-only で DOM に常時存在する", () => {
     render(<EmbedShell {...baseProps} />);
     const fallback = screen.getByTestId("embed-fallback-link");

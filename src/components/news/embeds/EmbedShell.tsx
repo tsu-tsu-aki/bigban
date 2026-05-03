@@ -8,10 +8,15 @@ interface EmbedShellProps {
   /** フォールバックリンクの文言 */
   fallbackLabel: string;
   /**
-   * CSS aspect-ratio (例: "16 / 9", "1 / 1.4")。
-   * プロバイダごとに最適値が異なるため必須。CLS 対策として固定する。
+   * CSS aspect-ratio (例: "16 / 9")。動画など縦横比固定のプロバイダ向け。
+   * height と排他的に指定する (両方指定した場合は aspectRatio が優先)。
    */
-  aspectRatio: string;
+  aspectRatio?: string;
+  /**
+   * 固定高さ (例: "700px")。投稿の長さが可変のプロバイダ (Instagram 等) 向け。
+   * aspectRatio と排他的に指定する。
+   */
+  height?: string;
   /**
    * 最大幅 (例: "540px")。指定時は中央寄せで配置。
    * Instagram (540px 推奨) など、幅を絞りたいプロバイダ向け。
@@ -31,9 +36,10 @@ const ALLOW =
 /**
  * SNS 埋め込みの共通骨格 (ページ表示と同時に iframe 読み込み開始)。
  *
- * - aspect-ratio はプロバイダごとに props で指定 (CLS 対策必須)
+ * - サイズ指定: aspectRatio (動画) または height (Instagram 等可変投稿) を排他で指定
  * - maxWidth はプロバイダごとに props で指定 (Instagram 540px 等)
  * - sandbox / referrerpolicy / loading=lazy / allow をハードコード (運用者が触れない)
+ *   → セキュリティ定数の単一の真実の源。新プロバイダはこの EmbedShell を必ず再利用
  * - loading=lazy はビューポート外の場合に読み込みを遅延させ通信量を抑える
  * - フォールバックリンクは sr-only で常時 DOM に保持 (a11y / クローラ対応)
  *
@@ -45,13 +51,14 @@ export function EmbedShell({
   fallbackHref,
   fallbackLabel,
   aspectRatio,
+  height,
   maxWidth,
 }: EmbedShellProps) {
   return (
     <figure
       data-testid="embed-shell"
       className="relative w-full my-8 overflow-hidden bg-black mx-auto"
-      style={{ aspectRatio, maxWidth }}
+      style={{ aspectRatio, height, maxWidth }}
     >
       <iframe
         src={iframeUrl}

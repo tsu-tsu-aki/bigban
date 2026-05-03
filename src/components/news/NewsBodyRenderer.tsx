@@ -90,11 +90,14 @@ type BodySegment =
   | { kind: "html"; html: string }
   | { kind: "embed"; provider: string; id: string };
 
+// 既知の制限: 属性キャプチャ [^>]+ は属性値内のリテラル '>' を扱えない
+// (例: title="A > B")。サニタイズ済み HTML + 制御された embed token の文脈
+// では実用上問題ないが、将来許可属性が増える時はこの前提を再評価すること。
 const ANCHOR_TAG_RE = /<a\s([^>]+)>([\s\S]*?)<\/a>/g;
 const PROVIDER_ATTR_RE = /\bdata-embed-provider="([a-z]+)"/;
 const ID_ATTR_RE = /\bdata-embed-id="([A-Za-z0-9_-]+)"/;
 
-export function segmentBodyHtml(html: string): BodySegment[] {
+function segmentBodyHtml(html: string): BodySegment[] {
   const segments: BodySegment[] = [];
   let lastIdx = 0;
   ANCHOR_TAG_RE.lastIndex = 0;
