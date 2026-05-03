@@ -20,14 +20,9 @@ import HomeFooter from "@/components/home/HomeFooter";
 
 import type { Metadata } from "next";
 
-// トップページの NEWS セクション (HomeNews) は microCMS から最新ニュースを取得するため、
-// 静的生成 + Vercel CDN キャッシュにすると、microCMS Webhook 経由の
-// `revalidateTag("news")` / `revalidatePath("/", "layout")` が CDN まで伝播せず、
-// `x-vercel-cache: HIT` で古い HTML が配信され続ける現象が確認された (本番で再現)。
-// 公開終了したニュースが消えない問題が発生。
-// About ページ (bc30a56) と同様に、リクエスト時動的レンダリングに固定して解決する。
-// データ層は microCMS タグキャッシュ (next.tags) で引き続きキャッシュされるため、
-// HomeNews の fetch が毎回 microCMS まで飛ぶわけではない。
+// HomeNews の fetch tag が Suspense 境界内のため Full Route Cache に登録されず、
+// revalidateTag/revalidatePath が CDN へ伝播しない (本番で再現)。
+// About ページ (bc30a56) と同様、動的レンダリングに固定して解決する。
 export const dynamic = "force-dynamic";
 
 interface HomePageProps {
