@@ -449,6 +449,15 @@
     "imageAlt": "THE PICKLE BANG THEORY Crowdfunding"
   },
   "News": {
-    "heading": "News"
+    "heading": "News",
+    "embed": {
+      "youtube": {
+        "iframeTitle": "YouTube player"
+      },
+      "instagram": {
+        "iframeTitle": "Instagram post"
+      },
+      "fallbackLabel": "Open externally"
+    }
   }
 }
