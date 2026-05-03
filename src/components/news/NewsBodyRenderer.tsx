@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import type { Locale } from "@/i18n/routing";
 import {
   RICH_EDITOR_CONFIG,
@@ -5,6 +7,8 @@ import {
   sanitizeNewsHtml,
 } from "@/lib/news/sanitize";
 import type { NewsItem } from "@/lib/microcms/schema";
+
+import { YouTubeEmbed } from "./embeds/YouTubeEmbed";
 
 interface NewsBodyRendererProps {
   displayMode: NewsItem["displayMode"];
@@ -69,14 +73,112 @@ function optimizeMicrocmsImages(html: string): string {
   );
 }
 
+/**
+ * SNS 埋め込みトークンの抽出。
+ *
+ * 入力: サニタイズ済み HTML
+ * 出力: { kind: "html"|"embed", ... } のセグメント配列
+ *
+ * - <a> 内に data-embed-provider と data-embed-id の両方がある時のみマッチ
+ *   (サニタイザーが provider を allowlist 検証済みなのでここで再検証は不要)
+ * - 属性順序非依存 (各属性を個別に regex 抽出)
+ * - 規約: 埋め込みトークンは top-level に置く (Skill 側で担保)
+ *   <p> 内に置かれた場合の HTML 境界の整合性は最善努力 (R1 リスク参照)
+ */
+type BodySegment =
+  | { kind: "html"; html: string }
+  | { kind: "embed"; provider: string; id: string };
+
+const ANCHOR_TAG_RE = /<a\s([^>]+)>([\s\S]*?)<\/a>/g;
+const PROVIDER_ATTR_RE = /\bdata-embed-provider="([a-z]+)"/;
+const ID_ATTR_RE = /\bdata-embed-id="([A-Za-z0-9_-]+)"/;
+
+export function segmentBodyHtml(html: string): BodySegment[] {
+  const segments: BodySegment[] = [];
+  let lastIdx = 0;
+  ANCHOR_TAG_RE.lastIndex = 0;
+
+  let match: RegExpExecArray | null;
+  while ((match = ANCHOR_TAG_RE.exec(html)) !== null) {
+    const attrs = match[1];
+    const providerMatch = PROVIDER_ATTR_RE.exec(attrs);
+    const idMatch = ID_ATTR_RE.exec(attrs);
+    if (!providerMatch || !idMatch) continue; // 普通の <a> リンクは触らない
+
+    const start = match.index;
+    if (start > lastIdx) {
+      segments.push({ kind: "html", html: html.slice(lastIdx, start) });
+    }
+    segments.push({
+      kind: "embed",
+      provider: providerMatch[1],
+      id: idMatch[1],
+    });
+    lastIdx = start + match[0].length;
+  }
+
+  if (lastIdx === 0) {
+    // 埋め込みトークン無し: 早期リターン (従来パスと同じ単一セグメント)
+    return [{ kind: "html", html }];
+  }
+  if (lastIdx < html.length) {
+    segments.push({ kind: "html", html: html.slice(lastIdx) });
+  }
+  return segments;
+}
+
+/**
+ * provider 名 → React Component の dispatcher。
+ * 未登録プロバイダはサニタイザーで data-embed-provider が落とされるため
+ * 通常ここに到達しないが、防御的に null を返す。
+ */
+function renderEmbed(provider: string, id: string, key: number) {
+  if (provider === "youtube") {
+    return <YouTubeEmbed key={key} embedId={id} />;
+  }
+  /* istanbul ignore next -- @preserve サニタイザーが registry に無い provider を
+   既に弾いているため、未知 provider はこのコードパスに到達しない */
+  return null;
+}
+
 function renderBody(safeHtml: string) {
   const processed = optimizeMicrocmsImages(wrapTablesForScroll(safeHtml));
+  const segments = segmentBodyHtml(processed);
+
+  // 埋め込み無しの場合は従来通りの単一 div で描画 (CSS prose の挙動を完全維持)
+  if (segments.length === 1 && segments[0].kind === "html") {
+    return (
+      <div
+        data-testid="news-body"
+        className={`news-body ${PROSE_CLASS}`}
+        dangerouslySetInnerHTML={{ __html: segments[0].html }}
+      />
+    );
+  }
+
+  // 埋め込みあり: HTML セグメントと React Component を交互にレンダリング
+  // contents (display: contents) で wrapper div を視覚的に透明化し、
+  // prose の descendant selector に影響を与えない。
   return (
-    <div
-      data-testid="news-body"
-      className={`news-body ${PROSE_CLASS}`}
-      dangerouslySetInnerHTML={{ __html: processed }}
-    />
+    <div data-testid="news-body" className={`news-body ${PROSE_CLASS}`}>
+      {segments.map((seg, i) => {
+        if (seg.kind === "html") {
+          if (seg.html.length === 0) return null;
+          return (
+            <div
+              key={`html-${i}`}
+              className="contents"
+              dangerouslySetInnerHTML={{ __html: seg.html }}
+            />
+          );
+        }
+        return (
+          <Fragment key={`embed-${i}`}>
+            {renderEmbed(seg.provider, seg.id, i)}
+          </Fragment>
+        );
+      })}
+    </div>
   );
 }
 

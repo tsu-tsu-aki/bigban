@@ -1,6 +1,29 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
+
 import { NewsBodyRenderer } from "./NewsBodyRenderer";
+
+const messages = {
+  News: {
+    embed: {
+      youtube: {
+        playLabel: "動画を再生",
+        iframeTitle: "YouTube プレイヤー",
+        thumbnailAlt: "YouTube サムネイル",
+      },
+      fallbackLabel: "外部サイトで開く",
+    },
+  },
+};
+
+function withIntl(ui: React.ReactNode, locale: "ja" | "en" = "ja") {
+  return (
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      {ui}
+    </NextIntlClientProvider>
+  );
+}
 
 describe("NewsBodyRenderer", () => {
   it("displayMode=html で bodyHtml を STRICT サニタイズ後に表示", () => {
@@ -207,5 +230,90 @@ describe("NewsBodyRenderer", () => {
       />,
     );
     expect(container.textContent).toContain("No content available.");
+  });
+
+  describe("SNS 埋め込みトークン → React Component 置換", () => {
+    it("YouTube 埋め込みトークン (top-level) を YouTubeEmbed として描画", () => {
+      const html = `<p>動画はこちら。</p><a class="embed" data-embed-provider="youtube" data-embed-id="dQw4w9WgXcQ">YouTube で見る</a><p>続きの本文。</p>`;
+      const { container } = render(
+        withIntl(
+          <NewsBodyRenderer
+            displayMode="html"
+            bodyHtml={html}
+            body=""
+          />,
+        ),
+      );
+      // YouTubeEmbed の特徴: テストID embed-shell が存在
+      expect(container.querySelector('[data-testid="embed-shell"]')).toBeInTheDocument();
+      // 元の <a> リンクは sr-only fallback として残るが、
+      // ボタン (再生) が button role で出現
+      expect(screen.getByRole("button", { name: /動画を再生/ })).toBeInTheDocument();
+      // 周辺の <p> は維持
+      expect(screen.getByText("動画はこちら。")).toBeInTheDocument();
+      expect(screen.getByText("続きの本文。")).toBeInTheDocument();
+    });
+
+    it("属性順序が逆 (data-embed-id が先) でも置換される", () => {
+      const html = `<a data-embed-id="dQw4w9WgXcQ" data-embed-provider="youtube" class="embed">x</a>`;
+      const { container } = render(
+        withIntl(
+          <NewsBodyRenderer
+            displayMode="html"
+            bodyHtml={html}
+            body=""
+          />,
+        ),
+      );
+      expect(container.querySelector('[data-testid="embed-shell"]')).toBeInTheDocument();
+    });
+
+    it("未登録プロバイダ (vimeo) はサニタイザーで data-embed-provider が落ち、素のリンクとして残る", () => {
+      const html = `<a class="embed" data-embed-provider="vimeo" data-embed-id="123">Vimeo で見る</a>`;
+      const { container } = render(
+        withIntl(
+          <NewsBodyRenderer
+            displayMode="html"
+            bodyHtml={html}
+            body=""
+          />,
+        ),
+      );
+      // EmbedShell は描画されない
+      expect(container.querySelector('[data-testid="embed-shell"]')).toBeNull();
+      // テキストはそのまま残る (サニタイザー通過後の <a> として)
+      expect(container.textContent).toContain("Vimeo で見る");
+    });
+
+    it("複数の埋め込みトークンを順番に描画", () => {
+      const html = `<p>1本目</p><a class="embed" data-embed-provider="youtube" data-embed-id="aaaaaaaaaaa">x</a><p>2本目</p><a class="embed" data-embed-provider="youtube" data-embed-id="bbbbbbbbbbb">y</a>`;
+      const { container } = render(
+        withIntl(
+          <NewsBodyRenderer
+            displayMode="html"
+            bodyHtml={html}
+            body=""
+          />,
+        ),
+      );
+      const shells = container.querySelectorAll('[data-testid="embed-shell"]');
+      expect(shells.length).toBe(2);
+    });
+
+    it("埋め込みなしの記事は従来通り素直に表示", () => {
+      const html = `<h2>見出し</h2><p>本文</p>`;
+      const { container } = render(
+        withIntl(
+          <NewsBodyRenderer
+            displayMode="html"
+            bodyHtml={html}
+            body=""
+          />,
+        ),
+      );
+      expect(container.querySelector("h2")?.textContent).toBe("見出し");
+      expect(container.querySelector("p")?.textContent).toBe("本文");
+      expect(container.querySelector('[data-testid="embed-shell"]')).toBeNull();
+    });
   });
 });
