@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect, useSyncExternalStore } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useSyncExternalStore,
+} from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { StarfieldWarpIntro } from "@/components/intro/StarfieldWarpIntro";
@@ -39,9 +45,23 @@ export default function HomeIntro({ children }: HomeIntroProps) {
   });
   const [phase, setPhase] = useState<AnimationPhase>("dark");
   const [isIntroComplete, setIsIntroComplete] = useState(!shouldShowIntro);
+  // ロゴ hold 用 setTimeout の id 管理。unmount 時に確実に clearTimeout する
+  // (LOGO_HOLD_MS=800ms 以内のナビゲーション等で setIsIntroComplete が
+  // unmount 後に呼ばれるのを防ぐ)。
+  const logoHoldTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     document.documentElement.classList.remove("intro-pending");
+  }, []);
+
+  // unmount 時に hold timer を必ず cleanup
+  useEffect(() => {
+    return () => {
+      if (logoHoldTimerRef.current !== null) {
+        window.clearTimeout(logoHoldTimerRef.current);
+        logoHoldTimerRef.current = null;
+      }
+    };
   }, []);
 
   const handlePhaseChange = useCallback((newPhase: AnimationPhase) => {
@@ -52,8 +72,13 @@ export default function HomeIntro({ children }: HomeIntroProps) {
       } catch {
         // sessionStorage unavailable
       }
-      setTimeout(() => {
+      // 既に hold timer が走っていれば上書き前にクリア (二重発火防止)
+      if (logoHoldTimerRef.current !== null) {
+        window.clearTimeout(logoHoldTimerRef.current);
+      }
+      logoHoldTimerRef.current = window.setTimeout(() => {
         setIsIntroComplete(true);
+        logoHoldTimerRef.current = null;
       }, LOGO_HOLD_MS);
     }
   }, []);
