@@ -57,8 +57,9 @@ const NAV_ITEMS = [
 
 describe("HomeNavigation", () => {
   beforeEach(() => {
-    // デフォルトでポップアップを非表示にし、既存テストとの競合を防ぐ
+    // デフォルトでポップアップ / スティッキーを非表示にし、既存テストとの競合を防ぐ
     sessionStorage.setItem("bigban-crowdfunding-dismissed", "true");
+    sessionStorage.setItem("bigban-crowdfunding-sticky-dismissed", "true");
   });
 
   it("ロゴ画像を表示する", () => {
