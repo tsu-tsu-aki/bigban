@@ -460,6 +460,14 @@
     "imageAlt": "THE PICKLE BANG THEORY クラウドファンディング"
   },
   "News": {
-    "heading": "ニュース"
+    "heading": "ニュース",
+    "embed": {
+      "youtube": {
+        "playLabel": "動画を再生",
+        "iframeTitle": "YouTube プレイヤー",
+        "thumbnailAlt": "YouTube サムネイル"
+      },
+      "fallbackLabel": "外部サイトで開く"
+    }
   }
 }
