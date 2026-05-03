@@ -45,7 +45,7 @@ describe("InstagramEmbed", () => {
     renderWithIntl(<InstagramEmbed embedId="C12abcXYZ_-" />);
     const iframe = screen.getByTitle("Instagram 投稿");
     expect(iframe.getAttribute("sandbox")).toBe(
-      "allow-scripts allow-same-origin allow-presentation allow-popups",
+      "allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox",
     );
     expect(iframe.getAttribute("referrerpolicy")).toBe(
       "strict-origin-when-cross-origin",
