@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef, useSyncExternalStore } from "react";
+import { useState, useCallback, useEffect, useSyncExternalStore } from "react";
 
 const SESSION_KEY = "bigban-crowdfunding-dismissed";
+const TRIGGER_DELAY_MS = 1500;
 
 /* istanbul ignore next -- SSR-only snapshot */
 const noop = () => () => {};
@@ -12,7 +13,7 @@ export function useCrowdfundingPopup() {
     noop,
     () => true,
     /* istanbul ignore next -- SSR-only snapshot */
-    () => false
+    () => false,
   );
 
   const [isNotDismissed] = useState(() => {
@@ -25,32 +26,17 @@ export function useCrowdfundingPopup() {
 
   const [isTriggered, setIsTriggered] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
-  const hasTriggered = useRef(false);
 
-  // about usセクション通過時にポップアップを表示
+  // 訪問から TRIGGER_DELAY_MS 経過でポップアップを表示する。
+  // sessionStorage で「閉じた」フラグが立っていればタイマーは仕掛けない。
   useEffect(() => {
-    if (!isMounted || !isNotDismissed || hasTriggered.current) return;
+    if (!isMounted || !isNotDismissed) return;
 
-    const aboutSection = document.getElementById("about");
-    if (!aboutSection) return;
+    const timeoutId = window.setTimeout(() => {
+      setIsTriggered(true);
+    }, TRIGGER_DELAY_MS);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // about usセクションが画面外に出た（通過した）タイミングで表示
-        if (!entry.isIntersecting && hasTriggered.current === false) {
-          const rect = aboutSection.getBoundingClientRect();
-          if (rect.bottom < 0) {
-            hasTriggered.current = true;
-            setIsTriggered(true);
-            observer.disconnect();
-          }
-        }
-      },
-      { threshold: 0 }
-    );
-
-    observer.observe(aboutSection);
-    return () => observer.disconnect();
+    return () => window.clearTimeout(timeoutId);
   }, [isMounted, isNotDismissed]);
 
   const isOpen = isMounted && isTriggered && !isDismissed;
