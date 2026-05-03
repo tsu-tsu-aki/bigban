@@ -24,13 +24,16 @@ describe("EmbedShell", () => {
     render(<EmbedShell {...baseProps} />);
     const iframe = screen.getByTitle("YouTube プレイヤー");
     expect(iframe.getAttribute("sandbox")).toBe(
-      "allow-scripts allow-same-origin allow-presentation",
+      "allow-scripts allow-same-origin allow-presentation allow-popups",
     );
     expect(iframe.getAttribute("referrerpolicy")).toBe(
       "strict-origin-when-cross-origin",
     );
     expect(iframe.getAttribute("loading")).toBe("lazy");
-    expect(iframe.getAttribute("allow")).toMatch(/encrypted-media/);
+    const allow = iframe.getAttribute("allow") ?? "";
+    expect(allow).toMatch(/encrypted-media/);
+    expect(allow).toMatch(/clipboard-write/);
+    expect(allow).toMatch(/picture-in-picture/);
   });
 
   it("aspect-ratio は 16/9 でレイアウトシフト 0 (CLS 対策)", () => {

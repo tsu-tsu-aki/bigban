@@ -9,9 +9,14 @@ interface EmbedShellProps {
   fallbackLabel: string;
 }
 
-const SANDBOX = "allow-scripts allow-same-origin allow-presentation";
+const SANDBOX = "allow-scripts allow-same-origin allow-presentation allow-popups";
 const REFERRER_POLICY = "strict-origin-when-cross-origin";
-const ALLOW = "encrypted-media; picture-in-picture; web-share";
+// YouTube 公式埋め込みコードの推奨値ベース。
+// clipboard-write でプレイヤーの「共有 → リンクコピー」が動作する。
+// accelerometer / gyroscope は 360 度動画 (VR) で使われる。
+// autoplay は将来 autoplay=1 を URL に付けた時のために許可。
+const ALLOW =
+  "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
 
 /**
  * SNS 埋め込みの共通骨格 (ページ表示と同時に iframe 読み込み開始)。
