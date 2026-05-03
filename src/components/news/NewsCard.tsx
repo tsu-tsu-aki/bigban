@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { NEWS_CATEGORIES } from "@/constants/news";
+import { resolveCategories } from "@/lib/news/categories";
 import type { NewsItem } from "@/lib/microcms/schema";
 
 type Locale = "ja" | "en";
@@ -21,14 +21,6 @@ function formatDate(iso: string): { display: string; iso: string } {
 
 function buildHref(locale: Locale, slug: string): string {
   return locale === "ja" ? `/news/${slug}` : `/en/news/${slug}`;
-}
-
-type NewsCategory = (typeof NEWS_CATEGORIES)[number];
-
-function resolveCategories(ids: NewsItem["category"]): NewsCategory[] {
-  return ids
-    .map((id) => NEWS_CATEGORIES.find((c) => c.id === id))
-    .filter((c): c is NewsCategory => Boolean(c));
 }
 
 export function NewsCard({ item, locale }: NewsCardProps) {

@@ -26,7 +26,9 @@ interface HomePageProps {
 export async function generateMetadata({
   params,
 }: HomePageProps): Promise<Metadata> {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = parseLocale(rawLocale);
+  if (!locale) return {};
   const t = await getTranslations({ locale, namespace: "Metadata" });
   const keywords = parseKeywords(t.raw("home.keywords"));
   const canonicalUrl =

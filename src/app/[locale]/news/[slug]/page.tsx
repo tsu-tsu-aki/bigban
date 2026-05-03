@@ -10,7 +10,6 @@ import { NewsArticleJsonLd } from "@/components/news/NewsArticleJsonLd";
 import { NewsBodyRenderer } from "@/components/news/NewsBodyRenderer";
 import { PreviewBanner } from "@/components/news/PreviewBanner";
 import { isCmsNewsEnabled } from "@/config/featureFlags";
-import { NEWS_CATEGORIES } from "@/constants/news";
 import { EXTERNAL_LINK_PROPS, SITE_URL } from "@/constants/site";
 import { parseLocale, type Locale } from "@/i18n/routing";
 import {
@@ -19,6 +18,7 @@ import {
   getNewsSlugs,
 } from "@/lib/microcms/queries";
 import type { NewsItem } from "@/lib/microcms/schema";
+import { resolveCategories } from "@/lib/news/categories";
 
 // 画面プレビュー (?draftKey=&contentId=) は searchParams を使うため、
 // generateStaticParams で静的生成された slug にプレビューパラメータ付きで
@@ -149,9 +149,7 @@ export default async function NewsDetailPage({
     previewItem ?? (await getNewsDetail({ locale, slug }));
   if (!item) notFound();
 
-  const cats = item.category
-    .map((id) => NEWS_CATEGORIES.find((c) => c.id === id))
-    .filter((c): c is (typeof NEWS_CATEGORIES)[number] => Boolean(c));
+  const cats = resolveCategories(item.category);
   const backHref = locale === "ja" ? "/news" : "/en/news";
   const backLabel =
     locale === "ja" ? "← ニュース一覧へ" : "← News index";

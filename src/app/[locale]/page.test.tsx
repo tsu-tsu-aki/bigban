@@ -76,6 +76,16 @@ describe("Home generateMetadata", () => {
     expect(metadata.openGraph?.locale).toBe("en_US");
   });
 
+  it("不正 locale で空メタデータを返す (getTranslations を呼ばない)", async () => {
+    mockGetTranslations.mockClear();
+    const { generateMetadata } = await import("./page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ locale: "fr" }),
+    });
+    expect(meta).toEqual({});
+    expect(mockGetTranslations).not.toHaveBeenCalled();
+  });
+
   it("openGraphにimagesを明示しない(opengraph-image.tsxに委譲)", async () => {
     mockGetTranslations.mockResolvedValue(buildMockT([]));
 
