@@ -78,6 +78,34 @@ describe("NewsDetailPage", () => {
     ).not.toBeNull();
   });
 
+  it("複数カテゴリは配列順にすべてチップ表示する (ja)", async () => {
+    getNewsDetailMock.mockImplementation(async () =>
+      makeNewsItem({
+        title: "複数",
+        slug: "multi",
+        category: ["notice", "media", "event"],
+      }),
+    );
+    await renderPage({ locale: "ja", slug: "multi" });
+    expect(screen.getByText("お知らせ")).toBeInTheDocument();
+    expect(screen.getByText("メディア掲載")).toBeInTheDocument();
+    expect(screen.getByText("イベント情報")).toBeInTheDocument();
+  });
+
+  it("複数カテゴリは locale=en で英語ラベルを並べる", async () => {
+    getNewsDetailMock.mockImplementation(async () =>
+      makeNewsItem({
+        title: "Multi",
+        slug: "multi-en",
+        category: ["notice", "campaign"],
+        locale: "en",
+      }),
+    );
+    await renderPage({ locale: "en", slug: "multi-en" });
+    expect(screen.getByText("Notice")).toBeInTheDocument();
+    expect(screen.getByText("Campaign")).toBeInTheDocument();
+  });
+
   it("publishedAt/bodyHtml/body が undefined でも createdAt と空文字 fallback で描画", async () => {
     getNewsDetailMock.mockImplementation(async () => {
       const base = makeNewsItem({

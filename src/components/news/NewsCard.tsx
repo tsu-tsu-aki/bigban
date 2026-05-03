@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { NEWS_CATEGORIES } from "@/constants/news";
+import { resolveCategories } from "@/lib/news/categories";
 import type { NewsItem } from "@/lib/microcms/schema";
 
 type Locale = "ja" | "en";
@@ -24,8 +24,9 @@ function buildHref(locale: Locale, slug: string): string {
 }
 
 export function NewsCard({ item, locale }: NewsCardProps) {
-  const cat = NEWS_CATEGORIES.find((c) => c.id === item.category[0]);
-  const label = locale === "ja" ? cat?.labelJa : cat?.labelEn;
+  const cats = resolveCategories(item.category);
+  // プレースホルダー画像のグラデは先頭カテゴリ色のみ使用 (混色を避ける設計判断)
+  const placeholderColor = cats[0]?.color ?? "#8A8A8A";
   const dateIso = item.publishedAt ?? item.createdAt;
   const date = formatDate(dateIso);
 
@@ -34,7 +35,7 @@ export function NewsCard({ item, locale }: NewsCardProps) {
       href={buildHref(locale, item.slug)}
       className="group block border border-text-gray/10 hover:border-accent/60 transition-colors"
     >
-      <div className="relative aspect-[16/9] bg-primary overflow-hidden">
+      <div className="relative aspect-[16/9] bg-deep-black overflow-hidden">
         {item.eyecatch ? (
           // 設計判断: alt="" (装飾扱い)。
           // 同カード内の <h3> に記事タイトルがあるため、画像にも alt=item.title
@@ -54,20 +55,25 @@ export function NewsCard({ item, locale }: NewsCardProps) {
             data-testid="news-card-placeholder"
             className="w-full h-full"
             style={{
-              background: `linear-gradient(135deg, ${cat?.color ?? "#8A8A8A"}33 0%, #0A0A0A 100%)`,
+              background: `linear-gradient(135deg, ${placeholderColor}33 0%, #0A0A0A 100%)`,
             }}
           />
         )}
       </div>
       <div className="p-5 space-y-2">
         <div className="flex items-center gap-3 text-xs text-text-gray">
-          {label && (
-            <span
-              className="inline-block px-2 py-0.5 border"
-              style={{ borderColor: cat?.color, color: cat?.color }}
-            >
-              {label}
-            </span>
+          {cats.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {cats.map((c) => (
+                <span
+                  key={c.id}
+                  className="inline-block px-2 py-0.5 border"
+                  style={{ borderColor: c.color, color: c.color }}
+                >
+                  {locale === "ja" ? c.labelJa : c.labelEn}
+                </span>
+              ))}
+            </div>
           )}
           <time dateTime={date.iso}>{date.display}</time>
         </div>

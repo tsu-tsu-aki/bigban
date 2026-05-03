@@ -87,6 +87,51 @@ describe("NewsCard", () => {
     expect(placeholder.getAttribute("style")).toContain("138, 138, 138");
   });
 
+  it("複数カテゴリは配列順にすべてチップ表示する (ja)", () => {
+    render(
+      <NewsCard
+        item={makeParsedNewsItem({
+          slug: "multi",
+          category: ["notice", "media", "event"],
+        })}
+        locale="ja"
+      />,
+    );
+    const labels = ["お知らせ", "メディア掲載", "イベント情報"];
+    const elements = labels.map((l) => screen.getByText(l));
+    elements.forEach((el) => expect(el).toBeInTheDocument());
+    // 配列順 (DOM 出現順) を担保
+    const positions = elements.map((el) =>
+      Array.prototype.indexOf.call(el.parentElement!.children, el),
+    );
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+  });
+
+  it("複数カテゴリは locale=en で英語ラベルを並べる", () => {
+    render(
+      <NewsCard
+        item={makeParsedNewsItem({
+          slug: "multi-en",
+          category: ["notice", "campaign"],
+        })}
+        locale="en"
+      />,
+    );
+    expect(screen.getByText("Notice")).toBeInTheDocument();
+    expect(screen.getByText("Campaign")).toBeInTheDocument();
+  });
+
+  it("不正カテゴリが混ざっていても有効カテゴリのみ描画する", () => {
+    const base = makeParsedNewsItem({ slug: "mix" });
+    const item = {
+      ...base,
+      category: ["notice", "ghost-cat"] as unknown as typeof base.category,
+    };
+    render(<NewsCard item={item} locale="ja" />);
+    expect(screen.getByText("お知らせ")).toBeInTheDocument();
+    expect(screen.queryByText("ghost-cat")).not.toBeInTheDocument();
+  });
+
   it("time要素 dateTime 属性", () => {
     render(
       <NewsCard

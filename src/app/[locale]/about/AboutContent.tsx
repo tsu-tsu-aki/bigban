@@ -472,7 +472,7 @@ export default function AboutContent({
                         className="group block border-l-2 border-accent/20 pl-6 lg:pl-8 motion-safe:transition-colors hover:border-accent"
                       >
                         <div className="flex flex-col md:flex-row md:items-start md:gap-6">
-                          <div className="relative w-full md:w-48 lg:w-56 shrink-0 aspect-[16/9] bg-primary overflow-hidden mb-4 md:mb-0">
+                          <div className="relative w-full md:w-48 lg:w-56 shrink-0 aspect-[16/9] bg-deep-black overflow-hidden mb-4 md:mb-0">
                             {item.eyecatch ? (
                               <Image
                                 src={`${item.eyecatch.url}?w=480&fm=webp&q=75`}

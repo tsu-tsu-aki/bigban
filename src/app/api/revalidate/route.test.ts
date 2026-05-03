@@ -2,11 +2,13 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { createHmac } from "node:crypto";
 
 const revalidateTagMock = vi.fn();
+const revalidatePathMock = vi.fn();
 // 第2引数 (cacheLife profile) も検証対象にしたいので、すべての引数を
 // そのままモックに転送する。誤って "default" など stale-while-revalidate 系の
 // プロファイルに戻された場合に検知できるようにする。
 vi.mock("next/cache", () => ({
   revalidateTag: (...args: unknown[]) => revalidateTagMock(...args),
+  revalidatePath: (...args: unknown[]) => revalidatePathMock(...args),
 }));
 
 const SECRET = "s3cret";
@@ -28,6 +30,7 @@ function makeRequest(body: unknown, signature?: string) {
 describe("/api/revalidate POST", () => {
   beforeEach(() => {
     revalidateTagMock.mockClear();
+    revalidatePathMock.mockClear();
     vi.stubEnv("MICROCMS_WEBHOOK_SECRET", SECRET);
   });
   afterEach(() => {
@@ -86,6 +89,22 @@ describe("/api/revalidate POST", () => {
     expect(res.status).toBe(200);
     expect(revalidateTagMock).toHaveBeenCalledWith("news", { expire: 0 });
     expect(revalidateTagMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("news 通知時にトップページ含む全ルートを revalidatePath('/', 'layout') で再生成する", async () => {
+    // tag 依存が記録されていない page (Suspense 境界の中で fetch している
+    // トップページ等) でも確実に再生成するため、layout レベルで path
+    // invalidation を発火させる。
+    const { POST } = await import("./route");
+    const res = await POST(makeRequest({ api: "news", id: "abc" }));
+    expect(res.status).toBe(200);
+    expect(revalidatePathMock).toHaveBeenCalledWith("/", "layout");
+  });
+
+  it("api!=news のときは revalidatePath を呼ばない", async () => {
+    const { POST } = await import("./route");
+    await POST(makeRequest({ api: "other" }));
+    expect(revalidatePathMock).not.toHaveBeenCalled();
   });
 
   it("不正body(JSON parse失敗) で400", async () => {

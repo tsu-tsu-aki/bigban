@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <section className="min-h-screen bg-primary py-16 lg:py-24">
+    <section className="min-h-screen bg-deep-black py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {Array.from({ length: 6 }).map((_, i) => (

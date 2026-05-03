@@ -56,7 +56,9 @@ describe("AboutPage", () => {
     expect(screen.getByText("FOUNDER")).toBeInTheDocument();
     expect(screen.getByText("OUR PLAYERS")).toBeInTheDocument();
     expect(screen.getByText("OUR CREW")).toBeInTheDocument();
-    expect(screen.getByText("NEWS")).toBeInTheDocument();
+    // NEWS は about ページのセクション見出しと共通ヘッダーリンクの両方に出るため複数一致を許容する
+    const newsElements = screen.getAllByText("NEWS");
+    expect(newsElements.length).toBeGreaterThanOrEqual(1);
     const contactElements = screen.getAllByText("CONTACT");
     expect(contactElements.length).toBeGreaterThanOrEqual(1);
   });

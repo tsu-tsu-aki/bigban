@@ -96,7 +96,7 @@ export function NewsPagination({
         <Link
           href={buildHref(locale, currentPage - 1, category)}
           rel="prev"
-          className="px-4 py-2 border border-accent text-accent text-sm hover:bg-accent hover:text-primary transition-colors"
+          className="px-4 py-2 border border-accent text-accent text-sm hover:bg-accent hover:text-deep-black transition-colors"
         >
           {labels.prev}
         </Link>
@@ -117,7 +117,7 @@ export function NewsPagination({
             aria-current={p === currentPage ? "page" : undefined}
             className={`px-4 py-2 border text-sm transition-colors ${
               p === currentPage
-                ? "border-accent bg-accent text-primary"
+                ? "border-accent bg-accent text-deep-black font-bold"
                 : "border-text-gray text-text-light hover:border-accent hover:text-accent"
             }`}
           >
@@ -129,7 +129,7 @@ export function NewsPagination({
         <Link
           href={buildHref(locale, currentPage + 1, category)}
           rel="next"
-          className="px-4 py-2 border border-accent text-accent text-sm hover:bg-accent hover:text-primary transition-colors"
+          className="px-4 py-2 border border-accent text-accent text-sm hover:bg-accent hover:text-deep-black transition-colors"
         >
           {labels.next}
         </Link>
