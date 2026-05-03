@@ -10,6 +10,11 @@ import type { ReactNode } from "react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 const SESSION_KEY = "bigban-intro-played";
+// ロゴ表示時間 (入場 0.5s + hold 0.3s 相当)。content 受信から unmount までの遅延。
+const LOGO_HOLD_MS = 800;
+// フェイルセーフ: phase=content が永遠に来ないケースに備え、
+// マウントから一定時間で必ず unmount する。canvas total ~3.8s + 余裕で 6 秒。
+const FALLBACK_UNMOUNT_MS = 6000;
 
 interface HomeIntroProps {
   children: ReactNode;
@@ -49,9 +54,20 @@ export default function HomeIntro({ children }: HomeIntroProps) {
       }
       setTimeout(() => {
         setIsIntroComplete(true);
-      }, 2000);
+      }, LOGO_HOLD_MS);
     }
   }, []);
+
+  // フェイルセーフ: 何があっても必ず FALLBACK_UNMOUNT_MS で intro を畳む。
+  // - StarfieldWarpIntro の rAF が止まるなど phase=content が来ない場合
+  // - Framer Motion AnimatePresence の race で exit が発火しない場合
+  useEffect(() => {
+    if (!shouldShowIntro) return;
+    const id = window.setTimeout(() => {
+      setIsIntroComplete(true);
+    }, FALLBACK_UNMOUNT_MS);
+    return () => window.clearTimeout(id);
+  }, [shouldShowIntro]);
 
   if (!isMounted || !shouldShowIntro) {
     return <>{children}</>;
@@ -59,35 +75,45 @@ export default function HomeIntro({ children }: HomeIntroProps) {
 
   return (
     <>
+      {/* 黒背景: isIntroComplete まで表示。fade-out で抜ける。 */}
       <AnimatePresence>
         {!isIntroComplete && (
           <motion.div
-            className="fixed inset-0 z-[100] bg-black"
+            key="intro-bg"
+            className="fixed inset-0 z-[100] bg-black pointer-events-none"
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: EASE }}
-          >
-            <StarfieldWarpIntro onPhaseChange={handlePhaseChange} />
+            transition={{ duration: 0.5, ease: EASE }}
+          />
+        )}
+      </AnimatePresence>
 
-            {/* Logo after explosion */}
-            <AnimatePresence>
-              {phase === "content" && (
-                <motion.div
-                  className="absolute inset-0 flex items-center justify-center"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8, ease: EASE }}
-                >
-                  <Image
-                    src="/logos/yoko-neon.png"
-                    alt="THE PICKLE BANG THEORY"
-                    width={360}
-                    height={80}
-                    priority
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+      {/* canvas (StarfieldWarp): phase=content の瞬間に即時 unmount。
+          これにより rAF 停止後の最後のフレーム (黒) が残らない。 */}
+      {!isIntroComplete && phase !== "content" && (
+        <div className="fixed inset-0 z-[100] pointer-events-none">
+          <StarfieldWarpIntro onPhaseChange={handlePhaseChange} />
+        </div>
+      )}
+
+      {/* ロゴ: phase=content から isIntroComplete まで独立レイヤーで表示。
+          自身も bg-black を持ち、黒背景の exit と同時に exit しても背景の黒が引き継がれる。 */}
+      <AnimatePresence>
+        {phase === "content" && !isIntroComplete && (
+          <motion.div
+            key="intro-logo"
+            className="fixed inset-0 z-[101] flex items-center justify-center pointer-events-none bg-black"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: EASE }}
+          >
+            <Image
+              src="/logos/yoko-neon.png"
+              alt="THE PICKLE BANG THEORY"
+              width={360}
+              height={80}
+              priority
+            />
           </motion.div>
         )}
       </AnimatePresence>

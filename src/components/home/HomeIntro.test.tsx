@@ -115,7 +115,7 @@ describe("HomeIntro", () => {
     expect(mockSessionStorage["bigban-intro-played"]).toBe("true");
   });
 
-  it("contentフェーズ後にイントロがフェードアウトする", () => {
+  it("contentフェーズ後 LOGO_HOLD_MS (800ms) 経過でイントロが unmount される", () => {
     render(
       <HomeIntro>
         <div data-testid="home-content">Home</div>
@@ -126,9 +126,46 @@ describe("HomeIntro", () => {
       canvas.click();
     });
     act(() => {
-      vi.advanceTimersByTime(2100);
+      vi.advanceTimersByTime(900);
     });
     expect(screen.queryByTestId("starfield-warp-intro")).not.toBeInTheDocument();
+    expect(
+      screen.queryByAltText("THE PICKLE BANG THEORY"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("contentフェーズに入った瞬間に canvas (StarfieldWarpIntro) が unmount される", () => {
+    // race を防ぐため、canvas は phase=content 受信即時に unmount し
+    // rAF 停止後の最終フレーム (黒) が残らないようにする。
+    render(
+      <HomeIntro>
+        <div data-testid="home-content">Home</div>
+      </HomeIntro>
+    );
+    const canvas = screen.getByTestId("starfield-warp-intro");
+    act(() => {
+      canvas.click();
+    });
+    expect(screen.queryByTestId("starfield-warp-intro")).not.toBeInTheDocument();
+    // ロゴは独立レイヤーで表示される
+    expect(screen.getByAltText("THE PICKLE BANG THEORY")).toBeInTheDocument();
+  });
+
+  it("phase=content が来なくても FALLBACK_UNMOUNT_MS (6000ms) で必ず unmount される", () => {
+    // Framer Motion の race / canvas 暴走で phase=content が来ないケースの保険。
+    // ユーザーが永久に黒画面に閉じ込められないよう必ず復帰する。
+    render(
+      <HomeIntro>
+        <div data-testid="home-content">Home</div>
+      </HomeIntro>
+    );
+    expect(screen.getByTestId("starfield-warp-intro")).toBeInTheDocument();
+    act(() => {
+      vi.advanceTimersByTime(6100);
+    });
+    expect(
+      screen.queryByTestId("starfield-warp-intro"),
+    ).not.toBeInTheDocument();
   });
 
   it("childrenを常に表示する", () => {
