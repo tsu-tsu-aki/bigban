@@ -42,6 +42,8 @@ function renderWithIntl(ui: ReactElement, locale: "ja" | "en" = "ja") {
 describe("AboutPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Sticky のクラファン CTA がページ内 CAMP-FIRE リンクと衝突するため抑制
+    sessionStorage.setItem("bigban-crowdfunding-sticky-dismissed", "true");
   });
 
   it("ABOUT USタイトルを表示する", () => {

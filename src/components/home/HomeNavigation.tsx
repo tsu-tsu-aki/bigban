@@ -9,6 +9,7 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 import { useCrowdfundingPopup } from "@/hooks/useCrowdfundingPopup";
 import { RESERVE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 import CrowdfundingPopup from "./CrowdfundingPopup";
+import CrowdfundingSticky from "./CrowdfundingSticky";
 import PromoBanner from "./PromoBanner";
 
 const SECTION_IDS = ["concept", "facility", "services", "pricing", "about", "access"];
@@ -224,6 +225,7 @@ export default function HomeNavigation() {
     </AnimatePresence>
 
     <CrowdfundingPopup isOpen={isCrowdfundingOpen} onClose={closePopup} />
+    <CrowdfundingSticky />
     </>
   );
 }
