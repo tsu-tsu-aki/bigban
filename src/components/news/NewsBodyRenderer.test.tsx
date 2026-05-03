@@ -263,6 +263,23 @@ describe("NewsBodyRenderer", () => {
       expect(container.querySelector('[data-testid="embed-shell"]')).toBeInTheDocument();
     });
 
+    it("Instagram 埋め込みトークンも InstagramEmbed として描画 (dispatcher 分岐検証)", () => {
+      const html = `<a class="embed" data-embed-provider="instagram" data-embed-id="C12abcXYZ_-">Instagram で見る</a>`;
+      const { container } = render(
+        withIntl(
+          <NewsBodyRenderer
+            displayMode="html"
+            bodyHtml={html}
+            body=""
+          />,
+        ),
+      );
+      const shell = container.querySelector('[data-testid="embed-shell"]') as HTMLElement;
+      expect(shell).toBeInTheDocument();
+      // Instagram の特徴: max-width 540px (YouTube は無し) で識別
+      expect(shell.style.maxWidth).toBe("540px");
+    });
+
     it("未登録プロバイダ (vimeo) はサニタイザーで data-embed-provider が落ち、素のリンクとして残る", () => {
       const html = `<a class="embed" data-embed-provider="vimeo" data-embed-id="123">Vimeo で見る</a>`;
       const { container } = render(

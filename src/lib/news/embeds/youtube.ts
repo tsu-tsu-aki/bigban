@@ -19,7 +19,8 @@ const ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
  */
 function extractYouTubeId(url: URL): string | null {
   if (url.hostname === "youtu.be") {
-    const id = url.pathname.slice(1).split("/")[0] ?? "";
+    // String.prototype.split は常に最低 1 要素の配列を返すため [0] は string 確定
+    const id = url.pathname.slice(1).split("/")[0];
     return ID_PATTERN.test(id) ? id : null;
   }
 

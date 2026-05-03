@@ -111,6 +111,14 @@ describe("YOUTUBE_PROVIDER", () => {
       ).toBe("dQw4w9WgXcQ");
     });
 
+    it("https://www.youtube.com/v/ID (legacy 形式) から ID を抽出", () => {
+      expect(
+        YOUTUBE_PROVIDER.extractIdFromUrl(
+          new URL("https://www.youtube.com/v/dQw4w9WgXcQ"),
+        ),
+      ).toBe("dQw4w9WgXcQ");
+    });
+
     it("ID が pattern にマッチしない場合は null", () => {
       expect(
         YOUTUBE_PROVIDER.extractIdFromUrl(
@@ -120,6 +128,14 @@ describe("YOUTUBE_PROVIDER", () => {
       expect(
         YOUTUBE_PROVIDER.extractIdFromUrl(
           new URL("https://youtu.be/short"),
+        ),
+      ).toBeNull();
+    });
+
+    it("/shorts/ パスでも ID 形式違反 (12文字以上) は null", () => {
+      expect(
+        YOUTUBE_PROVIDER.extractIdFromUrl(
+          new URL("https://www.youtube.com/shorts/invalid_too_long"),
         ),
       ).toBeNull();
     });

@@ -129,20 +129,23 @@ export function segmentBodyHtml(html: string): BodySegment[] {
 }
 
 /**
- * provider 名 → React Component の dispatcher。
+ * provider 名 → React Component の dispatcher (Map ベース)。
  * 未登録プロバイダはサニタイザーで data-embed-provider が落とされるため
- * 通常ここに到達しないが、防御的に null を返す。
+ * 通常ここに到達しないが、防御的に null を返す (istanbul-ignored)。
  */
+const EMBED_COMPONENTS: Record<
+  string,
+  React.ComponentType<{ embedId: string }>
+> = {
+  youtube: YouTubeEmbed,
+  instagram: InstagramEmbed,
+};
+
 function renderEmbed(provider: string, id: string, key: number) {
-  if (provider === "youtube") {
-    return <YouTubeEmbed key={key} embedId={id} />;
-  }
-  if (provider === "instagram") {
-    return <InstagramEmbed key={key} embedId={id} />;
-  }
-  /* istanbul ignore next -- @preserve サニタイザーが registry に無い provider を
-   既に弾いているため、未知 provider はこのコードパスに到達しない */
-  return null;
+  const Component = EMBED_COMPONENTS[provider];
+  /* istanbul ignore next -- @preserve サニタイザーが registry に無い provider を弾くため未知 provider は到達不可 */
+  if (!Component) return null;
+  return <Component key={key} embedId={id} />;
 }
 
 function renderBody(safeHtml: string) {
@@ -167,6 +170,7 @@ function renderBody(safeHtml: string) {
     <div data-testid="news-body" className={`news-body ${PROSE_CLASS}`}>
       {segments.map((seg, i) => {
         if (seg.kind === "html") {
+          /* istanbul ignore next -- @preserve segmentBodyHtml は空 html セグメントを push しない設計のため到達不可 (防御的記述) */
           if (seg.html.length === 0) return null;
           return (
             <div
