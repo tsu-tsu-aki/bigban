@@ -15,7 +15,7 @@ export default function NewsError({ reset }: ErrorProps) {
     : "Failed to load news.";
   const retryLabel = isJa ? "再試行" : "Retry";
   return (
-    <section className="min-h-screen bg-primary text-text-light flex items-center justify-center">
+    <section className="min-h-screen bg-deep-black text-text-light flex items-center justify-center">
       <div className="text-center space-y-6">
         <p>{message}</p>
         <button

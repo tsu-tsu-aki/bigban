@@ -37,6 +37,17 @@ describe("NewsPagination", () => {
     expect(current.className).not.toContain("text-primary");
   });
 
+  it("前/次ページボタンの hover は bg-accent + text-deep-black でコントラスト確保", () => {
+    render(<NewsPagination currentPage={2} totalPages={3} locale="ja" />);
+    const prev = screen.getByRole("link", { name: "前のページ" });
+    const next = screen.getByRole("link", { name: "次のページ" });
+    for (const el of [prev, next]) {
+      expect(el.className).toContain("hover:bg-accent");
+      expect(el.className).toContain("hover:text-deep-black");
+      expect(el.className).not.toContain("hover:text-primary");
+    }
+  });
+
   it("currentPage=1 で前ページボタンは非表示", () => {
     render(<NewsPagination currentPage={1} totalPages={3} locale="ja" />);
     expect(

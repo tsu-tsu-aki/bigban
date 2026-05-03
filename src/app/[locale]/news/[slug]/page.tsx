@@ -218,7 +218,7 @@ export default async function NewsDetailPage({
             <a
               href={item.externalLink.url}
               {...EXTERNAL_LINK_PROPS}
-              className="inline-flex items-center gap-2 px-6 py-3 border border-accent text-accent text-sm tracking-wider hover:bg-accent hover:text-primary transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-accent text-accent text-sm tracking-wider hover:bg-accent hover:text-deep-black transition-colors"
             >
               {item.externalLink.label}
               <span>→</span>

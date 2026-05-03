@@ -43,7 +43,7 @@ export function NewsCard({ item, locale }: NewsCardProps) {
       href={buildHref(locale, item.slug)}
       className="group block border border-text-gray/10 hover:border-accent/60 transition-colors"
     >
-      <div className="relative aspect-[16/9] bg-primary overflow-hidden">
+      <div className="relative aspect-[16/9] bg-deep-black overflow-hidden">
         {item.eyecatch ? (
           // 設計判断: alt="" (装飾扱い)。
           // 同カード内の <h3> に記事タイトルがあるため、画像にも alt=item.title
