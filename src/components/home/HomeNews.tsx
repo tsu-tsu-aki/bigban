@@ -22,7 +22,10 @@ export default async function HomeNews({ locale }: HomeNewsProps) {
       offset: 0,
     });
     items = list.contents;
-  } catch {
+  } catch (error) {
+    // セクションは静かに非表示にしつつ、Vercel Function logs で原因追跡できるよう
+    // サーバーサイドにログを残す。
+    console.error("[HomeNews] microCMS fetch failed:", error);
     items = [];
   }
 

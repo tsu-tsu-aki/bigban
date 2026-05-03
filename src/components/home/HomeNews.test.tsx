@@ -109,6 +109,18 @@ describe("HomeNews", () => {
     expect(container.firstChild).toBeNull();
   });
 
+  it("microCMS 取得失敗時にサーバーログへ console.error する (Vercel Function logs で追跡可能にする)", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const fetchError = new Error("microcms down");
+    getNewsListMock.mockRejectedValueOnce(fetchError);
+    await renderHomeNews("ja");
+    expect(errorSpy).toHaveBeenCalledWith(
+      expect.stringContaining("HomeNews"),
+      fetchError,
+    );
+    errorSpy.mockRestore();
+  });
+
   it("ニュース 3 件と ‘すべてのニュースを見る’ リンクを描画する (ja)", async () => {
     getNewsListMock.mockResolvedValueOnce({
       contents: [
