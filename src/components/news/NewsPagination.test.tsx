@@ -28,6 +28,15 @@ describe("NewsPagination", () => {
     );
   });
 
+  it("現在ページは bg-accent + text-deep-black でコントラスト確保 (text-primary は未定義トークンなのでバグ防止)", () => {
+    render(<NewsPagination currentPage={2} totalPages={3} locale="ja" />);
+    const current = screen.getByRole("link", { name: "2" });
+    expect(current.className).toContain("bg-accent");
+    expect(current.className).toContain("text-deep-black");
+    // テーマに存在しない 'text-primary' は使ってはいけない (色が text-light を継承して読めなくなるため)
+    expect(current.className).not.toContain("text-primary");
+  });
+
   it("currentPage=1 で前ページボタンは非表示", () => {
     render(<NewsPagination currentPage={1} totalPages={3} locale="ja" />);
     expect(

@@ -117,7 +117,7 @@ export function NewsPagination({
             aria-current={p === currentPage ? "page" : undefined}
             className={`px-4 py-2 border text-sm transition-colors ${
               p === currentPage
-                ? "border-accent bg-accent text-primary"
+                ? "border-accent bg-accent text-deep-black font-bold"
                 : "border-text-gray text-text-light hover:border-accent hover:text-accent"
             }`}
           >
