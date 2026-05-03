@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { SITE_URL } from "@/constants/site";
@@ -71,7 +72,12 @@ export default async function Home({ params }: HomePageProps) {
         <HomeFacility />
         <HomeServices />
         <HomePricing />
-        <HomeNews locale={locale} />
+        {/* Suspense で囲むことで microCMS フェッチが遅くても
+            HomeAbout 以降のセクションが先にストリーミングされる。
+            HomeNews は失敗時/0件時に null を返すため fallback も null で問題ない。 */}
+        <Suspense fallback={null}>
+          <HomeNews locale={locale} />
+        </Suspense>
         <HomeAbout />
         <HomeAccess />
         <HomeFooter />

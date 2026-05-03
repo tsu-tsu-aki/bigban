@@ -114,4 +114,24 @@ describe("Home Page", () => {
       Home({ params: Promise.resolve({ locale: "fr" }) }),
     ).rejects.toThrow(/NEXT_NOT_FOUND/);
   });
+
+  it("HomeNews を Suspense で囲んでストリーミング遅延を回避する", async () => {
+    const { Suspense } = await import("react");
+    const { default: Home } = await import("./page");
+    const element = await Home({
+      params: Promise.resolve({ locale: "ja" }),
+    });
+    function containsSuspense(node: unknown): boolean {
+      if (!node || typeof node !== "object") return false;
+      const el = node as {
+        type?: unknown;
+        props?: { children?: unknown };
+      };
+      if (el.type === Suspense) return true;
+      const children = el.props?.children;
+      if (Array.isArray(children)) return children.some(containsSuspense);
+      return containsSuspense(children);
+    }
+    expect(containsSuspense(element)).toBe(true);
+  });
 });
