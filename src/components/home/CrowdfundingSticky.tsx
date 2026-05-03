@@ -5,6 +5,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { CAMPFIRE_URL, EXTERNAL_LINK_PROPS } from "@/constants/site";
 
@@ -53,12 +54,12 @@ export default function CrowdfundingSticky() {
       role="complementary"
       aria-label={t("headline")}
       data-testid="crowdfunding-sticky"
-      className="fixed bottom-4 right-4 z-40 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-deep-black border border-accent/40 shadow-2xl"
+      className="fixed bottom-4 right-4 z-40 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-deep-black border border-accent/40 shadow-2xl overflow-hidden"
     >
       <button
         aria-label={t("close")}
         onClick={handleClose}
-        className="absolute top-2 right-2 z-10 text-text-gray hover:text-text-light bg-black/60 rounded-full w-7 h-7 flex items-center justify-center motion-safe:transition-colors"
+        className="absolute top-2 right-2 z-20 text-text-light hover:text-accent bg-black/70 rounded-full w-7 h-7 flex items-center justify-center motion-safe:transition-colors"
       >
         <svg
           width="14"
@@ -72,7 +73,16 @@ export default function CrowdfundingSticky() {
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </button>
-      <div className="p-4 pr-8 space-y-2">
+      <div className="relative aspect-[16/10] w-full">
+        <Image
+          src="/images/crowdfunding.avif"
+          alt={t("imageAlt")}
+          fill
+          sizes="(min-width: 640px) 20rem, 100vw"
+          className="object-cover"
+        />
+      </div>
+      <div className="p-4 space-y-2">
         <p className="font-serif text-base font-black text-accent tracking-wider">
           {t("headline")}
         </p>

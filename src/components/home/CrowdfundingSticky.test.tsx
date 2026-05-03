@@ -9,6 +9,20 @@ import type { ReactElement } from "react";
 
 const SESSION_KEY = "bigban-crowdfunding-sticky-dismissed";
 
+vi.mock("next/image", () => ({
+  default: (props: Record<string, unknown>) => {
+    const { fill, priority, ...rest } = props;
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        {...rest}
+        data-fill={fill ? "true" : undefined}
+        data-priority={priority ? "true" : undefined}
+      />
+    );
+  },
+}));
+
 function renderWithIntl(ui: ReactElement, locale: "ja" | "en" = "ja") {
   const messages = locale === "ja" ? jaMessages : enMessages;
   return render(
@@ -46,6 +60,15 @@ describe("CrowdfundingSticky", () => {
     );
     expect(cta).toHaveAttribute("target", "_blank");
     expect(cta).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  it("クラファン画像が表示される", () => {
+    renderWithIntl(<CrowdfundingSticky />);
+    const img = screen.getByAltText(
+      "THE PICKLE BANG THEORY クラウドファンディング",
+    );
+    expect(img).toBeInTheDocument();
+    expect(img.getAttribute("src")).toBe("/images/crowdfunding.avif");
   });
 
   it("EN ロケールで英語表示", () => {
