@@ -8,6 +8,7 @@ import {
 } from "@/lib/news/sanitize";
 import type { NewsItem } from "@/lib/microcms/schema";
 
+import { InstagramEmbed } from "./embeds/InstagramEmbed";
 import { YouTubeEmbed } from "./embeds/YouTubeEmbed";
 
 interface NewsBodyRendererProps {
@@ -135,6 +136,9 @@ export function segmentBodyHtml(html: string): BodySegment[] {
 function renderEmbed(provider: string, id: string, key: number) {
   if (provider === "youtube") {
     return <YouTubeEmbed key={key} embedId={id} />;
+  }
+  if (provider === "instagram") {
+    return <InstagramEmbed key={key} embedId={id} />;
   }
   /* istanbul ignore next -- @preserve サニタイザーが registry に無い provider を
    既に弾いているため、未知 provider はこのコードパスに到達しない */

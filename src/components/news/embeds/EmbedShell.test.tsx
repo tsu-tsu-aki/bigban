@@ -8,6 +8,7 @@ const baseProps = {
   iframeTitle: "YouTube プレイヤー",
   fallbackHref: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   fallbackLabel: "YouTube で見る",
+  aspectRatio: "16 / 9",
 };
 
 describe("EmbedShell", () => {
@@ -36,10 +37,22 @@ describe("EmbedShell", () => {
     expect(allow).toMatch(/picture-in-picture/);
   });
 
-  it("aspect-ratio は 16/9 でレイアウトシフト 0 (CLS 対策)", () => {
+  it("aspectRatio prop が style に反映され CLS 0 になる", () => {
     render(<EmbedShell {...baseProps} />);
     const wrapper = screen.getByTestId("embed-shell");
     expect(wrapper).toHaveStyle({ aspectRatio: "16 / 9" });
+  });
+
+  it("aspectRatio はプロバイダごとに切替可 (Instagram の 1/1.4 等)", () => {
+    render(<EmbedShell {...baseProps} aspectRatio="1 / 1.4" />);
+    const wrapper = screen.getByTestId("embed-shell");
+    expect(wrapper).toHaveStyle({ aspectRatio: "1 / 1.4" });
+  });
+
+  it("maxWidth が指定されると style に反映される (Instagram 540px 等)", () => {
+    render(<EmbedShell {...baseProps} maxWidth="540px" />);
+    const wrapper = screen.getByTestId("embed-shell");
+    expect(wrapper).toHaveStyle({ maxWidth: "540px" });
   });
 
   it("fallback リンクが sr-only で DOM に常時存在する", () => {

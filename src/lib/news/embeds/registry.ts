@@ -1,11 +1,12 @@
+import { INSTAGRAM_PROVIDER } from "./instagram";
 import type { EmbedProviderDescriptor } from "./types";
 import { YOUTUBE_PROVIDER } from "./youtube";
 
 /**
  * プロバイダの登録テーブル。
- * 新プロバイダ追加時はここに 1 行追加するだけ (Phase 2 以降)。
+ * 新プロバイダ追加時はここに 1 行追加するだけ。
  */
-const PROVIDERS = [YOUTUBE_PROVIDER] as const;
+const PROVIDERS = [YOUTUBE_PROVIDER, INSTAGRAM_PROVIDER] as const;
 
 const PROVIDER_MAP: ReadonlyMap<string, EmbedProviderDescriptor> = new Map(
   PROVIDERS.map((p) => [p.id, p]),

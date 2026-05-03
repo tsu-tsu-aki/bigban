@@ -454,6 +454,9 @@
       "youtube": {
         "iframeTitle": "YouTube player"
       },
+      "instagram": {
+        "iframeTitle": "Instagram post"
+      },
       "fallbackLabel": "Open externally"
     }
   }

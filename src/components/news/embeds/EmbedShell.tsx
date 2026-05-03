@@ -7,6 +7,16 @@ interface EmbedShellProps {
   fallbackHref: string;
   /** フォールバックリンクの文言 */
   fallbackLabel: string;
+  /**
+   * CSS aspect-ratio (例: "16 / 9", "1 / 1.4")。
+   * プロバイダごとに最適値が異なるため必須。CLS 対策として固定する。
+   */
+  aspectRatio: string;
+  /**
+   * 最大幅 (例: "540px")。指定時は中央寄せで配置。
+   * Instagram (540px 推奨) など、幅を絞りたいプロバイダ向け。
+   */
+  maxWidth?: string;
 }
 
 const SANDBOX = "allow-scripts allow-same-origin allow-presentation allow-popups";
@@ -21,10 +31,10 @@ const ALLOW =
 /**
  * SNS 埋め込みの共通骨格 (ページ表示と同時に iframe 読み込み開始)。
  *
- * - aspect-ratio: 16/9 でレイアウトシフト 0 を担保
+ * - aspect-ratio はプロバイダごとに props で指定 (CLS 対策必須)
+ * - maxWidth はプロバイダごとに props で指定 (Instagram 540px 等)
  * - sandbox / referrerpolicy / loading=lazy / allow をハードコード (運用者が触れない)
  * - loading=lazy はビューポート外の場合に読み込みを遅延させ通信量を抑える
- *   (Click-to-Load のような明示クリックは行わない)
  * - フォールバックリンクは sr-only で常時 DOM に保持 (a11y / クローラ対応)
  *
  * Server Component として動作 (state を持たない、純粋なレンダリング)。
@@ -34,12 +44,14 @@ export function EmbedShell({
   iframeTitle,
   fallbackHref,
   fallbackLabel,
+  aspectRatio,
+  maxWidth,
 }: EmbedShellProps) {
   return (
     <figure
       data-testid="embed-shell"
-      className="relative w-full my-8 overflow-hidden bg-black"
-      style={{ aspectRatio: "16 / 9" }}
+      className="relative w-full my-8 overflow-hidden bg-black mx-auto"
+      style={{ aspectRatio, maxWidth }}
     >
       <iframe
         src={iframeUrl}

@@ -34,6 +34,7 @@ export function YouTubeEmbed({ embedId }: YouTubeEmbedProps) {
       iframeTitle={t("youtube.iframeTitle")}
       fallbackHref={`https://www.youtube.com/watch?v=${embedId}`}
       fallbackLabel={t("fallbackLabel")}
+      aspectRatio="16 / 9"
     />
   );
 }
