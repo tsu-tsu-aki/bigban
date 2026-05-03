@@ -8,9 +8,7 @@ const messages = {
   News: {
     embed: {
       youtube: {
-        playLabel: "動画を再生",
         iframeTitle: "YouTube プレイヤー",
-        thumbnailAlt: "YouTube サムネイル",
       },
       fallbackLabel: "外部サイトで開く",
     },
@@ -244,11 +242,8 @@ describe("NewsBodyRenderer", () => {
           />,
         ),
       );
-      // YouTubeEmbed の特徴: テストID embed-shell が存在
+      // YouTubeEmbed の特徴: テストID embed-shell が存在し、iframe が即時描画される
       expect(container.querySelector('[data-testid="embed-shell"]')).toBeInTheDocument();
-      // 元の <a> リンクは sr-only fallback として残るが、
-      // ボタン (再生) が button role で出現
-      expect(screen.getByRole("button", { name: /動画を再生/ })).toBeInTheDocument();
       // 周辺の <p> は維持
       expect(screen.getByText("動画はこちら。")).toBeInTheDocument();
       expect(screen.getByText("続きの本文。")).toBeInTheDocument();

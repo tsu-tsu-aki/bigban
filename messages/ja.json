@@ -463,9 +463,7 @@
     "heading": "ニュース",
     "embed": {
       "youtube": {
-        "playLabel": "動画を再生",
-        "iframeTitle": "YouTube プレイヤー",
-        "thumbnailAlt": "YouTube サムネイル"
+        "iframeTitle": "YouTube プレイヤー"
       },
       "fallbackLabel": "外部サイトで開く"
     }

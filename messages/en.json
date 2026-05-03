@@ -452,9 +452,7 @@
     "heading": "News",
     "embed": {
       "youtube": {
-        "playLabel": "Play video",
-        "iframeTitle": "YouTube player",
-        "thumbnailAlt": "YouTube thumbnail"
+        "iframeTitle": "YouTube player"
       },
       "fallbackLabel": "Open externally"
     }

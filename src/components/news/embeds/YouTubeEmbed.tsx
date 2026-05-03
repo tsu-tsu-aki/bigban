@@ -11,13 +11,13 @@ interface YouTubeEmbedProps {
 }
 
 /**
- * YouTube 埋め込みコンポーネント (Click-to-Load)。
+ * YouTube 埋め込みコンポーネント (常時 iframe ロード)。
  *
  * - id の最終検証 (provider 固有: 11 文字) を行い、不正なら何も描画しない
  *   (サニタイザーは generic 検証のみ。最終的な「壊れた iframe を出さない」
  *   保証は描画レイヤーで担保 = 二段防御)
- * - サムネ / iframe URL は registry の YOUTUBE_PROVIDER から取得
- *   (URL ロジックを 1 箇所に集約)
+ * - iframe URL は registry の YOUTUBE_PROVIDER から取得
+ * - state を持たないが useTranslations のため "use client"
  */
 export function YouTubeEmbed({ embedId }: YouTubeEmbedProps) {
   const t = useTranslations("News.embed");
@@ -28,11 +28,8 @@ export function YouTubeEmbed({ embedId }: YouTubeEmbedProps) {
 
   return (
     <EmbedShell
-      thumbnailUrl={YOUTUBE_PROVIDER.buildThumbnailUrl(embedId)}
-      thumbnailAlt={t("youtube.thumbnailAlt")}
       iframeUrl={YOUTUBE_PROVIDER.buildIframeUrl(embedId)}
       iframeTitle={t("youtube.iframeTitle")}
-      playLabel={t("youtube.playLabel")}
       fallbackHref={`https://www.youtube.com/watch?v=${embedId}`}
       fallbackLabel={t("fallbackLabel")}
     />
