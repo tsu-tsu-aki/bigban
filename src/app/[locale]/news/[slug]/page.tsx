@@ -10,7 +10,6 @@ import { NewsArticleJsonLd } from "@/components/news/NewsArticleJsonLd";
 import { NewsBodyRenderer } from "@/components/news/NewsBodyRenderer";
 import { PreviewBanner } from "@/components/news/PreviewBanner";
 import { isCmsNewsEnabled } from "@/config/featureFlags";
-import { NEWS_CATEGORIES } from "@/constants/news";
 import { EXTERNAL_LINK_PROPS, SITE_URL } from "@/constants/site";
 import { parseLocale, type Locale } from "@/i18n/routing";
 import {
@@ -19,6 +18,7 @@ import {
   getNewsSlugs,
 } from "@/lib/microcms/queries";
 import type { NewsItem } from "@/lib/microcms/schema";
+import { resolveCategories } from "@/lib/news/categories";
 
 // 画面プレビュー (?draftKey=&contentId=) は searchParams を使うため、
 // generateStaticParams で静的生成された slug にプレビューパラメータ付きで
@@ -149,7 +149,7 @@ export default async function NewsDetailPage({
     previewItem ?? (await getNewsDetail({ locale, slug }));
   if (!item) notFound();
 
-  const cat = NEWS_CATEGORIES.find((c) => c.id === item.category[0]);
+  const cats = resolveCategories(item.category);
   const backHref = locale === "ja" ? "/news" : "/en/news";
   const backLabel =
     locale === "ja" ? "← ニュース一覧へ" : "← News index";
@@ -168,13 +168,18 @@ export default async function NewsDetailPage({
           {backLabel}
         </Link>
         <div className="mt-6 flex items-center gap-3 text-xs">
-          {cat && (
-            <span
-              className="inline-block px-2 py-0.5 border"
-              style={{ borderColor: cat.color, color: cat.color }}
-            >
-              {locale === "ja" ? cat.labelJa : cat.labelEn}
-            </span>
+          {cats.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {cats.map((c) => (
+                <span
+                  key={c.id}
+                  className="inline-block px-2 py-0.5 border"
+                  style={{ borderColor: c.color, color: c.color }}
+                >
+                  {locale === "ja" ? c.labelJa : c.labelEn}
+                </span>
+              ))}
+            </div>
           )}
           <time dateTime={(item.publishedAt ?? item.createdAt).slice(0, 10)}>
             {formatDate(item.publishedAt ?? item.createdAt)}
@@ -211,7 +216,7 @@ export default async function NewsDetailPage({
             <a
               href={item.externalLink.url}
               {...EXTERNAL_LINK_PROPS}
-              className="inline-flex items-center gap-2 px-6 py-3 border border-accent text-accent text-sm tracking-wider hover:bg-accent hover:text-primary transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-accent text-accent text-sm tracking-wider hover:bg-accent hover:text-deep-black transition-colors"
             >
               {item.externalLink.label}
               <span>→</span>

@@ -14,12 +14,13 @@ import PromoBanner from "./PromoBanner";
 const SECTION_IDS = ["concept", "facility", "services", "pricing", "about", "access"];
 
 const NAV_ITEMS = [
-  { id: "concept", href: "/#concept" },
-  { id: "facility", href: "/#facility" },
-  { id: "services", href: "/#services" },
-  { id: "pricing", href: "/#pricing" },
-  { id: "about", href: "/#about" },
-  { id: "access", href: "/#access" },
+  { id: "concept", kind: "anchor", href: "/#concept" },
+  { id: "facility", kind: "anchor", href: "/#facility" },
+  { id: "services", kind: "anchor", href: "/#services" },
+  { id: "pricing", kind: "anchor", href: "/#pricing" },
+  { id: "news", kind: "page", href: "/news" },
+  { id: "about", kind: "anchor", href: "/#about" },
+  { id: "access", kind: "anchor", href: "/#access" },
 ] as const;
 
 export default function HomeNavigation() {
@@ -109,17 +110,20 @@ export default function HomeNavigation() {
             aria-label={t("mainNav")}
             className="hidden md:flex items-center gap-8"
           >
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.id}
-                href={item.href}
-                className={`text-sm uppercase tracking-widest transition-colors hover:text-text-light ${
-                  activeSection === item.id ? "text-accent" : "text-text-gray"
-                }`}
-              >
-                {t(item.id)}
-              </a>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const className = `text-sm uppercase tracking-widest transition-colors hover:text-text-light ${
+                activeSection === item.id ? "text-accent" : "text-text-gray"
+              }`;
+              return item.kind === "page" ? (
+                <Link key={item.id} href={item.href} className={className}>
+                  {t(item.id)}
+                </Link>
+              ) : (
+                <a key={item.id} href={item.href} className={className}>
+                  {t(item.id)}
+                </a>
+              );
+            })}
           </nav>
 
           {/* Desktop: Right side */}
@@ -182,18 +186,30 @@ export default function HomeNavigation() {
           </button>
 
           <nav className="flex flex-col items-center gap-8">
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.id}
-                href={item.href}
-                onClick={handleMobileLinkClick}
-                className={`text-2xl uppercase tracking-widest transition-colors ${
-                  activeSection === item.id ? "text-accent" : "text-text-light"
-                }`}
-              >
-                {t(item.id)}
-              </a>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const className = `text-2xl uppercase tracking-widest transition-colors ${
+                activeSection === item.id ? "text-accent" : "text-text-light"
+              }`;
+              return item.kind === "page" ? (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  onClick={handleMobileLinkClick}
+                  className={className}
+                >
+                  {t(item.id)}
+                </Link>
+              ) : (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  onClick={handleMobileLinkClick}
+                  className={className}
+                >
+                  {t(item.id)}
+                </a>
+              );
+            })}
           </nav>
 
           <a

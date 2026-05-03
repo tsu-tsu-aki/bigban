@@ -50,6 +50,7 @@ const NAV_ITEMS = [
   { label: "FACILITY", href: "/#facility" },
   { label: "SERVICES", href: "/#services" },
   { label: "PRICING", href: "/#pricing" },
+  { label: "NEWS", href: "/news" },
   { label: "ABOUT", href: "/#about" },
   { label: "ACCESS", href: "/#access" },
 ];
@@ -73,7 +74,7 @@ describe("HomeNavigation", () => {
     expect(logos).toHaveLength(1);
   });
 
-  it("6つのデスクトップナビリンクと正しいhrefを表示する", () => {
+  it("7つのデスクトップナビリンクと正しいhrefを表示する", () => {
     renderWithIntl(<HomeNavigation />);
     const nav = screen.getByRole("navigation", { name: "メインナビゲーション" });
     for (const item of NAV_ITEMS) {
@@ -82,6 +83,27 @@ describe("HomeNavigation", () => {
       expect(link).toHaveAttribute("href", item.href);
       expect(nav).toContainElement(link);
     }
+  });
+
+  it("NEWSリンクがPRICINGとABOUTの間に配置される", () => {
+    renderWithIntl(<HomeNavigation />);
+    const nav = screen.getByRole("navigation", { name: "メインナビゲーション" });
+    const links = Array.from(nav.querySelectorAll("a")).map((a) => a.textContent);
+    const pricingIdx = links.indexOf("PRICING");
+    const newsIdx = links.indexOf("NEWS");
+    const aboutIdx = links.indexOf("ABOUT");
+    expect(pricingIdx).toBeGreaterThanOrEqual(0);
+    expect(newsIdx).toBe(pricingIdx + 1);
+    expect(aboutIdx).toBe(newsIdx + 1);
+  });
+
+  it("モバイルメニュー内にもNEWSリンクが含まれる", () => {
+    renderWithIntl(<HomeNavigation />);
+    fireEvent.click(screen.getByLabelText("メニューを開く"));
+    const dialog = screen.getByRole("dialog");
+    const newsLink = dialog.querySelector("a[href='/news']");
+    expect(newsLink).toBeInTheDocument();
+    expect(newsLink?.textContent).toBe("NEWS");
   });
 
   it("アクティブセクション(concept)をハイライトする", () => {
