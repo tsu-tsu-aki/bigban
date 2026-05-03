@@ -366,4 +366,86 @@ describe("CTA / Schedule timeline / time 要素", () => {
     expect(out).toMatch(/<p>x<\/p>/);
     expect(out).not.toMatch(/datetime/);
   });
+
+  describe("SNS 埋め込みトークン (<a class='embed' data-embed-*>)", () => {
+    it("登録済プロバイダ + 形式適合 ID は data-embed-* を保持", () => {
+      const out = sanitizeNewsHtml(
+        `<a class="embed" data-embed-provider="youtube" data-embed-id="dQw4w9WgXcQ">YouTube で見る</a>`,
+        STRICT_HTML_CONFIG,
+      );
+      expect(out).toMatch(/data-embed-provider="youtube"/);
+      expect(out).toMatch(/data-embed-id="dQw4w9WgXcQ"/);
+      expect(out).toMatch(/class="embed"/);
+    });
+
+    it("属性順序が異なっても保持", () => {
+      const out = sanitizeNewsHtml(
+        `<a data-embed-id="dQw4w9WgXcQ" data-embed-provider="youtube" class="embed">x</a>`,
+        STRICT_HTML_CONFIG,
+      );
+      expect(out).toMatch(/data-embed-provider="youtube"/);
+      expect(out).toMatch(/data-embed-id="dQw4w9WgXcQ"/);
+    });
+
+    it("未登録プロバイダ (vimeo) の data-embed-provider は除去", () => {
+      const out = sanitizeNewsHtml(
+        `<a class="embed" data-embed-provider="vimeo" data-embed-id="123456789">x</a>`,
+        STRICT_HTML_CONFIG,
+      );
+      expect(out).not.toMatch(/data-embed-provider/);
+    });
+
+    it("プロバイダ名が空 / 大文字 / 不正文字なら除去", () => {
+      const cases = ["", "YOUTUBE", "you tube", "yt!"];
+      for (const v of cases) {
+        const out = sanitizeNewsHtml(
+          `<a class="embed" data-embed-provider="${v}" data-embed-id="dQw4w9WgXcQ">x</a>`,
+          STRICT_HTML_CONFIG,
+        );
+        expect(out).not.toMatch(/data-embed-provider/);
+      }
+    });
+
+    it("data-embed-id の一般形式違反 (空 / 長すぎ / 特殊文字) は除去", () => {
+      const cases = [
+        "",
+        "a".repeat(65),
+        "id with space",
+        "id'with-quote",
+        "<script>",
+        'id"quote',
+      ];
+      for (const v of cases) {
+        const input = `<a class="embed" data-embed-provider="youtube" data-embed-id="${v.replace(/"/g, "&quot;")}">x</a>`;
+        const out = sanitizeNewsHtml(input, STRICT_HTML_CONFIG);
+        expect(out).not.toMatch(/data-embed-id="(?!dQw)/);
+      }
+    });
+
+    it("class='embed' は filterClasses を通過する", () => {
+      const out = sanitizeNewsHtml(
+        `<a class="embed" data-embed-provider="youtube" data-embed-id="dQw4w9WgXcQ">x</a>`,
+        STRICT_HTML_CONFIG,
+      );
+      expect(out).toMatch(/class="embed"/);
+    });
+
+    it("RICH_EDITOR_CONFIG でも同じ挙動", () => {
+      const out = sanitizeNewsHtml(
+        `<a class="embed" data-embed-provider="youtube" data-embed-id="dQw4w9WgXcQ">x</a>`,
+        RICH_EDITOR_CONFIG,
+      );
+      expect(out).toMatch(/data-embed-provider="youtube"/);
+      expect(out).toMatch(/data-embed-id="dQw4w9WgXcQ"/);
+    });
+
+    it("data-embed-* は <a> 以外では除去 (スコープ制限)", () => {
+      const out = sanitizeNewsHtml(
+        `<p class="embed" data-embed-provider="youtube" data-embed-id="dQw4w9WgXcQ">x</p>`,
+        STRICT_HTML_CONFIG,
+      );
+      expect(out).not.toMatch(/data-embed-provider/);
+      expect(out).not.toMatch(/data-embed-id/);
+    });
+  });
 });

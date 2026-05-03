@@ -1,5 +1,7 @@
 import DOMPurify from "isomorphic-dompurify";
 
+import { EMBED_PROVIDER_IDS } from "./embeds/registry";
+
 /* istanbul ignore next -- @preserve jsdom 環境では DOMPurify は常にサポートされるため到達不可 */
 if (!DOMPurify.isSupported) {
   throw new Error(
@@ -53,6 +55,10 @@ const COMMON_ALLOWED_ATTR = [
   "aria-describedby",
   // <time datetime="..."> 用
   "datetime",
+  // SNS 埋め込みトークン (<a class="embed" data-embed-provider data-embed-id>)
+  // 値検証は uponSanitizeAttribute フック内で行う
+  "data-embed-provider",
+  "data-embed-id",
 ];
 
 // 注: ALLOWED_URI_REGEXP オプションは DOMPurify 3.x + jsdom env で
@@ -76,6 +82,8 @@ const ALLOWED_CLASSES = new Set([
   // スケジュール timeline
   "schedule",
   "schedule-item",
+  // SNS 埋め込みトークン (<a class="embed" data-embed-provider data-embed-id>)
+  "embed",
 ]);
 
 // 共通の許可タグ (block / inline / table / 注釈)
@@ -138,6 +146,10 @@ const SPAN_REGEX = /^[1-9]\d?$/;
 // HTML5 time datetime: ISO 8601 ライク (年/年月/年月日/日時/タイムゾーン任意)
 const ISO_DATETIME_REGEX =
   /^\d{4}(-\d{2}(-\d{2}(T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:\d{2})?)?)?)?$/;
+// SNS 埋め込みトークンの ID は基本英数字 + ハイフン + アンダースコア (DoS / 注入対策)
+// プロバイダ固有の厳密検証 (例: YouTube は 11 文字固定) は registry 側で行う
+const EMBED_ID_GENERIC_REGEX = /^[A-Za-z0-9_-]{1,64}$/;
+const EMBED_PROVIDER_SET = new Set(EMBED_PROVIDER_IDS);
 
 // DOMPurify.addHook はモジュール評価のたびに呼ぶと同じ DOMPurify インスタンスに
 // hook が累積する (vi.resetModules や HMR 環境で発生しうる)。
@@ -196,6 +208,23 @@ function registerHooksOnce(): void {
     // <time datetime=...> のみ受理し、ISO 8601 形式のみに制限
     if (data.attrName === "datetime") {
       if (tag !== "TIME" || !ISO_DATETIME_REGEX.test(data.attrValue)) {
+        data.keepAttr = false;
+      }
+      return;
+    }
+
+    // SNS 埋め込みトークン (<a data-embed-provider data-embed-id>)
+    // - <a> 以外では受理しない (スコープ制限)
+    // - data-embed-provider は registry に存在するプロバイダのみ
+    // - data-embed-id は generic regex で形式検証 (provider 固有検証は renderer 側)
+    if (data.attrName === "data-embed-provider") {
+      if (tag !== "A" || !EMBED_PROVIDER_SET.has(data.attrValue)) {
+        data.keepAttr = false;
+      }
+      return;
+    }
+    if (data.attrName === "data-embed-id") {
+      if (tag !== "A" || !EMBED_ID_GENERIC_REGEX.test(data.attrValue)) {
         data.keepAttr = false;
       }
       return;
