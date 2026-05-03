@@ -12,8 +12,11 @@ export interface EmbedProviderDescriptor {
   readonly idPattern: RegExp;
   /** クリック前に表示するサムネイル画像 URL を組み立てる */
   readonly buildThumbnailUrl: (embedId: string) => string;
-  /** クリック後に iframe の src として使う URL を組み立てる */
-  readonly buildIframeUrl: (embedId: string) => string;
+  /** iframe の src として使う URL を組み立てる。locale に応じてプレイヤーUI言語を切替 */
+  readonly buildIframeUrl: (
+    embedId: string,
+    options?: { locale?: string },
+  ) => string;
   /** 入力 URL から埋め込み ID を抽出する (Skill が URL → トークンに変換する時に利用) */
   readonly extractIdFromUrl: (url: URL) => string | null;
 }

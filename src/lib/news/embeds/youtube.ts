@@ -39,11 +39,32 @@ function extractYouTubeId(url: URL): string | null {
   return null;
 }
 
+/**
+ * YouTube 埋め込みの URL パラメータ既定値:
+ *  - rel=0: 再生終了時に他チャンネルの関連動画を出さない
+ *  - playsinline=1: iOS Safari でフルスクリーン強制を防ぐ
+ *  - color=white: 進行バーを赤→白 (エディトリアル基調と相性◎)
+ *  - hl=<locale>: プレイヤー UI 言語をサイトロケールに合わせる (任意)
+ */
+function buildYouTubeIframeUrl(
+  embedId: string,
+  options?: { locale?: string },
+): string {
+  const params = new URLSearchParams({
+    rel: "0",
+    playsinline: "1",
+    color: "white",
+  });
+  if (options?.locale) {
+    params.set("hl", options.locale);
+  }
+  return `https://www.youtube-nocookie.com/embed/${embedId}?${params.toString()}`;
+}
+
 export const YOUTUBE_PROVIDER: EmbedProviderDescriptor = {
   id: "youtube",
   idPattern: ID_PATTERN,
   buildThumbnailUrl: (embedId) => `https://i.ytimg.com/vi/${embedId}/hqdefault.jpg`,
-  buildIframeUrl: (embedId) =>
-    `https://www.youtube-nocookie.com/embed/${embedId}?rel=0`,
+  buildIframeUrl: buildYouTubeIframeUrl,
   extractIdFromUrl: extractYouTubeId,
 };

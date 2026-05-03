@@ -35,10 +35,30 @@ describe("YOUTUBE_PROVIDER", () => {
   });
 
   describe("buildIframeUrl", () => {
-    it("youtube-nocookie.com の embed URL を返す (rel=0)", () => {
-      expect(YOUTUBE_PROVIDER.buildIframeUrl("dQw4w9WgXcQ")).toBe(
-        "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0",
+    it("youtube-nocookie.com の embed URL を返す (rel=0 / playsinline=1 / color=white)", () => {
+      const url = YOUTUBE_PROVIDER.buildIframeUrl("dQw4w9WgXcQ");
+      expect(url).toMatch(
+        /^https:\/\/www\.youtube-nocookie\.com\/embed\/dQw4w9WgXcQ\?/,
       );
+      const u = new URL(url);
+      expect(u.searchParams.get("rel")).toBe("0");
+      expect(u.searchParams.get("playsinline")).toBe("1");
+      expect(u.searchParams.get("color")).toBe("white");
+      expect(u.searchParams.has("hl")).toBe(false);
+    });
+
+    it("locale を指定すると hl パラメータが付く (ja)", () => {
+      const url = YOUTUBE_PROVIDER.buildIframeUrl("dQw4w9WgXcQ", {
+        locale: "ja",
+      });
+      expect(new URL(url).searchParams.get("hl")).toBe("ja");
+    });
+
+    it("locale を指定すると hl パラメータが付く (en)", () => {
+      const url = YOUTUBE_PROVIDER.buildIframeUrl("dQw4w9WgXcQ", {
+        locale: "en",
+      });
+      expect(new URL(url).searchParams.get("hl")).toBe("en");
     });
   });
 

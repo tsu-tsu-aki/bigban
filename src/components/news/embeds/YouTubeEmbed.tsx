@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { YOUTUBE_PROVIDER } from "@/lib/news/embeds/youtube";
 
@@ -17,10 +17,12 @@ interface YouTubeEmbedProps {
  *   (サニタイザーは generic 検証のみ。最終的な「壊れた iframe を出さない」
  *   保証は描画レイヤーで担保 = 二段防御)
  * - iframe URL は registry の YOUTUBE_PROVIDER から取得
- * - state を持たないが useTranslations のため "use client"
+ *   - 現在ロケール (ja / en) を hl パラメータでプレイヤー UI に反映
+ * - state を持たないが useTranslations / useLocale のため "use client"
  */
 export function YouTubeEmbed({ embedId }: YouTubeEmbedProps) {
   const t = useTranslations("News.embed");
+  const locale = useLocale();
 
   if (!YOUTUBE_PROVIDER.idPattern.test(embedId)) {
     return null;
@@ -28,7 +30,7 @@ export function YouTubeEmbed({ embedId }: YouTubeEmbedProps) {
 
   return (
     <EmbedShell
-      iframeUrl={YOUTUBE_PROVIDER.buildIframeUrl(embedId)}
+      iframeUrl={YOUTUBE_PROVIDER.buildIframeUrl(embedId, { locale })}
       iframeTitle={t("youtube.iframeTitle")}
       fallbackHref={`https://www.youtube.com/watch?v=${embedId}`}
       fallbackLabel={t("fallbackLabel")}

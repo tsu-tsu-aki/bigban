@@ -24,11 +24,24 @@ function renderWithIntl(ui: React.ReactNode, locale = "ja") {
 }
 
 describe("YouTubeEmbed", () => {
-  it("登録済プロバイダの id で iframe (youtube-nocookie.com) を即時描画", () => {
-    renderWithIntl(<YouTubeEmbed embedId="dQw4w9WgXcQ" />);
+  it("登録済プロバイダの id で iframe (youtube-nocookie.com) を即時描画 (ja locale 反映)", () => {
+    renderWithIntl(<YouTubeEmbed embedId="dQw4w9WgXcQ" />, "ja");
     const iframe = screen.getByTitle("YouTube プレイヤー") as HTMLIFrameElement;
-    expect(iframe.getAttribute("src")).toBe(
-      "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0",
+    const url = new URL(iframe.getAttribute("src") ?? "");
+    expect(url.origin + url.pathname).toBe(
+      "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+    );
+    expect(url.searchParams.get("rel")).toBe("0");
+    expect(url.searchParams.get("playsinline")).toBe("1");
+    expect(url.searchParams.get("color")).toBe("white");
+    expect(url.searchParams.get("hl")).toBe("ja");
+  });
+
+  it("locale=en の場合は hl=en でプレイヤー UI が英語化", () => {
+    renderWithIntl(<YouTubeEmbed embedId="dQw4w9WgXcQ" />, "en");
+    const iframe = screen.getByTitle("YouTube プレイヤー") as HTMLIFrameElement;
+    expect(new URL(iframe.getAttribute("src") ?? "").searchParams.get("hl")).toBe(
+      "en",
     );
   });
 
