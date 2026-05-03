@@ -149,7 +149,9 @@ export default async function NewsDetailPage({
     previewItem ?? (await getNewsDetail({ locale, slug }));
   if (!item) notFound();
 
-  const cat = NEWS_CATEGORIES.find((c) => c.id === item.category[0]);
+  const cats = item.category
+    .map((id) => NEWS_CATEGORIES.find((c) => c.id === id))
+    .filter((c): c is (typeof NEWS_CATEGORIES)[number] => Boolean(c));
   const backHref = locale === "ja" ? "/news" : "/en/news";
   const backLabel =
     locale === "ja" ? "← ニュース一覧へ" : "← News index";
@@ -168,13 +170,18 @@ export default async function NewsDetailPage({
           {backLabel}
         </Link>
         <div className="mt-6 flex items-center gap-3 text-xs">
-          {cat && (
-            <span
-              className="inline-block px-2 py-0.5 border"
-              style={{ borderColor: cat.color, color: cat.color }}
-            >
-              {locale === "ja" ? cat.labelJa : cat.labelEn}
-            </span>
+          {cats.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {cats.map((c) => (
+                <span
+                  key={c.id}
+                  className="inline-block px-2 py-0.5 border"
+                  style={{ borderColor: c.color, color: c.color }}
+                >
+                  {locale === "ja" ? c.labelJa : c.labelEn}
+                </span>
+              ))}
+            </div>
           )}
           <time dateTime={(item.publishedAt ?? item.createdAt).slice(0, 10)}>
             {formatDate(item.publishedAt ?? item.createdAt)}
