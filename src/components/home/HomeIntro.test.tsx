@@ -2,18 +2,25 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import HomeIntro from "./HomeIntro";
 
+// canvas mount 中の onPhaseChange を外部に露出させ、
+// canvas が unmount された後でも (連続発火テスト用に) 呼べるようにする。
+let capturedPhaseChange: ((phase: string) => void) | null = null;
+
 vi.mock("@/components/intro/StarfieldWarpIntro", () => ({
   StarfieldWarpIntro: ({
     onPhaseChange,
   }: {
     onPhaseChange: (phase: string) => void;
-  }) => (
-    <canvas
-      data-testid="starfield-warp-intro"
-      onClick={() => onPhaseChange("content")}
-      onDoubleClick={() => onPhaseChange("explode")}
-    />
-  ),
+  }) => {
+    capturedPhaseChange = onPhaseChange;
+    return (
+      <canvas
+        data-testid="starfield-warp-intro"
+        onClick={() => onPhaseChange("content")}
+        onDoubleClick={() => onPhaseChange("explode")}
+      />
+    );
+  },
 }));
 
 vi.mock("next/image", () => ({
@@ -35,6 +42,7 @@ const mockSessionStorage: Record<string, string> = {};
 beforeEach(() => {
   vi.clearAllMocks();
   vi.useFakeTimers();
+  capturedPhaseChange = null;
   Object.keys(mockSessionStorage).forEach(
     (key) => delete mockSessionStorage[key]
   );
@@ -149,6 +157,30 @@ describe("HomeIntro", () => {
     expect(screen.queryByTestId("starfield-warp-intro")).not.toBeInTheDocument();
     // ロゴは独立レイヤーで表示される
     expect(screen.getByAltText("THE PICKLE BANG THEORY")).toBeInTheDocument();
+  });
+
+  it("content フェーズが連続発火しても hold timer がリークしない (clearTimeout で上書き)", () => {
+    render(
+      <HomeIntro>
+        <div data-testid="home-content">Home</div>
+      </HomeIntro>
+    );
+    // 1 回目: hold timer set (この瞬間 canvas は unmount される)
+    act(() => {
+      capturedPhaseChange?.("content");
+    });
+    // 2 回目: canvas は既に unmount 済だが captured handler を直接呼んで
+    // 既存 hold timer を clearTimeout で上書きする経路をカバーする。
+    act(() => {
+      capturedPhaseChange?.("content");
+    });
+    // 2 回目の setTimeout 後に unmount される
+    act(() => {
+      vi.advanceTimersByTime(900);
+    });
+    expect(
+      screen.queryByTestId("starfield-warp-intro"),
+    ).not.toBeInTheDocument();
   });
 
   it("phase=content が来なくても FALLBACK_UNMOUNT_MS (6000ms) で必ず unmount される", () => {
