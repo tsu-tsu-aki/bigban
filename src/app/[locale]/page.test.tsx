@@ -7,6 +7,11 @@ vi.mock("next-intl/server", () => ({
   getTranslations: (...args: unknown[]) => mockGetTranslations(...args),
   setRequestLocale: vi.fn(),
 }));
+vi.mock("next/navigation", () => ({
+  notFound: () => {
+    throw new Error("NEXT_NOT_FOUND");
+  },
+}));
 
 vi.mock("@/components/home/HomeIntro", () => ({
   default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -17,6 +22,7 @@ vi.mock("@/components/home/HomeConcept", () => ({ default: () => null }));
 vi.mock("@/components/home/HomeFacility", () => ({ default: () => null }));
 vi.mock("@/components/home/HomeServices", () => ({ default: () => null }));
 vi.mock("@/components/home/HomePricing", () => ({ default: () => null }));
+vi.mock("@/components/home/HomeNews", () => ({ default: () => null }));
 vi.mock("@/components/home/HomeAbout", () => ({ default: () => null }));
 vi.mock("@/components/home/HomeAccess", () => ({ default: () => null }));
 vi.mock("@/components/home/HomeFooter", () => ({ default: () => null }));
@@ -90,5 +96,12 @@ describe("Home Page", () => {
     });
     const { container } = render(element);
     expect(container).toBeTruthy();
+  });
+
+  it("不正 locale で notFound", async () => {
+    const { default: Home } = await import("./page");
+    await expect(
+      Home({ params: Promise.resolve({ locale: "fr" }) }),
+    ).rejects.toThrow(/NEXT_NOT_FOUND/);
   });
 });

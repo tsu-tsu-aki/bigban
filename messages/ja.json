@@ -88,6 +88,7 @@
     "facility": "FACILITY",
     "services": "SERVICES",
     "pricing": "PRICING",
+    "news": "NEWS",
     "about": "ABOUT",
     "access": "ACCESS",
     "reserve": "RESERVE",
@@ -229,6 +230,12 @@
     "contactUs": "お問い合わせ",
     "pleaseContact": "ください。",
     "titleJa": "料金プラン"
+  },
+  "HomeNews": {
+    "title": "NEWS",
+    "titleJa": "ニュース",
+    "subtitle": "最新のお知らせ・メディア掲載・イベント情報",
+    "viewAll": "すべてのニュースを見る"
   },
   "HomeAbout": {
     "title": "ABOUT US",
