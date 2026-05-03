@@ -3,10 +3,42 @@ import { renderHook, act } from "@testing-library/react";
 import { useCrowdfundingPopup } from "./useCrowdfundingPopup";
 
 const SESSION_KEY = "bigban-crowdfunding-dismissed";
-const TRIGGER_DELAY_MS = 1500;
+
+let observerCallback: IntersectionObserverCallback;
+let mockObserve: ReturnType<typeof vi.fn>;
+let mockDisconnect: ReturnType<typeof vi.fn>;
+
+function setupIntersectionObserver() {
+  mockObserve = vi.fn();
+  mockDisconnect = vi.fn();
+
+  class MockIntersectionObserver {
+    constructor(callback: IntersectionObserverCallback) {
+      observerCallback = callback;
+    }
+    observe = mockObserve;
+    unobserve = vi.fn();
+    disconnect = mockDisconnect;
+    root = null;
+    rootMargin = "";
+    thresholds = [] as number[];
+    takeRecords = vi.fn();
+  }
+
+  global.IntersectionObserver =
+    MockIntersectionObserver as unknown as typeof IntersectionObserver;
+}
+
+function triggerConceptVisible() {
+  observerCallback(
+    [{ isIntersecting: true } as IntersectionObserverEntry],
+    {} as IntersectionObserver,
+  );
+}
 
 describe("useCrowdfundingPopup", () => {
   let mockStorage: Record<string, string>;
+  let conceptSection: HTMLElement;
 
   beforeEach(() => {
     mockStorage = {};
@@ -22,54 +54,66 @@ describe("useCrowdfundingPopup", () => {
       },
       writable: true,
     });
-    vi.useFakeTimers();
+    setupIntersectionObserver();
+
+    conceptSection = document.createElement("section");
+    conceptSection.id = "concept";
+    document.body.appendChild(conceptSection);
   });
 
   afterEach(() => {
-    vi.useRealTimers();
+    conceptSection.remove();
     vi.restoreAllMocks();
   });
 
-  it("初期表示直後 (タイマー発火前) は isOpen が false", () => {
+  it("初回訪問時でも CONCEPT セクション到達前は isOpen が false", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
     expect(result.current.isOpen).toBe(false);
   });
 
-  it(`${TRIGGER_DELAY_MS}ms 経過後に isOpen が true になる`, () => {
+  it("CONCEPT セクションが画面に入った瞬間に isOpen が true になる", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
     expect(result.current.isOpen).toBe(false);
 
     act(() => {
-      vi.advanceTimersByTime(TRIGGER_DELAY_MS);
+      triggerConceptVisible();
     });
 
     expect(result.current.isOpen).toBe(true);
   });
 
-  it(`${TRIGGER_DELAY_MS - 1}ms 経過時点ではまだ isOpen が false (1ms 直前は出さない)`, () => {
+  it("CONCEPT がまだ画面外 (isIntersecting=false) なら isOpen は false のまま", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
     act(() => {
-      vi.advanceTimersByTime(TRIGGER_DELAY_MS - 1);
+      observerCallback(
+        [{ isIntersecting: false } as IntersectionObserverEntry],
+        {} as IntersectionObserver,
+      );
     });
     expect(result.current.isOpen).toBe(false);
   });
 
-  it("sessionStorage 設定済みの場合はタイマー経過後も isOpen が false", () => {
-    mockStorage[SESSION_KEY] = "true";
+  it("一度トリガーされると observer は disconnect され二度発火しない", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
 
     act(() => {
-      vi.advanceTimersByTime(TRIGGER_DELAY_MS);
+      triggerConceptVisible();
     });
+    expect(result.current.isOpen).toBe(true);
+    expect(mockDisconnect).toHaveBeenCalled();
+  });
 
-    expect(result.current.isOpen).toBe(false);
+  it("sessionStorage 設定済みの場合は observer を仕掛けない", () => {
+    mockStorage[SESSION_KEY] = "true";
+    renderHook(() => useCrowdfundingPopup());
+    expect(mockObserve).not.toHaveBeenCalled();
   });
 
   it("closePopup で isOpen が false になり sessionStorage に書き込む", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
 
     act(() => {
-      vi.advanceTimersByTime(TRIGGER_DELAY_MS);
+      triggerConceptVisible();
     });
     expect(result.current.isOpen).toBe(true);
 
@@ -84,7 +128,7 @@ describe("useCrowdfundingPopup", () => {
     );
   });
 
-  it("sessionStorage アクセスエラー時でもタイマーで表示される", () => {
+  it("sessionStorage アクセスエラー時でも CONCEPT 到達で表示される", () => {
     Object.defineProperty(window, "sessionStorage", {
       value: {
         getItem: vi.fn(() => {
@@ -101,7 +145,7 @@ describe("useCrowdfundingPopup", () => {
     expect(result.current.isOpen).toBe(false);
 
     act(() => {
-      vi.advanceTimersByTime(TRIGGER_DELAY_MS);
+      triggerConceptVisible();
     });
 
     expect(result.current.isOpen).toBe(true);
@@ -121,7 +165,7 @@ describe("useCrowdfundingPopup", () => {
     const { result } = renderHook(() => useCrowdfundingPopup());
 
     act(() => {
-      vi.advanceTimersByTime(TRIGGER_DELAY_MS);
+      triggerConceptVisible();
     });
     expect(result.current.isOpen).toBe(true);
 
@@ -132,15 +176,9 @@ describe("useCrowdfundingPopup", () => {
     expect(result.current.isOpen).toBe(false);
   });
 
-  it("unmount 時にタイマーがクリアされ、その後発火しない", () => {
-    const { result, unmount } = renderHook(() => useCrowdfundingPopup());
-    unmount();
-
-    act(() => {
-      vi.advanceTimersByTime(TRIGGER_DELAY_MS * 2);
-    });
-
-    // unmount 後に setIsTriggered が呼ばれず、結果としてリーク警告も出ない
+  it("CONCEPT セクションが存在しない場合もエラーにならない", () => {
+    conceptSection.remove();
+    const { result } = renderHook(() => useCrowdfundingPopup());
     expect(result.current.isOpen).toBe(false);
   });
 });
