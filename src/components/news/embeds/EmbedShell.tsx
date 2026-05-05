@@ -24,7 +24,14 @@ interface EmbedShellProps {
   maxWidth?: string;
 }
 
-const SANDBOX = "allow-scripts allow-same-origin allow-presentation allow-popups";
+// allow-popups-to-escape-sandbox: iframe からの target="_blank" 新規タブが親 iframe の
+// sandbox を継承して origin が null 化することを防ぐ。これがないと PC Chrome で
+// YouTube/Instagram 本体への遷移が ERR_BLOCKED_BY_RESPONSE (blocked:origin) で失敗する
+// (相手側の X-Frame-Options:SAMEORIGIN / COOP チェックで弾かれる)。
+// 参考: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-sandbox
+//      https://googlechrome.github.io/samples/allow-popups-to-escape-sandbox/
+const SANDBOX =
+  "allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox";
 const REFERRER_POLICY = "strict-origin-when-cross-origin";
 // YouTube 公式埋め込みコードの推奨値ベース。
 // clipboard-write でプレイヤーの「共有 → リンクコピー」が動作する。
