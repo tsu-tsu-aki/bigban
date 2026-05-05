@@ -25,7 +25,7 @@ describe("EmbedShell", () => {
     render(<EmbedShell {...baseProps} />);
     const iframe = screen.getByTitle("YouTube プレイヤー");
     expect(iframe.getAttribute("sandbox")).toBe(
-      "allow-scripts allow-same-origin allow-presentation allow-popups",
+      "allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox",
     );
     expect(iframe.getAttribute("referrerpolicy")).toBe(
       "strict-origin-when-cross-origin",
@@ -35,6 +35,18 @@ describe("EmbedShell", () => {
     expect(allow).toMatch(/encrypted-media/);
     expect(allow).toMatch(/clipboard-write/);
     expect(allow).toMatch(/picture-in-picture/);
+  });
+
+  it("sandbox に allow-popups-to-escape-sandbox を含む (PC Chrome の ERR_BLOCKED_BY_RESPONSE 回避)", () => {
+    // YouTube/Instagram iframe 内のリンクをクリックすると target="_blank" で新規タブが開く。
+    // allow-popups-to-escape-sandbox がないと新規タブが親 iframe の sandbox を継承し
+    // origin が null 化 → YouTube の X-Frame-Options:SAMEORIGIN や COOP チェックで弾かれ
+    // PC Chrome で ERR_BLOCKED_BY_RESPONSE (blocked:origin) が発生する。
+    render(<EmbedShell {...baseProps} />);
+    const sandbox = screen
+      .getByTitle("YouTube プレイヤー")
+      .getAttribute("sandbox") ?? "";
+    expect(sandbox.split(/\s+/)).toContain("allow-popups-to-escape-sandbox");
   });
 
   it("aspectRatio prop が style に反映され CLS 0 になる", () => {
